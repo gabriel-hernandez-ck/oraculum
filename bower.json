@@ -1,0 +1,47 @@
+{
+  "name": "Oraculum",
+  "version": "0.0.1",
+  "keywords": [
+    "mvc",
+    "list",
+    "table",
+    "memory",
+    "mixins",
+    "router",
+    "binding",
+    "chaplin",
+    "factory",
+    "history",
+    "lookout",
+    "backbone",
+    "backgrid",
+    "behaviors",
+    "factoryjs",
+    "pagination",
+    "application",
+    "composition"
+  ],
+  "description": "Factory-driven Backbone.JS behaviors based on Chaplin",
+  "homepage": "https://github.com/lookout/oraculum",
+  "repository": "https://github.com/lookout/oraculum.git",
+  "bugs": {
+    "url": "https://github.com/lookout/oraculum/issues",
+    "email": "Steve (Egesté) Regester <egeste@lookout.com> (http://egeste.net/)"
+  },
+  "contributors": [
+    "Steve (Egesté) Regester <egeste@lookout.com> (http://egeste.net/)",
+    "Gabriel Hernandez <gabriel.hernandez@lookout.com> (http://about.me/gabrielhernandez/)"
+  ],
+  "dependencies": {
+    "factoryjs": "master"
+  },
+  "devDependencies": {
+    "sinon": "~1.7",
+    "bootstrap": "2.3.2",
+    "coffee-script": "latest",
+    "jasmine-sinon": "~0.3",
+    "jasmine-jquery": "1.5.8",
+    "jasmine-matchers": "uxebu/jasmine-matchers#33e09d6b98ce190d0dff000e16a90f85e72d920f",
+    "jasmine-matchers-util": "JamieMason/Jasmine-Matchers#bfdb8e3cc50b48468e719243e65f2cf6d11ab066"
+  }
+}
