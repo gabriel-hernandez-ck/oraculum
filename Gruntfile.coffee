@@ -31,7 +31,7 @@ module.exports = (grunt) ->
   grunt.loadNpmTasks 'grunt-contrib-jshint'
   grunt.loadNpmTasks 'grunt-contrib-connect'
   grunt.loadNpmTasks 'grunt-contrib-jasmine'
-
+  grunt.loadNpmTasks 'grunt-gh-pages'
 
   grunt.initConfig
     pkg: require './package.json'
@@ -156,6 +156,10 @@ module.exports = (grunt) ->
         createTag: false
         files: ['package.json', 'bower.json']
         updateConfigs: ['pkg', 'component']
+    "gh-pages":
+      options:
+        base: "docs"
+      src: ["**"]
 
   grunt.registerTask 'build', [
     'coffeelint'
@@ -192,4 +196,9 @@ module.exports = (grunt) ->
   grunt.registerTask 'docs', [
     'clean:docs'
     'docker'
+  ]
+
+  grunt.registerTask 'publish-docs', [
+    'docs'
+    'gh-pages'
   ]

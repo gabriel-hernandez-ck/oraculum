@@ -7,6 +7,8 @@
         \/           \/     \/                       \/
 ```
 
+[Documentation](http://hackers.lookout.com/oraculum/README.md.html)
+
 Oraculum is a [javascript MVC framework](http://todomvc.com/architecture-examples/oraculum/) and a collection of mixins for [Backbone](http://backbonejs.org/) `Model`s, `Collection`s and `View`s written for [FactoryJS](https://github.com/lookout/factoryjs/). It inherits all of its application structure, many behaviors, and is generally inspired by [Chaplin](http://chaplinjs.org/).
 
 Though a large portion of Oraculum's behavior is inherited from Chaplin, Oraculum employs a signficiantly different strategy surrounding the issues of inheritance, structure, and coupling. Applications built with Oraculum take full advantage of the [aspect-oriented programming](http://en.wikipedia.org/wiki/Aspect-oriented_programming) and [composition](http://en.wikipedia.org/wiki/Composition_over_inheritance) paradigms offered by FactoryJS. The purpose of this project is to collect abstract, reusable behaviors into a framework that  can be used by anyone building complex applications with Backbone.
