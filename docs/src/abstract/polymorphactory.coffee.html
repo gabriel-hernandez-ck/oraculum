@@ -222,7 +222,7 @@ any constructor arguments to the factory getter.</p>
 
     <span class="nv">constructor: </span><span class="nf">-&gt;</span>
       <span class="nv">typeString = </span><span class="nx">@getTypeString</span> <span class="nx">arguments</span><span class="p">...</span>
-      <span class="nv">typeString = </span><span class="nx">@typeMap</span><span class="p">[</span><span class="nx">typeString</span><span class="p">]</span> <span class="k">if</span> <span class="nx">@typeMap</span><span class="p">[</span><span class="nx">typeString</span><span class="p">]</span><span class="o">?</span>
+      <span class="nv">typeString = </span><span class="nx">@typeMap</span><span class="p">[</span><span class="nx">typeString</span><span class="p">]</span> <span class="k">if</span> <span class="nx">@typeMap</span><span class="o">?</span><span class="p">[</span><span class="nx">typeString</span><span class="p">]</span><span class="o">?</span>
       <span class="k">return</span> <span class="nx">@__factory</span><span class="p">().</span><span class="nx">get</span> <span class="nx">typeString</span><span class="p">,</span> <span class="nx">arguments</span><span class="p">...</span>
 </pre></div>
         </td>

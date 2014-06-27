@@ -1,6 +1,9 @@
 define [
   'oraculum'
-], (Oraculum) ->
+  'jquery'
+  'backbone'
+  'underscore'
+], (Oraculum, jQuery, Backbone, _) ->
   'use strict'
 
   # Libs
@@ -10,6 +13,6 @@ define [
   # and simply request a reference to the library from Oraculum.
   # It lends itself well to more readable code.
 
-  Oraculum.define 'jQuery', (-> require 'jquery'), singleton: true
-  Oraculum.define 'Backbone', (-> require 'backbone'), singleton: true
-  Oraculum.define 'underscore', (-> require 'underscore'), singleton: true
+  Oraculum.define 'jQuery', (-> jQuery), singleton: true
+  Oraculum.define 'Backbone', (-> Backbone), singleton: true
+  Oraculum.define 'underscore', (-> _), singleton: true
