@@ -48,6 +48,7 @@
     "grunt-contrib-jshint": "latest",
     "grunt-contrib-connect": "latest",
     "grunt-contrib-requirejs": "latest",
-    "grunt-template-jasmine-requirejs": "egeste/grunt-template-jasmine-requirejs#0.1.6-modules"
+    "grunt-template-jasmine-requirejs": "egeste/grunt-template-jasmine-requirejs#0.1.6-modules",
+    "grunt-gh-pages": "^0.9.1"
   }
 }
