@@ -180,12 +180,12 @@ define [
         expect(pageState.get 'end').toBe 0
         pageState.set 'start', 1
         expect(pageState.get 'end').toBe 1
-        pageState.set 'total', 100
-        expect(pageState.get 'end').toBe 101
-        expect(pageState.get 'pages').toBe 10
+        pageState.set 'total', 105
+        expect(pageState.get 'end').toBe 106
+        expect(pageState.get 'pages').toBe 11
         pageState.set 'start', 0
-        expect(pageState.get 'end').toBe 100
-        expect(pageState.get 'pages').toBe 10
+        expect(pageState.get 'end').toBe 105
+        expect(pageState.get 'pages').toBe 11
 
     describe 'parser', ->
 

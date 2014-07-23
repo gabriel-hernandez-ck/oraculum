@@ -50,7 +50,7 @@
         start = this.get('start');
         total = this.get('total');
         end = total + start;
-        pages = Math.max(1, Math.floor(total / size));
+        pages = Math.max(1, Math.ceil(total / size));
         return this.set({
           end: end,
           pages: pages
