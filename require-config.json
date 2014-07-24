@@ -1,5 +1,5 @@
 {
-  "baseUrl": "build/src-cov",
+  "baseUrl": "build/src",
   "paths": {
     "jquery": "../../components/jquery/jquery",
     "backbone": "../../components/backbone/backbone",
