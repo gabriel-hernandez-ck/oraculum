@@ -60,12 +60,12 @@
        */
 
       function PolymorPhactory() {
-        var typeString, _ref;
+        var typeString, _ref, _ref1;
         typeString = this.getTypeString.apply(this, arguments);
-        if (this.typeMap[typeString] != null) {
+        if (((_ref = this.typeMap) != null ? _ref[typeString] : void 0) != null) {
           typeString = this.typeMap[typeString];
         }
-        return (_ref = this.__factory()).get.apply(_ref, [typeString].concat(__slice.call(arguments)));
+        return (_ref1 = this.__factory()).get.apply(_ref1, [typeString].concat(__slice.call(arguments)));
       }
 
       return PolymorPhactory;

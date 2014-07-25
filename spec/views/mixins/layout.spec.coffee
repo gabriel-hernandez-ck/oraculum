@@ -1,4 +1,4 @@
-define [
+require [
   'oraculum'
   'oraculum/libs'
   'oraculum/application/controller'

@@ -66,5 +66,5 @@ define [
 
     constructor: ->
       typeString = @getTypeString arguments...
-      typeString = @typeMap[typeString] if @typeMap[typeString]?
+      typeString = @typeMap[typeString] if @typeMap?[typeString]?
       return @__factory().get typeString, arguments...

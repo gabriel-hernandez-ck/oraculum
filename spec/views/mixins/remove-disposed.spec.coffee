@@ -1,4 +1,4 @@
-define [
+require [
   'oraculum'
   'oraculum/mixins/disposable'
   'oraculum/views/mixins/remove-disposed'
