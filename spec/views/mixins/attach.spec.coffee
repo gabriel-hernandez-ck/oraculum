@@ -1,4 +1,4 @@
-define [
+require [
   'oraculum'
   'oraculum/views/mixins/attach'
   'oraculum/views/mixins/auto-render'

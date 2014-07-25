@@ -1,4 +1,4 @@
-define [
+require [
   'oraculum'
   'oraculum/mixins/disposable'
 ], (Oraculum) ->

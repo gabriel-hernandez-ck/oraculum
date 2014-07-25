@@ -1,4 +1,4 @@
-define [
+require [
   'oraculum'
   'oraculum/views/mixins/dom-cache'
   'oraculum/views/mixins/html-templating'
