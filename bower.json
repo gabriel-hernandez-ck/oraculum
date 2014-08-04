@@ -21,7 +21,7 @@
     "application",
     "composition"
   ],
-  "description": "Factory-driven Backbone.JS behaviors based on Chaplin",
+  "description": "The Enterprise Javascript MVC Framework.",
   "homepage": "https://github.com/lookout/oraculum",
   "repository": "https://github.com/lookout/oraculum.git",
   "bugs": {

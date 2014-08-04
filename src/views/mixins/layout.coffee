@@ -1,11 +1,15 @@
 define [
   'oraculum'
+  'oraculum/libs'
   'oraculum/mixins/pub-sub'
   'oraculum/mixins/callback-provider'
   'oraculum/views/mixins/region-publisher'
   'oraculum/views/mixins/region-subscriber'
 ], (Oraculum) ->
   'use strict'
+
+  $ = Oraculum.get 'jQuery'
+  _ = Oraculum.get 'underscore'
 
   modifierKeyPressed = (event) ->
     return event.altKey or
@@ -42,6 +46,7 @@ define [
       layout.openExternalToBlank = openExternalToBlank if openExternalToBlank?
 
     mixinitialize: ->
+      @subscribeEvent '!scrollTo', @scrollTo
       @subscribeEvent '!adjustTitle', @adjustTitle
       @subscribeEvent 'beforeControllerDispose', @scroll
       @startLinkRouting() if @mixinOptions.layout.routeLinks
@@ -52,9 +57,13 @@ define [
     # Handler for the global beforeControllerDispose event.
     scroll: ->
       # Reset the scroll position.
-      return unless {scrollTo} = @mixinOptions.layout
+      return unless scrollTo = @mixinOptions.layout.scrollTo
       [x, y] = scrollTo
       window.scrollTo x, y
+
+    scrollTo: (selector, args...) ->
+      scroll = scrollTop: $(selector).offset().top
+      $(document.body).animate scroll, args...
 
     # Handler for the global dispatcher:dispatch event.
     # Change the document title to match the new controller.

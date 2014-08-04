@@ -45,12 +45,16 @@
         </td>
         <td class="code highlight"><div class="highlight"><pre><span class="nx">define</span> <span class="p">[</span>
   <span class="s">&#39;oraculum&#39;</span>
+  <span class="s">&#39;oraculum/libs&#39;</span>
   <span class="s">&#39;oraculum/mixins/pub-sub&#39;</span>
   <span class="s">&#39;oraculum/mixins/callback-provider&#39;</span>
   <span class="s">&#39;oraculum/views/mixins/region-publisher&#39;</span>
   <span class="s">&#39;oraculum/views/mixins/region-subscriber&#39;</span>
 <span class="p">],</span> <span class="nf">(Oraculum) -&gt;</span>
   <span class="s">&#39;use strict&#39;</span>
+
+  <span class="nv">$ = </span><span class="nx">Oraculum</span><span class="p">.</span><span class="nx">get</span> <span class="s">&#39;jQuery&#39;</span>
+  <span class="nv">_ = </span><span class="nx">Oraculum</span><span class="p">.</span><span class="nx">get</span> <span class="s">&#39;underscore&#39;</span>
 
   <span class="nv">modifierKeyPressed = </span><span class="nf">(event) -&gt;</span>
     <span class="k">return</span> <span class="nx">event</span><span class="p">.</span><span class="nx">altKey</span> <span class="o">or</span>
@@ -87,6 +91,7 @@
       <span class="nv">layout.openExternalToBlank = </span><span class="nx">openExternalToBlank</span> <span class="k">if</span> <span class="nx">openExternalToBlank</span><span class="o">?</span>
 
     <span class="nv">mixinitialize: </span><span class="nf">-&gt;</span>
+      <span class="nx">@subscribeEvent</span> <span class="s">&#39;!scrollTo&#39;</span><span class="p">,</span> <span class="nx">@scrollTo</span>
       <span class="nx">@subscribeEvent</span> <span class="s">&#39;!adjustTitle&#39;</span><span class="p">,</span> <span class="nx">@adjustTitle</span>
       <span class="nx">@subscribeEvent</span> <span class="s">&#39;beforeControllerDispose&#39;</span><span class="p">,</span> <span class="nx">@scroll</span>
       <span class="nx">@startLinkRouting</span><span class="p">()</span> <span class="k">if</span> <span class="nx">@mixinOptions</span><span class="p">.</span><span class="nx">layout</span><span class="p">.</span><span class="nx">routeLinks</span>
@@ -122,9 +127,13 @@
 <p>Reset the scroll position.</p>
         </td>
         <td class="code highlight"><div class="highlight"><pre>
-      <span class="k">return</span> <span class="k">unless</span> <span class="p">{</span><span class="nx">scrollTo</span><span class="p">}</span> <span class="o">=</span> <span class="nx">@mixinOptions</span><span class="p">.</span><span class="nx">layout</span>
+      <span class="k">return</span> <span class="k">unless</span> <span class="nv">scrollTo = </span><span class="nx">@mixinOptions</span><span class="p">.</span><span class="nx">layout</span><span class="p">.</span><span class="nx">scrollTo</span>
       <span class="p">[</span><span class="nx">x</span><span class="p">,</span> <span class="nx">y</span><span class="p">]</span> <span class="o">=</span> <span class="nx">scrollTo</span>
       <span class="nb">window</span><span class="p">.</span><span class="nx">scrollTo</span> <span class="nx">x</span><span class="p">,</span> <span class="nx">y</span>
+
+    <span class="nv">scrollTo: </span><span class="nf">(selector, args...) -&gt;</span>
+      <span class="nv">scroll = scrollTop: </span><span class="nx">$</span><span class="p">(</span><span class="nx">selector</span><span class="p">).</span><span class="nx">offset</span><span class="p">().</span><span class="nx">top</span>
+      <span class="nx">$</span><span class="p">(</span><span class="nb">document</span><span class="p">.</span><span class="nx">body</span><span class="p">).</span><span class="nx">animate</span> <span class="nx">scroll</span><span class="p">,</span> <span class="nx">args</span><span class="p">...</span>
 
 
 </pre></div>

@@ -42,7 +42,10 @@
         </td>
         <td class="code highlight"><div class="highlight"><pre><span class="nx">define</span> <span class="p">[</span>
   <span class="s">&#39;oraculum&#39;</span>
-<span class="p">],</span> <span class="nf">(Oraculum) -&gt;</span>
+  <span class="s">&#39;jquery&#39;</span>
+  <span class="s">&#39;backbone&#39;</span>
+  <span class="s">&#39;underscore&#39;</span>
+<span class="p">],</span> <span class="nf">(Oraculum, jQuery, Backbone, _) -&gt;</span>
   <span class="s">&#39;use strict&#39;</span>
 
 
@@ -66,9 +69,9 @@ It lends itself well to more readable code.</p>
         </td>
         <td class="code highlight"><div class="highlight"><pre>
 
-  <span class="nx">Oraculum</span><span class="p">.</span><span class="nx">define</span> <span class="s">&#39;jQuery&#39;</span><span class="p">,</span> <span class="p">(</span><span class="nf">-&gt;</span> <span class="nx">require</span> <span class="s">&#39;jquery&#39;</span><span class="p">),</span> <span class="nv">singleton: </span><span class="kc">true</span>
-  <span class="nx">Oraculum</span><span class="p">.</span><span class="nx">define</span> <span class="s">&#39;Backbone&#39;</span><span class="p">,</span> <span class="p">(</span><span class="nf">-&gt;</span> <span class="nx">require</span> <span class="s">&#39;backbone&#39;</span><span class="p">),</span> <span class="nv">singleton: </span><span class="kc">true</span>
-  <span class="nx">Oraculum</span><span class="p">.</span><span class="nx">define</span> <span class="s">&#39;underscore&#39;</span><span class="p">,</span> <span class="p">(</span><span class="nf">-&gt;</span> <span class="nx">require</span> <span class="s">&#39;underscore&#39;</span><span class="p">),</span> <span class="nv">singleton: </span><span class="kc">true</span>
+  <span class="nx">Oraculum</span><span class="p">.</span><span class="nx">define</span> <span class="s">&#39;jQuery&#39;</span><span class="p">,</span> <span class="p">(</span><span class="nf">-&gt;</span> <span class="nx">jQuery</span><span class="p">),</span> <span class="nv">singleton: </span><span class="kc">true</span>
+  <span class="nx">Oraculum</span><span class="p">.</span><span class="nx">define</span> <span class="s">&#39;Backbone&#39;</span><span class="p">,</span> <span class="p">(</span><span class="nf">-&gt;</span> <span class="nx">Backbone</span><span class="p">),</span> <span class="nv">singleton: </span><span class="kc">true</span>
+  <span class="nx">Oraculum</span><span class="p">.</span><span class="nx">define</span> <span class="s">&#39;underscore&#39;</span><span class="p">,</span> <span class="p">(</span><span class="nf">-&gt;</span> <span class="nx">_</span><span class="p">),</span> <span class="nv">singleton: </span><span class="kc">true</span>
 </pre></div>
         </td>
       </tr>

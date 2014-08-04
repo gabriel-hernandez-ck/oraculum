@@ -1,7 +1,11 @@
 (function() {
-  define(['oraculum', 'oraculum/mixins/pub-sub', 'oraculum/mixins/callback-provider', 'oraculum/views/mixins/region-publisher', 'oraculum/views/mixins/region-subscriber'], function(Oraculum) {
+  var __slice = [].slice;
+
+  define(['oraculum', 'oraculum/libs', 'oraculum/mixins/pub-sub', 'oraculum/mixins/callback-provider', 'oraculum/views/mixins/region-publisher', 'oraculum/views/mixins/region-subscriber'], function(Oraculum) {
     'use strict';
-    var modifierKeyPressed;
+    var $, modifierKeyPressed, _;
+    $ = Oraculum.get('jQuery');
+    _ = Oraculum.get('underscore');
     modifierKeyPressed = function(event) {
       return event.altKey || event.ctrlKey || event.metaKey || event.shiftKey || event.button === 1;
     };
@@ -53,6 +57,7 @@
         }
       },
       mixinitialize: function() {
+        this.subscribeEvent('!scrollTo', this.scrollTo);
         this.subscribeEvent('!adjustTitle', this.adjustTitle);
         this.subscribeEvent('beforeControllerDispose', this.scroll);
         if (this.mixinOptions.layout.routeLinks) {
@@ -61,12 +66,20 @@
         return this.on('dispose', this.stopLinkRouting, this);
       },
       scroll: function() {
-        var scrollTo, x, y, _ref;
-        if (!(_ref = this.mixinOptions.layout, scrollTo = _ref.scrollTo, _ref)) {
+        var scrollTo, x, y;
+        if (!(scrollTo = this.mixinOptions.layout.scrollTo)) {
           return;
         }
         x = scrollTo[0], y = scrollTo[1];
         return window.scrollTo(x, y);
+      },
+      scrollTo: function() {
+        var args, scroll, selector, _ref;
+        selector = arguments[0], args = 2 <= arguments.length ? __slice.call(arguments, 1) : [];
+        scroll = {
+          scrollTop: $(selector).offset().top
+        };
+        return (_ref = $(document.body)).animate.apply(_ref, [scroll].concat(__slice.call(args)));
       },
       adjustTitle: function(subtitle) {
         var title, titleTemplate;

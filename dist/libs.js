@@ -1,18 +1,18 @@
 (function() {
-  define(['oraculum'], function(Oraculum) {
+  define(['oraculum', 'jquery', 'backbone', 'underscore'], function(Oraculum, jQuery, Backbone, _) {
     'use strict';
     Oraculum.define('jQuery', (function() {
-      return require('jquery');
+      return jQuery;
     }), {
       singleton: true
     });
     Oraculum.define('Backbone', (function() {
-      return require('backbone');
+      return Backbone;
     }), {
       singleton: true
     });
     return Oraculum.define('underscore', (function() {
-      return require('underscore');
+      return _;
     }), {
       singleton: true
     });
