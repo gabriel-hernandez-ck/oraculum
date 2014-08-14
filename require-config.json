@@ -1,11 +1,11 @@
 {
-  "baseUrl": "build/src",
+  "baseUrl": ".grunt/grunt-contrib-jasmine/build/src",
   "paths": {
-    "jquery": "../../components/jquery/jquery",
-    "backbone": "../../components/backbone/backbone",
-    "underscore": "../../components/underscore/underscore",
-    "Factory": "../../components/factoryjs/dist/Factory",
-    "BackboneFactory": "../../components/factoryjs/dist/BackboneFactory"
+    "jquery": "../../../../components/jquery/jquery",
+    "backbone": "../../../../components/backbone/backbone",
+    "underscore": "../../../../components/underscore/underscore",
+    "Factory": "../../../../components/factoryjs/dist/Factory",
+    "BackboneFactory": "../../../../components/factoryjs/dist/BackboneFactory"
   },
   "shim": {
     "jquery": {

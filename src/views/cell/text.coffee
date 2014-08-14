@@ -1,53 +1,8 @@
-define [
-  'oraculum'
-  'oraculum/mixins/listener'
-  'oraculum/mixins/disposable'
-  'oraculum/views/mixins/cell'
-  'oraculum/views/mixins/static-classes'
-  'oraculum/views/mixins/html-templating'
-  'oraculum/views/mixins/dom-property-binding'
-], (Oraculum) ->
-  'use strict'
+###
+This file is a stub for convenience
+===================================
+This file will be removed in 2.0
+###
 
-  ###
-  Text.Cell
-  =========
-  Like all other concrete implementations in Oraculum, this class exists as a
-  convenience/example. Please feel free to override or simply not use this
-  definition.
-  ###
-
-  ###
-  This definition is part of Oraculum's tabular interface.
-  For more information see:
-
-  @see views/cell/text.coffee
-  @see views/cell/header.coffee
-  @see views/cell/checkbox.coffee
-  @see views/mixins/cell.coffee
-  @see views/mixins/column-list.coffee
-  @see models/mixins/sortable-column.coffee
-  ###
-
-  Oraculum.extend 'View', 'Text.Cell', {
-
-    mixinOptions:
-      staticClasses: ['text-cell-view']
-      listen:
-        'change:attribute column': 'render'
-        'change:display_attribute column': 'render'
-      template: ->
-        attribute = @column.get 'display_attribute'
-        attribute ?= @column.get 'attribute'
-        return """
-          <span data-prop="model" data-prop-attr="#{attribute}"/>
-        """
-
-  }, mixins: [
-    'Cell.ViewMixin'
-    'Listener.Mixin'
-    'Disposable.Mixin'
-    'StaticClasses.ViewMixin'
-    'HTMLTemplating.ViewMixin'
-    'DOMPropertyBinding.ViewMixin'
-  ]
+console?.log? 'Oraculum\'s tabular interface has moved. See /plugins/tabular'
+define ['oraculum/plugins/tabular/views/cell/text']
