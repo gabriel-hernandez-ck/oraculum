@@ -1,13 +1,21 @@
 _ = require 'underscore'
 
-requireConfig = require './require-config.json'
-coverageConfig = require './require-config-cov.json'
-
 jasmineConfig =
-  src: ['build/src/**/*.js']
+  src: [
+    'build/src/**/*.js'
+    '!build/src/index.js' # Omit the application bootstrapper.
+  ]
   options:
-    template: require 'grunt-template-jasmine-requirejs'
-    templateOptions: {requireConfig}
+    template: require 'grunt-template-jasmine-istanbul'
+    templateOptions:
+      coverage: 'build/coverage/coverage.json'
+      template: require 'grunt-template-jasmine-requirejs'
+      templateOptions:
+        requireConfig: require './require-config.json'
+      report:
+        type: 'lcov'
+        options:
+          dir: 'build/coverage/lcov'
     specs: [
       'build/spec/**/*.helper.js'
       'build/spec/**/*.spec.js'
@@ -95,22 +103,6 @@ module.exports = (grunt) ->
           keepRunner: true
         })
       })
-      coverage: _.extend({}, jasmineConfig, {
-        options: _.extend({}, jasmineConfig.options, {
-          template: require 'grunt-template-jasmine-istanbul'
-          templateOptions:
-            host: 'http://localhost:9001'
-            files: ['build/src/**/*.js']
-            template: require 'grunt-template-jasmine-requirejs'
-            templateOptions: requireConfig: coverageConfig
-            keepRunner: true
-            coverage: 'build/coverage/coverage.json'
-            report:
-              type: 'lcov'
-              options:
-                dir: 'build/coverage/lcov'
-        })
-      })
 
     coveralls:
       main:
@@ -133,6 +125,7 @@ module.exports = (grunt) ->
         dest: 'docs/'
         src: [
           '*.md'
+          'src/**/*.md'
           'src/**/*.coffee'
         ]
 
@@ -150,6 +143,7 @@ module.exports = (grunt) ->
           'jasmine:live'
           'clean:dist'
           'copy:dist'
+          'docs'
         ]
       spec:
         files: [
@@ -163,7 +157,10 @@ module.exports = (grunt) ->
           'jasmine:live'
         ]
       md:
-        files: ['*.md']
+        files: [
+          '*.md'
+          'src/**/*.md'
+        ]
         tasks: ['docs']
 
     bump:
@@ -212,6 +209,7 @@ module.exports = (grunt) ->
     'jasmine:live'
     'clean:dist'
     'copy:dist'
+    'docs'
     'watch'
   ]
 
@@ -223,7 +221,7 @@ module.exports = (grunt) ->
 
   grunt.registerTask 'travis', [
     'build'
-    'jasmine:coverage'
+    'jasmine:normal'
     'coveralls'
   ]
 
