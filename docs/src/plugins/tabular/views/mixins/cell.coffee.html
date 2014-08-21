@@ -44,6 +44,8 @@
   <span class="s">&#39;oraculum&#39;</span>
   <span class="s">&#39;oraculum/mixins/evented&#39;</span>
   <span class="s">&#39;oraculum/views/mixins/static-classes&#39;</span>
+  <span class="s">&#39;oraculum/plugins/tabular/views/mixins/sortable-cell&#39;</span>
+  <span class="s">&#39;oraculum/plugins/tabular/views/mixins/hideable-cell&#39;</span>
 <span class="p">],</span> <span class="nf">(Oraculum) -&gt;</span>
   <span class="s">&#39;use strict&#39;</span>
 
@@ -77,7 +79,25 @@ This mixin aims to cover the most common use cases for tabular view cells.</p>
   <span class="nx">Oraculum</span><span class="p">.</span><span class="nx">defineMixin</span> <span class="s">&#39;Cell.ViewMixin&#39;</span><span class="p">,</span> <span class="p">{</span>
 
     <span class="nv">mixinOptions:</span>
-      <span class="nv">staticClasses: </span><span class="p">[</span><span class="s">&#39;cell&#39;</span><span class="p">]</span>
+      <span class="nv">staticClasses: </span><span class="p">[</span>
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-3" id="section-3">&#182;</a>
+</div>
+
+<div class="highlight"><pre><code>    <span class="s1">&#39;cell&#39;</span> <span class="err">#</span> <span class="nx">TODO</span><span class="o">:</span> <span class="s1">&#39;cell&#39;</span> <span class="nx">should</span> <span class="nx">be</span> <span class="nx">removed</span> <span class="nx">prior</span> <span class="nx">to</span> <span class="mf">2.0</span>
+</code></pre></div>
+
+
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+        <span class="s">&#39;cell-mixin&#39;</span>
+      <span class="p">]</span>
       <span class="nv">cell: column: </span><span class="kc">null</span>
 
     <span class="nv">mixconfig: </span><span class="nf">({cell}, {model, column} = {}) -&gt;</span>
@@ -89,38 +109,19 @@ This mixin aims to cover the most common use cases for tabular view cells.</p>
 
     <span class="nv">mixinitialize: </span><span class="nf">-&gt;</span>
       <span class="vi">@column = </span><span class="nx">@mixinOptions</span><span class="p">.</span><span class="nx">cell</span><span class="p">.</span><span class="nx">column</span>
-      <span class="nx">@listenTo</span> <span class="nx">@column</span><span class="p">,</span> <span class="s">&#39;change:sortable&#39;</span><span class="p">,</span> <span class="nx">@_updateSortableClass</span>
       <span class="nx">@listenTo</span> <span class="nx">@column</span><span class="p">,</span> <span class="s">&#39;change:attribute&#39;</span><span class="p">,</span> <span class="nx">@_updateAttributeClass</span>
-      <span class="nx">@listenTo</span> <span class="nx">@column</span><span class="p">,</span> <span class="s">&#39;change:sortDirection&#39;</span><span class="p">,</span> <span class="nx">@_updateDirectionClass</span>
-      <span class="nx">@listenTo</span> <span class="nx">@column</span><span class="p">,</span> <span class="s">&#39;change:hidden&#39;</span><span class="p">,</span> <span class="nx">@_updateHiddenState</span>
-      <span class="nx">@_updateSortableClass</span><span class="p">()</span>
       <span class="nx">@_updateAttributeClass</span><span class="p">()</span>
-      <span class="nx">@_updateDirectionClass</span><span class="p">()</span>
-      <span class="nx">@_updateHiddenState</span><span class="p">()</span>
 
     <span class="nv">_updateAttributeClass: </span><span class="nf">-&gt;</span>
       <span class="nv">previous = </span><span class="nx">@column</span><span class="p">.</span><span class="nx">previous</span> <span class="s">&#39;attribute&#39;</span>
-      <span class="nx">@$el</span><span class="p">.</span><span class="nx">removeClass</span> <span class="s">&quot;</span><span class="si">#{</span><span class="nx">previous</span><span class="si">}</span><span class="s">-cell&quot;</span>
+      <span class="nx">@$el</span><span class="p">.</span><span class="nx">removeClass</span> <span class="s">&quot;</span><span class="si">#{</span><span class="nx">previous</span><span class="si">}</span><span class="s">-cell&quot;</span><span class="p">.</span><span class="nx">replace</span> <span class="sr">/[\.\s]/</span><span class="p">,</span> <span class="s">&#39;-&#39;</span>
       <span class="nv">current = </span><span class="nx">@column</span><span class="p">.</span><span class="nx">get</span> <span class="s">&#39;attribute&#39;</span>
-      <span class="nx">@$el</span><span class="p">.</span><span class="nx">addClass</span> <span class="s">&quot;</span><span class="si">#{</span><span class="nx">current</span><span class="si">}</span><span class="s">-cell&quot;</span>
-
-    <span class="nv">_updateSortableClass: </span><span class="nf">-&gt;</span>
-      <span class="nv">sortable = </span><span class="nb">Boolean</span> <span class="nx">@column</span><span class="p">.</span><span class="nx">get</span> <span class="s">&#39;sortable&#39;</span>
-      <span class="nx">@$el</span><span class="p">.</span><span class="nx">toggleClass</span> <span class="s">&#39;sortable&#39;</span><span class="p">,</span> <span class="nx">sortable</span>
-
-    <span class="nv">_updateDirectionClass: </span><span class="nf">-&gt;</span>
-      <span class="nv">direction = </span><span class="nx">@column</span><span class="p">.</span><span class="nx">get</span> <span class="s">&#39;sortDirection&#39;</span>
-      <span class="nx">@$el</span><span class="p">.</span><span class="nx">toggleClass</span> <span class="s">&#39;sorted&#39;</span><span class="p">,</span> <span class="nb">Boolean</span> <span class="nx">direction</span>
-      <span class="nx">@$el</span><span class="p">.</span><span class="nx">toggleClass</span> <span class="s">&#39;ascending&#39;</span><span class="p">,</span> <span class="nx">direction</span> <span class="o">is</span> <span class="o">-</span><span class="mi">1</span>
-      <span class="nx">@$el</span><span class="p">.</span><span class="nx">toggleClass</span> <span class="s">&#39;descending&#39;</span><span class="p">,</span> <span class="nx">direction</span> <span class="o">is</span> <span class="mi">1</span>
-
-    <span class="nv">_updateHiddenState: </span><span class="nf">-&gt;</span>
-      <span class="nv">hidden = </span><span class="nx">@column</span><span class="p">.</span><span class="nx">get</span> <span class="s">&#39;hidden&#39;</span>
-      <span class="k">return</span> <span class="k">unless</span> <span class="nx">hidden</span><span class="o">?</span>
-      <span class="nx">@$el</span><span class="p">.</span><span class="nx">toggle</span><span class="p">(</span><span class="o">not</span> <span class="nx">hidden</span><span class="p">)</span>
+      <span class="nx">@$el</span><span class="p">.</span><span class="nx">addClass</span> <span class="s">&quot;</span><span class="si">#{</span><span class="nx">current</span><span class="si">}</span><span class="s">-cell&quot;</span><span class="p">.</span><span class="nx">replace</span> <span class="sr">/[\.\s]/</span><span class="p">,</span> <span class="s">&#39;-&#39;</span>
 
   <span class="p">},</span> <span class="nv">mixins: </span><span class="p">[</span>
     <span class="s">&#39;Evented.Mixin&#39;</span>
+    <span class="s">&#39;Hideable.CellMixin&#39;</span>
+    <span class="s">&#39;Sortable.CellMixin&#39;</span>
     <span class="s">&#39;StaticClasses.ViewMixin&#39;</span>
   <span class="p">]</span>
 </pre></div>

@@ -95,6 +95,7 @@ can mixin one of the provided sorting mixins:</p>
         <td class="code highlight"><div class="highlight"><pre>
 
   <span class="nx">Oraculum</span><span class="p">.</span><span class="nx">defineMixin</span> <span class="s">&#39;SortableColumn.ModelMixin&#39;</span><span class="p">,</span>
+
     <span class="nv">mixinOptions:</span>
       <span class="nv">sortableColumn:</span>
         <span class="nv">collection: </span><span class="kc">null</span>
@@ -149,6 +150,24 @@ can mixin one of the provided sorting mixins:</p>
 <div class="pilwrap">
   <a class="pilcrow" href="#section-5" id="section-5">&#182;</a>
 </div>
+<p>React to changed in the <code>@_sortableCollection</code>s state</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+    <span class="nv">_collectionSorted: </span><span class="nf">-&gt;</span>
+      <span class="nv">attribute = </span><span class="nx">@get</span> <span class="s">&#39;attribute&#39;</span>
+      <span class="nv">currentDirection = </span><span class="nx">@_sortableCollection</span><span class="p">.</span><span class="nx">getAttributeDirection</span> <span class="nx">attribute</span>
+      <span class="k">return</span> <span class="nx">@unset</span> <span class="s">&#39;sortDirection&#39;</span> <span class="k">unless</span> <span class="nx">currentDirection</span>
+      <span class="nx">@set</span> <span class="s">&#39;sortDirection&#39;</span><span class="p">,</span> <span class="nx">currentDirection</span>
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-6" id="section-6">&#182;</a>
+</div>
 <p>Expose an interface for incrementing the current direction</p>
         </td>
         <td class="code highlight"><div class="highlight"><pre>
@@ -165,7 +184,7 @@ can mixin one of the provided sorting mixins:</p>
       <tr>
         <td class="docs">
 <div class="pilwrap">
-  <a class="pilcrow" href="#section-6" id="section-6">&#182;</a>
+  <a class="pilcrow" href="#section-7" id="section-7">&#182;</a>
 </div>
 <p>Expose the machanism for determining the next direction</p>
         </td>
@@ -186,30 +205,12 @@ can mixin one of the provided sorting mixins:</p>
       <tr>
         <td class="docs">
 <div class="pilwrap">
-  <a class="pilcrow" href="#section-7" id="section-7">&#182;</a>
+  <a class="pilcrow" href="#section-8" id="section-8">&#182;</a>
 </div>
 <p>Provide a convenience method for determining if a column is sorted</p>
         </td>
         <td class="code highlight"><div class="highlight"><pre>
     <span class="nv">isSorted: </span><span class="nf">-&gt;</span> <span class="nx">@has</span> <span class="s">&#39;sortDirection&#39;</span>
-
-
-</pre></div>
-        </td>
-      </tr>
-      <tr>
-        <td class="docs">
-<div class="pilwrap">
-  <a class="pilcrow" href="#section-8" id="section-8">&#182;</a>
-</div>
-<p>React to changed in the <code>@_sortableCollection</code>s state</p>
-        </td>
-        <td class="code highlight"><div class="highlight"><pre>
-    <span class="nv">_collectionSorted: </span><span class="nf">-&gt;</span>
-      <span class="nv">attribute = </span><span class="nx">@get</span> <span class="s">&#39;attribute&#39;</span>
-      <span class="nv">currentDirection = </span><span class="nx">@_sortableCollection</span><span class="p">.</span><span class="nx">getAttributeDirection</span> <span class="nx">attribute</span>
-      <span class="k">return</span> <span class="nx">@unset</span> <span class="s">&#39;sortDirection&#39;</span> <span class="k">unless</span> <span class="nx">currentDirection</span>
-      <span class="nx">@set</span> <span class="s">&#39;sortDirection&#39;</span><span class="p">,</span> <span class="nx">currentDirection</span>
 </pre></div>
         </td>
       </tr>

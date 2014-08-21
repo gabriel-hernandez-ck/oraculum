@@ -24,6 +24,7 @@ define [
   ###
 
   Oraculum.defineMixin 'SortableColumn.ModelMixin',
+
     mixinOptions:
       sortableColumn:
         collection: null
@@ -47,6 +48,13 @@ define [
       @listenTo @_sortableCollection, 'sort', @_collectionSorted
       @_collectionSorted()
 
+    # React to changed in the `@_sortableCollection`s state
+    _collectionSorted: ->
+      attribute = @get 'attribute'
+      currentDirection = @_sortableCollection.getAttributeDirection attribute
+      return @unset 'sortDirection' unless currentDirection
+      @set 'sortDirection', currentDirection
+
     # Expose an interface for incrementing the current direction
     nextDirection: ->
       attribute = @get 'attribute'
@@ -66,10 +74,3 @@ define [
 
     # Provide a convenience method for determining if a column is sorted
     isSorted: -> @has 'sortDirection'
-
-    # React to changed in the `@_sortableCollection`s state
-    _collectionSorted: ->
-      attribute = @get 'attribute'
-      currentDirection = @_sortableCollection.getAttributeDirection attribute
-      return @unset 'sortDirection' unless currentDirection
-      @set 'sortDirection', currentDirection

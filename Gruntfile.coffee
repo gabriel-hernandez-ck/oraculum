@@ -116,6 +116,11 @@ module.exports = (grunt) ->
           dest: 'dist/'
           expand: true
           src: ['**/*.js']
+        }, {
+          cwd: 'src/'
+          dest: 'dist/'
+          expand: true
+          src: ['**/static/**/*']
         }]
 
     docker:
@@ -162,6 +167,9 @@ module.exports = (grunt) ->
           'src/**/*.md'
         ]
         tasks: ['docs']
+      static:
+        files: ['src/**/static/**/*']
+        tasks: ['copy:dist']
 
     bump:
       options:
