@@ -80,13 +80,6 @@
         if (!_.isFunction(callback)) {
           throw new TypeError('CallbackProvider.Mixin::provideCallback requires callback');
         }
-        if (handlers[name] != null) {
-          if (typeof console !== "undefined" && console !== null) {
-            if (typeof console.warn === "function") {
-              console.warn("CallbackProvider.Mixin: Overriding " + name + " callback");
-            }
-          }
-        }
         handlers[name] = {
           callback: callback,
           instance: instance

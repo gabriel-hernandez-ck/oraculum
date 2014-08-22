@@ -30,6 +30,7 @@ define [
     view.$el.css 'display', unless included then 'none' else ''
 
   Oraculum.defineMixin 'List.ViewMixin', {
+
     mixinOptions:
       list:
         filterer: null

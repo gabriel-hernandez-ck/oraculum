@@ -52,6 +52,15 @@
         this.listenTo(this._sortableCollection, 'sort', this._collectionSorted);
         return this._collectionSorted();
       },
+      _collectionSorted: function() {
+        var attribute, currentDirection;
+        attribute = this.get('attribute');
+        currentDirection = this._sortableCollection.getAttributeDirection(attribute);
+        if (!currentDirection) {
+          return this.unset('sortDirection');
+        }
+        return this.set('sortDirection', currentDirection);
+      },
       nextDirection: function() {
         var attribute, nextDirection;
         attribute = this.get('attribute');
@@ -73,15 +82,6 @@
       },
       isSorted: function() {
         return this.has('sortDirection');
-      },
-      _collectionSorted: function() {
-        var attribute, currentDirection;
-        attribute = this.get('attribute');
-        currentDirection = this._sortableCollection.getAttributeDirection(attribute);
-        if (!currentDirection) {
-          return this.unset('sortDirection');
-        }
-        return this.set('sortDirection', currentDirection);
       }
     });
   });

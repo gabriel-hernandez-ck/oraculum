@@ -1,5 +1,5 @@
 (function() {
-  define(['oraculum', 'oraculum/mixins/evented', 'oraculum/views/mixins/static-classes'], function(Oraculum) {
+  define(['oraculum', 'oraculum/mixins/evented', 'oraculum/views/mixins/static-classes', 'oraculum/plugins/tabular/views/mixins/sortable-cell', 'oraculum/plugins/tabular/views/mixins/hideable-cell'], function(Oraculum) {
     'use strict';
 
     /*
@@ -13,7 +13,7 @@
      */
     return Oraculum.defineMixin('Cell.ViewMixin', {
       mixinOptions: {
-        staticClasses: ['cell'],
+        staticClasses: ['cell', 'cell-mixin'],
         cell: {
           column: null
         }
@@ -36,44 +36,18 @@
       },
       mixinitialize: function() {
         this.column = this.mixinOptions.cell.column;
-        this.listenTo(this.column, 'change:sortable', this._updateSortableClass);
         this.listenTo(this.column, 'change:attribute', this._updateAttributeClass);
-        this.listenTo(this.column, 'change:sortDirection', this._updateDirectionClass);
-        this.listenTo(this.column, 'change:hidden', this._updateHiddenState);
-        this._updateSortableClass();
-        this._updateAttributeClass();
-        this._updateDirectionClass();
-        return this._updateHiddenState();
+        return this._updateAttributeClass();
       },
       _updateAttributeClass: function() {
         var current, previous;
         previous = this.column.previous('attribute');
-        this.$el.removeClass("" + previous + "-cell");
+        this.$el.removeClass(("" + previous + "-cell").replace(/[\.\s]/, '-'));
         current = this.column.get('attribute');
-        return this.$el.addClass("" + current + "-cell");
-      },
-      _updateSortableClass: function() {
-        var sortable;
-        sortable = Boolean(this.column.get('sortable'));
-        return this.$el.toggleClass('sortable', sortable);
-      },
-      _updateDirectionClass: function() {
-        var direction;
-        direction = this.column.get('sortDirection');
-        this.$el.toggleClass('sorted', Boolean(direction));
-        this.$el.toggleClass('ascending', direction === -1);
-        return this.$el.toggleClass('descending', direction === 1);
-      },
-      _updateHiddenState: function() {
-        var hidden;
-        hidden = this.column.get('hidden');
-        if (hidden == null) {
-          return;
-        }
-        return this.$el.toggle(!hidden);
+        return this.$el.addClass(("" + current + "-cell").replace(/[\.\s]/, '-'));
       }
     }, {
-      mixins: ['Evented.Mixin', 'StaticClasses.ViewMixin']
+      mixins: ['Evented.Mixin', 'Hideable.CellMixin', 'Sortable.CellMixin', 'StaticClasses.ViewMixin']
     });
   });
 

@@ -85,10 +85,6 @@ define [
         CallbackProvider.Mixin::provideCallback requires callback
       ''' unless _.isFunction callback
 
-      console?.warn? """
-        CallbackProvider.Mixin: Overriding #{name} callback
-      """ if handlers[name]?
-
       handlers[name] = {callback, instance}
       return # void 0
 

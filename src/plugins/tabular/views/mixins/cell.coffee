@@ -2,6 +2,8 @@ define [
   'oraculum'
   'oraculum/mixins/evented'
   'oraculum/views/mixins/static-classes'
+  'oraculum/plugins/tabular/views/mixins/sortable-cell'
+  'oraculum/plugins/tabular/views/mixins/hideable-cell'
 ], (Oraculum) ->
   'use strict'
 
@@ -18,7 +20,10 @@ define [
   Oraculum.defineMixin 'Cell.ViewMixin', {
 
     mixinOptions:
-      staticClasses: ['cell']
+      staticClasses: [
+        'cell' # TODO: 'cell' should be removed prior to 2.0
+        'cell-mixin'
+      ]
       cell: column: null
 
     mixconfig: ({cell}, {model, column} = {}) ->
@@ -30,37 +35,18 @@ define [
 
     mixinitialize: ->
       @column = @mixinOptions.cell.column
-      @listenTo @column, 'change:sortable', @_updateSortableClass
       @listenTo @column, 'change:attribute', @_updateAttributeClass
-      @listenTo @column, 'change:sortDirection', @_updateDirectionClass
-      @listenTo @column, 'change:hidden', @_updateHiddenState
-      @_updateSortableClass()
       @_updateAttributeClass()
-      @_updateDirectionClass()
-      @_updateHiddenState()
 
     _updateAttributeClass: ->
       previous = @column.previous 'attribute'
-      @$el.removeClass "#{previous}-cell"
+      @$el.removeClass "#{previous}-cell".replace /[\.\s]/, '-'
       current = @column.get 'attribute'
-      @$el.addClass "#{current}-cell"
-
-    _updateSortableClass: ->
-      sortable = Boolean @column.get 'sortable'
-      @$el.toggleClass 'sortable', sortable
-
-    _updateDirectionClass: ->
-      direction = @column.get 'sortDirection'
-      @$el.toggleClass 'sorted', Boolean direction
-      @$el.toggleClass 'ascending', direction is -1
-      @$el.toggleClass 'descending', direction is 1
-
-    _updateHiddenState: ->
-      hidden = @column.get 'hidden'
-      return unless hidden?
-      @$el.toggle(not hidden)
+      @$el.addClass "#{current}-cell".replace /[\.\s]/, '-'
 
   }, mixins: [
     'Evented.Mixin'
+    'Hideable.CellMixin'
+    'Sortable.CellMixin'
     'StaticClasses.ViewMixin'
   ]
