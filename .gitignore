@@ -1,9 +1,8 @@
-/build
-
-/components
-/node_modules
+*.DS_Store
 
 /.grunt
-/specs.html
 /_SpecRunner.html
-*.DS_Store
+
+/build
+/node_modules
+/bower_components
