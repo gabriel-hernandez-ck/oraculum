@@ -23,6 +23,7 @@ define [
 
     _updateHiddenState: ->
       return unless (hidden = @column.get 'hidden')?
-      @$el.toggle not hidden
+      display = if Boolean hidden then 'none' else ''
+      @$el.css {display}
 
   }, mixins: ['StaticClasses.ViewMixin']
