@@ -15,15 +15,18 @@ define [
     mixinOptions:
       staticClasses: ['row-mixin']
 
-    initModelView: (column) ->
+    resolveModelView: (column) ->
       {modelView, viewOptions} = @mixinOptions.list
+      return column.get('modelView') or modelView
 
-      modelView = column.get('modelView') or modelView
+    initModelView: (column) ->
+      modelView = @resolveModelView column
       throw new TypeError '''
-        ColumList.ViewMixin modelView option must be defined.
+        Row.ViewMixin modelView option must be defined.
       ''' unless modelView
 
       model = @model or column
+      viewOptions = @mixinOptions.list.viewOptions
       viewOptions = if _.isFunction viewOptions
       then viewOptions.call this, { model, column }
       else _.extend { model, column }, viewOptions

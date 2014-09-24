@@ -12,12 +12,16 @@ define [
   subviewPrefix = 'modelView:'
   subviewName = ({cid}) -> "#{subviewPrefix}#{cid}"
 
+  resolveModelView = (model) ->
+    return @mixinOptions.list.modelView
+
   initModelView = (model) ->
-    {modelView, viewOptions} = @mixinOptions.list
+    modelView = @resolveModelView model
     throw new TypeError '''
       List.ViewMixin: The modelView mixin option must be defined or the
       initModelView() must be overridden.
     ''' unless modelView
+    viewOptions = @mixinOptions.list.viewOptions
     viewOptions = if _.isFunction viewOptions
     then viewOptions.call this, {model}
     else _.extend { model }, viewOptions
@@ -66,8 +70,10 @@ define [
       list.viewSelector = viewSelector if viewSelector?
 
     mixinitialize: ->
-      @visibleModels = []
       @initModelView ?= _.bind initModelView, this
+      @resolveModelView ?= _.bind resolveModelView, this
+
+      @visibleModels = []
       @listenTo @collection, 'add', @modelAdded
       @listenTo @collection, 'remove', @modelRemoved
       @listenTo @collection, 'reset sort', @renderAllModels

@@ -23,6 +23,7 @@ define [
     mixinitialize: ->
       @columns = @mixinOptions.table.columns
       @columns = @__factory().get @columns if _.isString @columns
+      @columns = @__factory().get 'Collection', @columns if _.isArray @columns
 
   }, mixins: [
     'List.ViewMixin'

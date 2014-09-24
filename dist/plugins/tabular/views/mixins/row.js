@@ -10,14 +10,19 @@
       mixinOptions: {
         staticClasses: ['row-mixin']
       },
-      initModelView: function(column) {
-        var model, modelView, viewOptions, _ref;
+      resolveModelView: function(column) {
+        var modelView, viewOptions, _ref;
         _ref = this.mixinOptions.list, modelView = _ref.modelView, viewOptions = _ref.viewOptions;
-        modelView = column.get('modelView') || modelView;
+        return column.get('modelView') || modelView;
+      },
+      initModelView: function(column) {
+        var model, modelView, viewOptions;
+        modelView = this.resolveModelView(column);
         if (!modelView) {
-          throw new TypeError('ColumList.ViewMixin modelView option must be defined.');
+          throw new TypeError('Row.ViewMixin modelView option must be defined.');
         }
         model = this.model || column;
+        viewOptions = this.mixinOptions.list.viewOptions;
         viewOptions = _.isFunction(viewOptions) ? viewOptions.call(this, {
           model: model,
           column: column

@@ -1,7 +1,7 @@
 (function() {
   define(['oraculum', 'oraculum/libs', 'oraculum/mixins/evented', 'oraculum/mixins/evented-method', 'oraculum/views/mixins/subview'], function(Oraculum) {
     'use strict';
-    var initModelView, subviewName, subviewPrefix, toggleView, _;
+    var initModelView, resolveModelView, subviewName, subviewPrefix, toggleView, _;
     _ = Oraculum.get('underscore');
     subviewPrefix = 'modelView:';
     subviewName = function(_arg) {
@@ -9,12 +9,16 @@
       cid = _arg.cid;
       return "" + subviewPrefix + cid;
     };
+    resolveModelView = function(model) {
+      return this.mixinOptions.list.modelView;
+    };
     initModelView = function(model) {
-      var modelView, viewOptions, _ref;
-      _ref = this.mixinOptions.list, modelView = _ref.modelView, viewOptions = _ref.viewOptions;
+      var modelView, viewOptions;
+      modelView = this.resolveModelView(model);
       if (!modelView) {
         throw new TypeError('List.ViewMixin: The modelView mixin option must be defined or the\ninitModelView() must be overridden.');
       }
+      viewOptions = this.mixinOptions.list.viewOptions;
       viewOptions = _.isFunction(viewOptions) ? viewOptions.call(this, {
         model: model
       }) : _.extend({
@@ -80,10 +84,13 @@
         }
       },
       mixinitialize: function() {
-        this.visibleModels = [];
         if (this.initModelView == null) {
           this.initModelView = _.bind(initModelView, this);
         }
+        if (this.resolveModelView == null) {
+          this.resolveModelView = _.bind(resolveModelView, this);
+        }
+        this.visibleModels = [];
         this.listenTo(this.collection, 'add', this.modelAdded);
         this.listenTo(this.collection, 'remove', this.modelRemoved);
         this.listenTo(this.collection, 'reset sort', this.renderAllModels);
