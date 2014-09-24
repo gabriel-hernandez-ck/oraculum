@@ -3,8 +3,8 @@
     'use strict';
 
     /*
-    Row.ViewMixin
-    =============
+    HeaderRow.ViewMixin
+    ===================
      */
     return Oraculum.defineMixin('HeaderRow.ViewMixin', {
       mixinOptions: {
@@ -16,6 +16,19 @@
         headerView = column.get('headerView') || headerView;
         headerView || (headerView = column.get('modelView') || modelView);
         return headerView;
+      },
+      resolveViewOptions: function(column) {
+        var model, viewOptions;
+        model = this.model || column;
+        viewOptions = this.mixinOptions.list.viewOptions;
+        viewOptions = _.isFunction(viewOptions) ? viewOptions.call(this, {
+          model: model,
+          column: column
+        }) : _.extend({
+          model: model,
+          column: column
+        }, viewOptions);
+        return _.extend({}, viewOptions, column.get('headerViewOptions'));
       }
     }, {
       mixins: ['Row.ViewMixin', 'StaticClasses.ViewMixin']

@@ -15,12 +15,8 @@
         _ref = this.mixinOptions.list, modelView = _ref.modelView, viewOptions = _ref.viewOptions;
         return column.get('modelView') || modelView;
       },
-      initModelView: function(column) {
-        var model, modelView, viewOptions;
-        modelView = this.resolveModelView(column);
-        if (!modelView) {
-          throw new TypeError('Row.ViewMixin modelView option must be defined.');
-        }
+      resolveViewOptions: function(column) {
+        var model, viewOptions;
         model = this.model || column;
         viewOptions = this.mixinOptions.list.viewOptions;
         viewOptions = _.isFunction(viewOptions) ? viewOptions.call(this, {
@@ -30,11 +26,7 @@
           model: model,
           column: column
         }, viewOptions);
-        viewOptions = _.extend({}, viewOptions, column.get('viewOptions'));
-        return this.createView({
-          view: modelView,
-          viewOptions: viewOptions
-        });
+        return _.extend({}, viewOptions, column.get('viewOptions'));
       }
     }, {
       mixins: ['List.ViewMixin', 'StaticClasses.ViewMixin']

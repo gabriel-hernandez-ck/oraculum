@@ -19,7 +19,7 @@
     <div id="tree"></div>
     <div id="headings">
       <div class="heading h1">
-        <a href="#row.viewmixin">Row.ViewMixin</a>
+        <a href="#headerrow.viewmixin">HeaderRow.ViewMixin</a>
       </div>
     </div>
   </div>
@@ -54,10 +54,10 @@
       <tr>
         <td class="docs"><div class="dox">
   <div class="summary">
-<div class="pilwrap" id="row.viewmixin">
+<div class="pilwrap" id="headerrow.viewmixin">
   <h1>
-    <a href="#row.viewmixin" name="row.viewmixin" class="pilcrow">&#182;</a>
-    Row.ViewMixin
+    <a href="#headerrow.viewmixin" name="headerrow.viewmixin" class="pilcrow">&#182;</a>
+    HeaderRow.ViewMixin
   </h1>
 </div>
 
@@ -78,6 +78,14 @@
       <span class="nv">headerView = </span><span class="nx">column</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s">&#39;headerView&#39;</span><span class="p">)</span> <span class="o">or</span> <span class="nx">headerView</span>
       <span class="nx">headerView</span> <span class="o">or=</span> <span class="nx">column</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s">&#39;modelView&#39;</span><span class="p">)</span> <span class="o">or</span> <span class="nx">modelView</span>
       <span class="k">return</span> <span class="nx">headerView</span>
+
+    <span class="nv">resolveViewOptions: </span><span class="nf">(column) -&gt;</span>
+      <span class="nv">model = </span><span class="nx">@model</span> <span class="o">or</span> <span class="nx">column</span>
+      <span class="nv">viewOptions = </span><span class="nx">@mixinOptions</span><span class="p">.</span><span class="nx">list</span><span class="p">.</span><span class="nx">viewOptions</span>
+      <span class="nv">viewOptions = </span><span class="k">if</span> <span class="nx">_</span><span class="p">.</span><span class="nx">isFunction</span> <span class="nx">viewOptions</span>
+      <span class="k">then</span> <span class="nx">viewOptions</span><span class="p">.</span><span class="nx">call</span> <span class="k">this</span><span class="p">,</span> <span class="p">{</span> <span class="nx">model</span><span class="p">,</span> <span class="nx">column</span> <span class="p">}</span>
+      <span class="k">else</span> <span class="nx">_</span><span class="p">.</span><span class="nx">extend</span> <span class="p">{</span> <span class="nx">model</span><span class="p">,</span> <span class="nx">column</span> <span class="p">},</span> <span class="nx">viewOptions</span>
+      <span class="k">return</span> <span class="nx">_</span><span class="p">.</span><span class="nx">extend</span> <span class="p">{},</span> <span class="nx">viewOptions</span><span class="p">,</span> <span class="nx">column</span><span class="p">.</span><span class="nx">get</span> <span class="s">&#39;headerViewOptions&#39;</span>
 
   <span class="p">},</span> <span class="nv">mixins: </span><span class="p">[</span>
     <span class="s">&#39;Row.ViewMixin&#39;</span>

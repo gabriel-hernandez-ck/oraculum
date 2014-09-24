@@ -6,8 +6,8 @@ define [
   'use strict'
 
   ###
-  Row.ViewMixin
-  =============
+  HeaderRow.ViewMixin
+  ===================
   ###
 
   Oraculum.defineMixin 'HeaderRow.ViewMixin', {
@@ -20,6 +20,14 @@ define [
       headerView = column.get('headerView') or headerView
       headerView or= column.get('modelView') or modelView
       return headerView
+
+    resolveViewOptions: (column) ->
+      model = @model or column
+      viewOptions = @mixinOptions.list.viewOptions
+      viewOptions = if _.isFunction viewOptions
+      then viewOptions.call this, { model, column }
+      else _.extend { model, column }, viewOptions
+      return _.extend {}, viewOptions, column.get 'headerViewOptions'
 
   }, mixins: [
     'Row.ViewMixin'

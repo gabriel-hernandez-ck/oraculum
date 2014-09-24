@@ -15,17 +15,27 @@ define [
   resolveModelView = (model) ->
     return @mixinOptions.list.modelView
 
-  initModelView = (model) ->
-    modelView = @resolveModelView model
-    throw new TypeError '''
-      List.ViewMixin: The modelView mixin option must be defined or the
-      initModelView() must be overridden.
-    ''' unless modelView
+  resolveViewOptions = (model) ->
     viewOptions = @mixinOptions.list.viewOptions
-    viewOptions = if _.isFunction viewOptions
-    then viewOptions.call this, {model}
-    else _.extend { model }, viewOptions
-    return @createView { view: modelView, viewOptions }
+    viewOptions = viewOptions.call this, { model } if _.isFunction viewOptions
+    return _.extend { model }, viewOptions
+
+  initModelView = (model) ->
+    view = @resolveModelView model
+    throw new TypeError '''
+      List.ViewMixin#initModelView modelView is not defined.
+      Provide modelView in mixinOptions or constructor arguments.
+      Optionally, you can override resolveModelView or initModelView.
+    ''' unless view
+
+    viewOptions = @resolveViewOptions model
+    throw new TypeError '''
+      List.ViewMixin#initModelView viewOptions is not defined.
+      Provide viewOptions in mixinOptions or constructor arguments.
+      Optionally, you can override resolveViewOptions or initModelView.
+    ''' unless viewOptions
+
+    return @createView { view, viewOptions }
 
   # A function that will be executed after each filter.
   # Hides excluded items by default.
@@ -70,8 +80,9 @@ define [
       list.viewSelector = viewSelector if viewSelector?
 
     mixinitialize: ->
-      @initModelView ?= _.bind initModelView, this
-      @resolveModelView ?= _.bind resolveModelView, this
+      @initModelView ?= initModelView
+      @resolveModelView ?= resolveModelView
+      @resolveViewOptions ?= resolveViewOptions
 
       @visibleModels = []
       @listenTo @collection, 'add', @modelAdded

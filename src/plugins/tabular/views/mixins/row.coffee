@@ -19,20 +19,13 @@ define [
       {modelView, viewOptions} = @mixinOptions.list
       return column.get('modelView') or modelView
 
-    initModelView: (column) ->
-      modelView = @resolveModelView column
-      throw new TypeError '''
-        Row.ViewMixin modelView option must be defined.
-      ''' unless modelView
-
+    resolveViewOptions: (column) ->
       model = @model or column
       viewOptions = @mixinOptions.list.viewOptions
       viewOptions = if _.isFunction viewOptions
       then viewOptions.call this, { model, column }
       else _.extend { model, column }, viewOptions
-
-      viewOptions = _.extend {}, viewOptions, column.get 'viewOptions'
-      return @createView { view: modelView , viewOptions }
+      return _.extend {}, viewOptions, column.get 'viewOptions'
 
   }, mixins: [
     'List.ViewMixin'

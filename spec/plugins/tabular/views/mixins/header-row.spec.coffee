@@ -50,8 +50,8 @@ require [
       expect(createView).toHaveBeenCalledOnce()
       expect(createView.firstCall.args[0]).toImplement view: 'Test.View'
 
-    it 'should allow viewOptions to be set on the column', ->
-      collection.add { 'attribute', headerView: 'Test.View', viewOptions: {'test'} }
+    it 'should allow headerViewOptions to be set on the column', ->
+      collection.add { 'attribute', headerView: 'Test.View', headerViewOptions: {'test'} }
       expect(createView).toHaveBeenCalledOnce()
       expect(createView.firstCall.args[0].viewOptions).toImplement {'test'}
 
