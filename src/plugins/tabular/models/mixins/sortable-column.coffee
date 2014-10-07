@@ -41,10 +41,12 @@ define [
       ''' unless sortableColumn.collection
 
     mixinitialize: ->
-      sortCollection = @mixinOptions.sortableColumn.collection
-      @_sortableCollection = if _.isString sortCollection
-      then @__factory().get sortCollection
-      else sortCollection
+      @_sortableCollection = @mixinOptions.sortableColumn.collection
+      if _.isString @_sortableCollection
+        @_sortableCollection = @__factory().get @_sortableCollection
+      if _.isFunction @_sortableCollection
+        @_sortableCollection = @_sortableCollection.call this
+
       @listenTo @_sortableCollection, 'sort', @_collectionSorted
       @_collectionSorted()
 

@@ -75,5 +75,4 @@ require [
 
     it 'should throw if no headerView is configured', ->
       epicFail = -> collection.add {'attribute'}
-      debugger
       expect(epicFail).toThrow()

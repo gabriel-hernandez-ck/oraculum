@@ -55,11 +55,17 @@ require [
       mixinOptions = testModel.mixinOptions.sortableColumn
       expect(mixinOptions.directions).toEqual sortDirections
 
-    it 'should resolve sortCollection to an instance', ->
+    it 'should resolve sortCollection to an instance from a string', ->
       ctor = Oraculum.getConstructor 'SortableCollection.SortableColumn.Test.Collection'
       testModel = Oraculum.get 'SortableColumn.Test.Model', {'attribute'},
         sortCollection: 'SortableCollection.SortableColumn.Test.Collection'
       expect(testModel._sortableCollection).toBeInstanceOf ctor
+
+    it 'should resolve sortCollection to an instance from a function', ->
+      instance = Oraculum.get 'SortableCollection.SortableColumn.Test.Collection'
+      testModel = Oraculum.get 'SortableColumn.Test.Model', {'attribute'},
+        sortCollection: -> instance
+      expect(testModel._sortableCollection).toBe instance
 
     describe 'reactionary behavior', ->
 
