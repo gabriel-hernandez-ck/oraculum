@@ -48,7 +48,7 @@ define [
       @sortState.remove model
 
     unsort: ->
-      @sortState.reset()
+      @sortState.reset() unless @sortState.isEmpty()
 
   }, mixins: [
     'Evented.Mixin'
