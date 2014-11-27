@@ -12,7 +12,7 @@ define [
       staticClasses: []
 
     mixinitialize: ->
-      @_addTagClass @__type()
+      @_addTagClass @__type() if _.isFunction @__type
       @$el.addClass if _.isArray @mixinOptions.staticClasses
       then @mixinOptions.staticClasses.join ' '
       else @mixinOptions.staticClasses
