@@ -53,7 +53,7 @@ define [
         # Invoke dispose on all of our models. This will throw if this
         # collection contains any models that fail to implement the `disposable`
         # interface.
-        _.invoke @models, 'dispose'
+        _.invoke @models.slice(), 'dispose'
 
   }, mixins: [
     'Disposable.Mixin'
