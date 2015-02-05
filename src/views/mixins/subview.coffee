@@ -79,10 +79,15 @@ define [
       @trigger 'subviewCreated', view, this
       return view
 
-    removeSubview: (nameOrView) ->
+    removeSubview: (nameOrView, dispose = true) ->
       {name, view} = @_resolveSubview nameOrView
       return unless name and view
       view.remove()
+      @disposeSubview nameOrView if dispose
+
+    disposeSubview: (nameOrView) ->
+      {name, view} = @_resolveSubview nameOrView
+      return unless name and view
       view.dispose?()
       index = @_subviews.indexOf view
       @_subviews.splice index, 1 unless index is -1

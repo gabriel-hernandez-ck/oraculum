@@ -61,7 +61,7 @@ define [
     # Gets invoked automagically after initialization.
 
     mixinitialize: ->
-      # Invoke our _bindElements method when the view renders
+      @on 'render:before', @_unbindElements, this
       @on 'render:after', @_bindElements, this
 
     # Bind Elements
@@ -72,13 +72,25 @@ define [
     _bindElements: ->
       $elements = @$ '[data-prop][data-prop-attr]'
       _.each $elements, (element) =>
-        $element = $ element
-        propertySpec = $element.attr('data-prop').split '.'
+        # Assign a cid to the element so we can memoize it
+        element.cid = _.uniqueId 'dom_property_binding_element_'
+        propertySpec = @$(element).attr('data-prop').split '.'
         resolvedProperty = @_resolveProperty this, propertySpec
         if tags = resolvedProperty.__tags?()
           @_bindToModel element, resolvedProperty if 'Model' in tags
           @_bindToCollection element, resolvedProperty if 'Collection' in tags
         @_updateBoundElement element
+
+    _unbindElements: ->
+      $elements = @$ '[data-prop][data-prop-attr]'
+      _.each $elements, (element) =>
+        propertySpec = @$(element).attr('data-prop').split '.'
+        resolvedProperty = @_resolveProperty this, propertySpec
+        if tags = resolvedProperty.__tags?()
+          if 'Model' in tags
+            @_unbindFromModel element, resolvedProperty
+          if 'Collection' in tags
+            @_unbindFromCollection element, resolvedProperty
 
     # Resolve Property
     # ----------------
@@ -96,51 +108,61 @@ define [
       return property if index is attributes.length - 1
       return @_resolveProperty property, attributes, ++index
 
-    # Bind Element to Model
-    # ---------------------
+    # Bind/Unbind Element to Model
+    # ----------------------------
     # Binds model events to our update function.
 
     _bindToModel: (element, model) ->
+      return unless events = @_resolveModelEvents element
+      @listenTo model, events, @_getElementHandler element
+
+    _unbindFromModel: (element, model) ->
+      return unless events = @_resolveModelEvents element
+      @stopListening model, events, @_getElementHandler element
+
+    # Bind/Unbind Element to Collection
+    # ---------------------------------
+    # Binds collection events to our update function.
+
+    _bindToCollection: (element, collection) ->
+      return unless events = @_resolveCollectionEvents element
+      @listenTo collection, events, @_getElementHandler element
+
+    _unbindFromCollection: (element, collection) ->
+      return unless events = @_resolveModelEvents element
+      @stopListening collection, events, @_getElementHandler element
+
+    # Resolve Model/Collection Events
+    # -------------------------------
+    # Resolve the target events to add our callback for on a per-element basis.
+    # It is assumed that the data-prop-events attribute on a bound element will
+    # not change if present.
+
+    _resolveModelEvents: _.memoize ((element) ->
       $element = @validateBindTarget element
       attr = $element.attr('data-prop-attr').split('.')[0]
       events = $element.attr 'data-prop-events'
       events ?= "change:#{attr}"
-      @listenTo model, events, @_getElementHandler element if events
+      return events
+    ), ({cid}) -> cid
 
-    # Bind Element to Collection
-    # --------------------------
-    # Binds collection events to our update function.
-
-    _bindToCollection: (element, collection) ->
+    _resolveCollectionEvents: _.memoize ((element) ->
       $element = @validateBindTarget element
       events = $element.attr 'data-prop-events'
       events ?= 'add remove reset'
-      @listenTo collection, events, @_getElementHandler element if events
-
-    # Validate Bind Target
-    # --------------------
-    # Validate that a given element, wrapped element, or selector is found in
-    # this view's element and matches our data-attribute convention.
-    # Return a wrapped element if it does.
-
-    validateBindTarget: (element) ->
-      $element = @$ element
-      throw new Error """
-        #{element} not found in #{this} scope
-      """ unless $element.length
-      throw new Error """
-        #{element} does not contain necessary data attributes
-      """ unless $element.is '[data-prop][data-prop-attr]'
-      return $element
+      return events
+    ), ({cid}) -> cid
 
     # Bound Element Handler
     # ---------------------
-    # Returns a function that invokes @_updateBoundElement with a reference to
-    # the bound element.
+    # Returns a memoized function that invokes @_updateBoundElement with
+    # a reference to the bound element. The return value is memoized based on
+    # the method signature's input to bind the return value to the element.
 
-    _getElementHandler: (element) ->
+    _getElementHandler: _.memoize ((element) ->
       @validateBindTarget element
       return => @_updateBoundElement element
+    ), ({cid}) -> cid
 
     # Update Bound Element
     # --------------------
@@ -162,6 +184,22 @@ define [
       attribute ?= @mixinOptions.domPropertyBinding.placeholder
       method = $element.attr('data-prop-method') or 'text'
       $element[method] attribute
+
+    # Validate Bind Target
+    # --------------------
+    # Validate that a given element, wrapped element, or selector is found in
+    # this view's element and matches our data-attribute convention.
+    # Return a wrapped element if it does.
+
+    validateBindTarget: (element) ->
+      $element = @$ element
+      throw new Error """
+        #{element} not found in #{this} scope
+      """ unless $element.length
+      throw new Error """
+        #{element} does not contain necessary data attributes
+      """ unless $element.is '[data-prop][data-prop-attr]'
+      return $element
 
   }, mixins: [
     'Evented.Mixin'

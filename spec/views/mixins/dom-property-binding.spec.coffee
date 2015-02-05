@@ -11,7 +11,7 @@ require [
     model = null
     collection = null
 
-    Oraculum.extend 'View', 'DOMPropertyBinding.View', {
+    Oraculum.extend 'View', 'DOMPropertyBinding.Test.View', {
       mixinOptions:
         domPropertyBinding: {'placeholder'}
     }, mixins: [
@@ -28,10 +28,10 @@ require [
       'EventedMethod.Mixin'
 
     it 'should read placeholder at construction', ->
-      view = Oraculum.get 'DOMPropertyBinding.View'
+      view = Oraculum.get 'DOMPropertyBinding.Test.View'
       expect(view.mixinOptions.domPropertyBinding.placeholder).toBe 'placeholder'
       view.__dispose()
-      view = Oraculum.get 'DOMPropertyBinding.View', placeholder: 'somethingElse'
+      view = Oraculum.get 'DOMPropertyBinding.Test.View', placeholder: 'somethingElse'
       expect(view.mixinOptions.domPropertyBinding.placeholder).toBe 'somethingElse'
 
     describe 'Model binding', ->
@@ -48,7 +48,7 @@ require [
           data-prop="model"
           data-prop-attr="attribute"
         />'''
-        view = Oraculum.get 'DOMPropertyBinding.View', {model, template}
+        view = Oraculum.get 'DOMPropertyBinding.Test.View', {model, template}
         view.render()
         elem = view.$ '.test'
         expect(elem.text()).toBe 'attribute'
@@ -56,18 +56,19 @@ require [
         expect(elem.text()).toBe 'somethingElse'
 
       it 'should allow alternate dom manipulation methods', ->
-        template = '''<div
+        template = '''<input
+          type="text"
           class="test"
           data-prop="model"
           data-prop-attr="attribute"
-          data-prop-method="addClass"
+          data-prop-method="val"
         />'''
-        view = Oraculum.get 'DOMPropertyBinding.View', {model, template}
+        view = Oraculum.get 'DOMPropertyBinding.Test.View', {model, template}
         view.render()
         elem = view.$ '.test'
-        expect(elem).toHaveClass 'attribute'
+        expect(elem).toHaveValue 'attribute'
         model.set 'attribute', 'somethingElse'
-        expect(elem).toHaveClass 'somethingElse'
+        expect(elem).toHaveValue 'somethingElse'
 
       it 'should respect custom event listeners', ->
         template = '''<div
@@ -76,7 +77,7 @@ require [
           data-prop-attr="attribute"
           data-prop-events="customEvent1 customEvent2"
         />'''
-        view = Oraculum.get 'DOMPropertyBinding.View', {model, template}
+        view = Oraculum.get 'DOMPropertyBinding.Test.View', {model, template}
         view.render()
         elem = view.$ '.test'
         expect(elem.text()).toBe 'attribute'
@@ -96,7 +97,7 @@ require [
           data-prop-attr="attribute"
           data-prop-events=""
         />'''
-        view = Oraculum.get 'DOMPropertyBinding.View', {model, template}
+        view = Oraculum.get 'DOMPropertyBinding.Test.View', {model, template}
         view.render()
         elem = view.$ '.test'
         expect(elem.text()).toBe 'attribute'
@@ -123,7 +124,7 @@ require [
           data-prop="collection"
           data-prop-attr="length"
         />'''
-        view = Oraculum.get 'DOMPropertyBinding.View', {collection, template}
+        view = Oraculum.get 'DOMPropertyBinding.Test.View', {collection, template}
         view.render()
         elem = view.$ '.test'
         expect(elem.text()).toBe collection.length.toString()
@@ -137,7 +138,7 @@ require [
           data-prop-attr="models.0.id"
         />'''
         model = collection.models[0]
-        view = Oraculum.get 'DOMPropertyBinding.View', {collection, template}
+        view = Oraculum.get 'DOMPropertyBinding.Test.View', {collection, template}
         view.render()
         elem = view.$ '.test'
         expect(elem.text()).toBe model.id
@@ -154,7 +155,7 @@ require [
           data-prop-attr="some.property"
         />'''
         someObject = some: {'property'}
-        view = Oraculum.get 'DOMPropertyBinding.View', {template}
+        view = Oraculum.get 'DOMPropertyBinding.Test.View', {template}
         view.someObject = someObject
         view.render()
         elem = view.$ '.test'
@@ -171,7 +172,7 @@ require [
           data-prop-attr="some.function"
         />'''
         someObject = some: function: -> 'result'
-        view = Oraculum.get 'DOMPropertyBinding.View', {template}
+        view = Oraculum.get 'DOMPropertyBinding.Test.View', {template}
         view.someObject = someObject
         view.render()
         elem = view.$ '.test'
@@ -188,7 +189,7 @@ require [
           data-prop-attr="1.2"
         />'''
         someArray = [null,[null,null,'value',null],null]
-        view = Oraculum.get 'DOMPropertyBinding.View', {template}
+        view = Oraculum.get 'DOMPropertyBinding.Test.View', {template}
         view.someArray = someArray
         view.render()
         elem = view.$ '.test'
@@ -206,7 +207,7 @@ require [
           data-prop="nonexistant"
           data-prop-attr="nonexistant"
         />'''
-        view = Oraculum.get 'DOMPropertyBinding.View', {template}
+        view = Oraculum.get 'DOMPropertyBinding.Test.View', {template}
         expect(-> view.render()).toThrow()
 
       it 'should render a placeholder when a property\'s attribute is nullish', ->
@@ -215,7 +216,7 @@ require [
           data-prop="someObject"
           data-prop-attr="nonexistant"
         />'''
-        view = Oraculum.get 'DOMPropertyBinding.View', {template}
+        view = Oraculum.get 'DOMPropertyBinding.Test.View', {template}
         view.someObject = {}
         view.render()
         elem = view.$ '.test'
@@ -224,3 +225,12 @@ require [
         view.render()
         elem = view.$ '.test'
         expect(elem.text()).toBe 'otherPlaceholder'
+
+      it 'should not throw if rendered after the initial render', ->
+        template = '<div data-prop="model" data-prop-attr="attribute" />'
+        view = Oraculum.get 'DOMPropertyBinding.Test.View', {model, template}
+        view.render()
+        expect(-> view.render()).not.toThrow()
+        expect(-> view.render()).not.toThrow()
+        expect(-> view.render()).not.toThrow()
+        expect(-> view.render()).not.toThrow()
