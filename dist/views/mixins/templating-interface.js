@@ -26,9 +26,9 @@
       ------------
       Allow the `template` to be configured at construction.
        */
-      mixconfig: function(mixinOptions, _arg) {
+      mixconfig: function(mixinOptions, arg) {
         var template;
-        template = (_arg != null ? _arg : {}).template;
+        template = (arg != null ? arg : {}).template;
         if (template != null) {
           return mixinOptions.template = template;
         }

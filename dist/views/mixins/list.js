@@ -1,12 +1,12 @@
 (function() {
   define(['oraculum', 'oraculum/libs', 'oraculum/mixins/evented', 'oraculum/mixins/evented-method', 'oraculum/views/mixins/subview'], function(Oraculum) {
     'use strict';
-    var initModelView, resolveModelView, resolveViewOptions, subviewName, subviewPrefix, toggleView, _;
+    var _, initModelView, resolveModelView, resolveViewOptions, subviewName, subviewPrefix, toggleView;
     _ = Oraculum.get('underscore');
     subviewPrefix = 'modelView:';
-    subviewName = function(_arg) {
+    subviewName = function(arg) {
       var cid;
-      cid = _arg.cid;
+      cid = arg.cid;
       return "" + subviewPrefix + cid;
     };
     resolveModelView = function(model) {
@@ -58,9 +58,9 @@
           render: {}
         }
       },
-      mixconfig: function(_arg, options) {
+      mixconfig: function(arg, options) {
         var filterCallback, filterer, list, listSelector, modelView, renderItems, viewOptions, viewSelector;
-        list = _arg.list;
+        list = arg.list;
         if (options == null) {
           options = {};
         }
@@ -109,9 +109,9 @@
         this.listenTo(this.collection, 'reset sort', this.renderAllModels);
         return this.on('render:after', this.renderCollection, this);
       },
-      modelAdded: function(model, collection, _arg) {
+      modelAdded: function(model, collection, arg) {
         var index, view;
-        index = _arg.at;
+        index = arg.at;
         view = this.renderModel(model);
         return this.insertView(model, view, index);
       },
@@ -120,8 +120,8 @@
         return this.removeSubview(subviewName(model));
       },
       renderCollection: function() {
-        var listSelector, renderItems, _ref;
-        _ref = this.mixinOptions.list, renderItems = _ref.renderItems, listSelector = _ref.listSelector;
+        var listSelector, ref, renderItems;
+        ref = this.mixinOptions.list, renderItems = ref.renderItems, listSelector = ref.listSelector;
         this._$list = listSelector != null ? this.$(listSelector) : this.$el;
         if (renderItems) {
           return this.renderAllModels();
@@ -181,14 +181,14 @@
         return view;
       },
       filter: function(filterer, filterCallback) {
-        var hasItemViews, included, index, model, view, _i, _len, _ref, _ref1;
+        var hasItemViews, i, included, index, len, model, ref, ref1, view;
         if (filterer === null || _.isFunction(filterer)) {
           this.mixinOptions.list.filterer = filterer;
         }
         if (filterCallback === null || _.isFunction(filterCallback)) {
           this.mixinOptions.list.filterCallback = filterCallback;
         }
-        _ref = this.mixinOptions.list, filterer = _ref.filterer, filterCallback = _ref.filterCallback;
+        ref = this.mixinOptions.list, filterer = ref.filterer, filterCallback = ref.filterCallback;
         hasItemViews = (function(_this) {
           return function() {
             var name;
@@ -203,9 +203,9 @@
           };
         })(this)();
         if (hasItemViews) {
-          _ref1 = this.collection.models;
-          for (index = _i = 0, _len = _ref1.length; _i < _len; index = ++_i) {
-            model = _ref1[index];
+          ref1 = this.collection.models;
+          for (index = i = 0, len = ref1.length; i < len; index = ++i) {
+            model = ref1[index];
             included = _.isFunction(filterer) ? filterer.call(this, model, index) : true;
             view = this.subview(subviewName(model));
             if (!view) {
@@ -220,8 +220,8 @@
         return this.trigger('visibilityChange', this.visibleModels);
       },
       insertView: function(model, view, position) {
-        var children, childrenLength, filterCallback, filterer, included, insertInMiddle, isEnd, length, method, viewSelector, _ref;
-        _ref = this.mixinOptions.list, filterer = _ref.filterer, filterCallback = _ref.filterCallback, viewSelector = _ref.viewSelector;
+        var children, childrenLength, filterCallback, filterer, included, insertInMiddle, isEnd, length, method, ref, viewSelector;
+        ref = this.mixinOptions.list, filterer = ref.filterer, filterCallback = ref.filterCallback, viewSelector = ref.viewSelector;
         included = true;
         if (_.isFunction(filterer)) {
           included = filterer.call(this, model, position);

@@ -1,4 +1,4 @@
-require [
+define [
   'oraculum'
   'oraculum/mixins/disposable'
   'oraculum/models/mixins/disposable'
@@ -41,7 +41,7 @@ require [
       columns = 'Disposable.Table.ViewMixin.Test.Collection'
       collection = 'Disposable.Table.ViewMixin.Test.Collection'
       testView = Oraculum.get 'Table.ViewMixin.Test.View', {columns, collection}
-      expect(testView.columns).toBeInstanceOf Oraculum.getConstructor columns
+      expect(testView.columns instanceof Oraculum.getConstructor columns).toBe true
 
     it 'should extend list.viewOptions and set collection: columns', ->
       viewOptions = testView.mixinOptions.list.viewOptions

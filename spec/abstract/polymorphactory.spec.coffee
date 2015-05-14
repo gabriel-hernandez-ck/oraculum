@@ -1,4 +1,4 @@
-require [
+define [
   'oraculum'
   'oraculum/abstract/polymorphactory'
 ], (Oraculum) ->

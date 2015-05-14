@@ -7,10 +7,10 @@
           keepElement: false
         }
       },
-      mixconfig: function(_arg, _arg1) {
+      mixconfig: function(arg, arg1) {
         var disposable, keepElement;
-        disposable = _arg.disposable;
-        keepElement = (_arg1 != null ? _arg1 : {}).keepElement;
+        disposable = arg.disposable;
+        keepElement = (arg1 != null ? arg1 : {}).keepElement;
         if (keepElement != null) {
           return disposable.keepElement = keepElement;
         }

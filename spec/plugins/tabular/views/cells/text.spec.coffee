@@ -1,4 +1,4 @@
-require [
+define [
   'oraculum'
   'oraculum/plugins/tabular/views/cells/checkbox'
 ], (Oraculum) ->
@@ -32,11 +32,11 @@ require [
 
     it 'should render a property-bound element', ->
       view.render()
-      expect(view.$el).toContain '[data-prop="model"][data-prop-attr="attribute1"]'
+      expect(view.$el).toContainElement '[data-prop="model"][data-prop-attr="attribute1"]'
 
     it 'should update the property-bound element if the models target attribute changes', ->
       view.render()
-      expect(view.$el).toContain '[data-prop="model"][data-prop-attr="attribute1"]'
+      expect(view.$el).toContainElement '[data-prop="model"][data-prop-attr="attribute1"]'
       column.set 'attribute', 'attribute2'
-      expect(view.$el).not.toContain '[data-prop="model"][data-prop-attr="attribute1"]'
-      expect(view.$el).toContain '[data-prop="model"][data-prop-attr="attribute2"]'
+      expect(view.$el).toContainElement '[data-prop="model"][data-prop-attr="attribute2"]'
+      expect(view.$el).not.toContainElement '[data-prop="model"][data-prop-attr="attribute1"]'

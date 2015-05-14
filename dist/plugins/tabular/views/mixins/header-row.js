@@ -11,8 +11,8 @@
         staticClasses: ['header-row-mixin']
       },
       resolveModelView: function(column) {
-        var headerView, modelView, viewOptions, _ref;
-        _ref = this.mixinOptions.list, headerView = _ref.headerView, modelView = _ref.modelView, viewOptions = _ref.viewOptions;
+        var headerView, modelView, ref, viewOptions;
+        ref = this.mixinOptions.list, headerView = ref.headerView, modelView = ref.modelView, viewOptions = ref.viewOptions;
         headerView = column.get('headerView') || headerView;
         headerView || (headerView = column.get('modelView') || modelView);
         return headerView;

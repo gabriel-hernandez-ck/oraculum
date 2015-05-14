@@ -1,4 +1,4 @@
-require [
+define [
   'oraculum'
   'oraculum/application/composition'
 ], (Oraculum) ->

@@ -1,4 +1,4 @@
-require [
+define [
   'oraculum'
   'oraculum/mixins/disposable'
   'oraculum/models/mixins/sort-by-attribute-direction'
@@ -59,7 +59,7 @@ require [
       ctor = Oraculum.getConstructor 'SortableCollection.SortableColumn.Test.Collection'
       testModel = Oraculum.get 'SortableColumn.Test.Model', {'attribute'},
         sortCollection: 'SortableCollection.SortableColumn.Test.Collection'
-      expect(testModel._sortableCollection).toBeInstanceOf ctor
+      expect(testModel._sortableCollection instanceof ctor).toBe true
 
     it 'should resolve sortCollection to an instance from a function', ->
       instance = Oraculum.get 'SortableCollection.SortableColumn.Test.Collection'
@@ -69,27 +69,33 @@ require [
 
     describe 'reactionary behavior', ->
 
-      it 'should track the sortDirection of the current column', ->
+      it 'should track the sortDirection of the current column', (done) ->
         sortCollection = Oraculum.get 'SortableCollection.SortableColumn.Test.Collection'
         testModel = Oraculum.get 'SortableColumn.Test.Model',
           {'attribute'}, {sortCollection}
         sortCollection.addAttributeDirection 'attribute', -1
-        waits(10) and runs ->
+        setTimeout (->
           expect(testModel.get 'sortDirection').toBe -1
           sortCollection.unsort()
-          waits(10) and runs ->
+          setTimeout (->
             expect(testModel.has 'sortDirection').toBeFalse()
+            done()
+          ), 10
+        ), 10
 
     describe 'getNextDirection method', ->
 
-      it 'should return the next available sortDirection in the list', ->
+      it 'should return the next available sortDirection in the list', (done) ->
         expect(testModel.getNextDirection()).toBe -1
         sortCollection.addAttributeDirection 'attribute', -1
-        waits(10) and runs ->
+        setTimeout (->
           expect(testModel.getNextDirection()).toBe 1
           sortCollection.addAttributeDirection 'attribute', 1
-          wats(10) and runs ->
+          setTimeout (->
             expect(testModel.getNextDirection()).toBe 0
+            done()
+          ), 10
+        ), 10
 
     describe 'nextDirection method', ->
 

@@ -1,17 +1,13 @@
 _ = require 'underscore'
 
 jasmineConfig =
-  src: [
-    'build/src/**/*.js'
-    '!build/src/index.js' # Omit the application bootstrapper.
-  ]
+  src: ['build/src/**/*.js']
   options:
     template: require 'grunt-template-jasmine-istanbul'
     templateOptions:
       coverage: 'build/coverage/coverage.json'
       template: require 'grunt-template-jasmine-requirejs'
-      templateOptions:
-        requireConfig: require './require-config.json'
+      templateOptions: requireConfig: require './require-config.json'
       report:
         type: 'lcov'
         options:
@@ -21,13 +17,11 @@ jasmineConfig =
       'build/spec/**/*.spec.js'
     ]
     helpers: [
-      'bower_components/sinon/lib/sinon.js'
-      'bower_components/sinon/lib/sinon/spy.js'
-      'bower_components/sinon/lib/sinon/**/*.js'
+      'bower_components/sinonjs/sinon.js'
       'bower_components/jasmine-sinon/lib/jasmine-sinon.js'
+      'bower_components/jquery/dist/jquery.js'
       'bower_components/jasmine-jquery/lib/jasmine-jquery.js'
-      'bower_components/jasmine-matchers-util/jasmine-matchers-1.3.0.js'
-      'bower_components/jasmine-matchers/src/to*.js'
+      'bower_components/jasmine-expect/dist/jasmine-matchers.js'
     ]
 
 module.exports = (grunt) ->

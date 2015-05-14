@@ -29,9 +29,9 @@
       
       @param {Boolean} disposeDestroyed Whether or not to `dispose` destroyed `Model`s.
        */
-      mixconfig: function(mixinOptions, models, _arg) {
+      mixconfig: function(mixinOptions, models, arg) {
         var disposeDestroyed;
-        disposeDestroyed = (_arg != null ? _arg : {}).disposeDestroyed;
+        disposeDestroyed = (arg != null ? arg : {}).disposeDestroyed;
         if (disposeDestroyed != null) {
           return mixinOptions.disposeDestroyed = disposeDestroyed;
         }

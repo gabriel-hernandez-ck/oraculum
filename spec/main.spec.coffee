@@ -1,4 +1,4 @@
-require [
+define [
   'oraculum'
   'Factory'
   'BackboneFactory'
@@ -8,4 +8,4 @@ require [
   describe 'Oraculum', ->
 
     it 'should be a factory', ->
-      expect(Oraculum).toBeInstanceOf Factory
+      expect(Oraculum instanceof Factory).toBe true

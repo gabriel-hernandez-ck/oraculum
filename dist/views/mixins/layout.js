@@ -1,9 +1,9 @@
 (function() {
-  var __slice = [].slice;
+  var slice = [].slice;
 
   define(['oraculum', 'oraculum/libs', 'oraculum/mixins/pub-sub', 'oraculum/mixins/callback-provider', 'oraculum/views/mixins/region-publisher', 'oraculum/views/mixins/region-subscriber'], function(Oraculum) {
     'use strict';
-    var $, modifierKeyPressed, _;
+    var $, _, modifierKeyPressed;
     $ = Oraculum.get('jQuery');
     _ = Oraculum.get('underscore');
     modifierKeyPressed = function(event) {
@@ -19,7 +19,7 @@
           openExternalToBlank: false,
           titleTemplate: function(data) {
             if (data.subtitle) {
-              return "" + data.subtitle + " - " + data.title;
+              return data.subtitle + " - " + data.title;
             } else {
               return data.title;
             }
@@ -29,9 +29,9 @@
           disposeAll: true
         }
       },
-      mixconfig: function(_arg, options) {
+      mixconfig: function(arg, options) {
         var layout, openExternalToBlank, routeLinks, scrollTo, skipRouting, title, titleTemplate;
-        layout = _arg.layout;
+        layout = arg.layout;
         if (options == null) {
           options = {};
         }
@@ -74,12 +74,12 @@
         return window.scrollTo(x, y);
       },
       scrollTo: function() {
-        var args, scroll, selector, _ref;
-        selector = arguments[0], args = 2 <= arguments.length ? __slice.call(arguments, 1) : [];
+        var args, ref, scroll, selector;
+        selector = arguments[0], args = 2 <= arguments.length ? slice.call(arguments, 1) : [];
         scroll = {
           scrollTop: $(selector).offset().top
         };
-        return (_ref = $(document.body)).animate.apply(_ref, [scroll].concat(__slice.call(args)));
+        return (ref = $(document.body)).animate.apply(ref, [scroll].concat(slice.call(args)));
       },
       adjustTitle: function(subtitle) {
         var title, titleTemplate;
@@ -106,18 +106,18 @@
         })(this));
       },
       stopLinkRouting: function() {
-        var routeLinks, _ref;
-        if (!(_ref = this.mixinOptions.layout, routeLinks = _ref.routeLinks, _ref)) {
+        var ref, routeLinks;
+        if (!(ref = this.mixinOptions.layout, routeLinks = ref.routeLinks, ref)) {
           return;
         }
         return this.$el.off('click', routeLinks);
       },
       isExternalLink: function(link) {
-        var _ref, _ref1;
-        return link.rel === 'external' || link.target === '_blank' || ((_ref = link.hostname) !== location.hostname && _ref !== '') || ((_ref1 = link.protocol) !== 'http:' && _ref1 !== 'https:' && _ref1 !== 'file:');
+        var ref, ref1;
+        return link.rel === 'external' || link.target === '_blank' || ((ref = link.hostname) !== location.hostname && ref !== '') || ((ref1 = link.protocol) !== 'http:' && ref1 !== 'https:' && ref1 !== 'file:');
       },
       openLink: function(event) {
-        var el, href, isAnchor, isExternalLink, openExternalToBlank, skipRouting, type, _ref;
+        var el, href, isAnchor, isExternalLink, openExternalToBlank, ref, skipRouting, type;
         if (modifierKeyPressed(event)) {
           return;
         }
@@ -135,7 +135,7 @@
         if (/^javascript:\s*void\(.*\);?$/.test(href)) {
           return;
         }
-        _ref = this.mixinOptions.layout, skipRouting = _ref.skipRouting, openExternalToBlank = _ref.openExternalToBlank;
+        ref = this.mixinOptions.layout, skipRouting = ref.skipRouting, openExternalToBlank = ref.openExternalToBlank;
         type = typeof skipRouting;
         if (_.isString(skipRouting) && $(el).is(skipRouting)) {
           return;

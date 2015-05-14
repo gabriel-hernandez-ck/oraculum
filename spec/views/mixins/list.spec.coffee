@@ -1,4 +1,4 @@
-require [
+define [
   'oraculum'
   'oraculum/libs'
   'oraculum/mixins/disposable'
@@ -142,7 +142,7 @@ require [
         expect(hasOwnProp listView, '$list').toBeFalse()
 
         listView.render()
-        expect(listView._$list).toBeInstanceOf $
+        expect(listView._$list instanceof $).toBe true
         expect(listView._$list.length).toBe 1
 
         listView.renderAllModels()
@@ -515,9 +515,9 @@ require [
         listView = Oraculum.get 'TemplatedList.View', {collection}
 
       it 'should retain templated nodes', ->
-        expect(listView.el).toContain '.unrelated'
+        expect(listView.el).toContainElement '.unrelated'
         collection.reset()
-        expect(listView.el).toContain '.unrelated'
+        expect(listView.el).toContainElement '.unrelated'
 
       it 'should retain subviews that don\'t belong to the list', ->
         subview = listView.createSubview 'testView', {view: 'View'}
@@ -528,7 +528,7 @@ require [
       describe 'Selectors', ->
 
         it 'should append views to the listSelector', ->
-          expect(listView._$list).toBeInstanceOf $
+          expect(listView._$list instanceof $).toBe true
           expect(listView._$list.length).toBe 1
 
           $list2 = listView.$(listView.mixinOptions.list.listSelector)

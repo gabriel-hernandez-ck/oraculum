@@ -1,9 +1,9 @@
 (function() {
-  var __slice = [].slice;
+  var slice = [].slice;
 
   define(['oraculum', 'oraculum/libs', 'oraculum/mixins/evented', 'oraculum/extensions/make-middleware-method'], function(Oraculum) {
     'use strict';
-    var makeMiddlewareMethod, _;
+    var _, makeMiddlewareMethod;
     _ = Oraculum.get('underscore');
     makeMiddlewareMethod = Oraculum.get('makeMiddlewareMethod');
 
@@ -51,9 +51,9 @@
           return;
         }
         return _.each(middlewareMap, (function(_this) {
-          return function(_arg, method) {
+          return function(arg, method) {
             var emitter, prefix, trigger;
-            emitter = _arg.emitter, trigger = _arg.trigger, prefix = _arg.prefix;
+            emitter = arg.emitter, trigger = arg.trigger, prefix = arg.prefix;
             return _this.makeMiddlewareMethod(method, emitter, trigger, prefix);
           };
         })(this));
@@ -66,7 +66,7 @@
       Forces the middlewared method's scope to `this`.
        */
       makeMiddlewareMethod: function() {
-        return makeMiddlewareMethod.apply(null, [this].concat(__slice.call(arguments)));
+        return makeMiddlewareMethod.apply(null, [this].concat(slice.call(arguments)));
       }
     }, {
       mixins: ['Evented.Mixin']

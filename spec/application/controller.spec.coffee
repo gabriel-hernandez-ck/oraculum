@@ -1,5 +1,5 @@
 # Unit tests ported from Chaplin
-require [
+define [
   'oraculum'
   'oraculum/libs'
   'oraculum/application/controller'

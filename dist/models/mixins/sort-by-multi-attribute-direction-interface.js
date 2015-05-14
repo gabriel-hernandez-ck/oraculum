@@ -14,10 +14,10 @@
           defaults: []
         }
       },
-      mixconfig: function(_arg, models, _arg1) {
+      mixconfig: function(arg, models, arg1) {
         var sortByMultiAttributeDirection, sortDefaults;
-        sortByMultiAttributeDirection = _arg.sortByMultiAttributeDirection;
-        sortDefaults = (_arg1 != null ? _arg1 : {}).sortDefaults;
+        sortByMultiAttributeDirection = arg.sortByMultiAttributeDirection;
+        sortDefaults = (arg1 != null ? arg1 : {}).sortDefaults;
         if (sortDefaults != null) {
           return sortByMultiAttributeDirection.defaults = sortDefaults;
         }

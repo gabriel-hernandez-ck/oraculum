@@ -1,5 +1,5 @@
 (function() {
-  var __slice = [].slice;
+  var slice = [].slice;
 
   define(['oraculum', 'oraculum/mixins/pub-sub', 'oraculum/mixins/disposable', 'oraculum/mixins/callback-provider'], function(Oraculum) {
     'use strict';
@@ -126,7 +126,7 @@
       Controller.prototype.reuse = function() {
         var method;
         method = arguments.length === 1 ? 'retrieve' : 'compose';
-        return this.executeCallback.apply(this, ["composer:" + method].concat(__slice.call(arguments)));
+        return this.executeCallback.apply(this, ["composer:" + method].concat(slice.call(arguments)));
       };
 
 
@@ -148,7 +148,7 @@
 
       Controller.prototype.redirectTo = function() {
         this.redirected = true;
-        return this.executeCallback.apply(this, ['router:route'].concat(__slice.call(arguments)));
+        return this.executeCallback.apply(this, ['router:route'].concat(slice.call(arguments)));
       };
 
       return Controller;

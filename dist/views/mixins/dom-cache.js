@@ -9,9 +9,9 @@
           render: {}
         }
       },
-      mixconfig: function(mixinOptions, _arg) {
+      mixconfig: function(mixinOptions, arg) {
         var domcache;
-        domcache = (_arg != null ? _arg : {}).domcache;
+        domcache = (arg != null ? arg : {}).domcache;
         return mixinOptions.domcache = _.extend({}, mixinOptions.domcache, domcache);
       },
       mixinitialize: function() {

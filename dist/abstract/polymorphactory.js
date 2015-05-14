@@ -1,5 +1,5 @@
 (function() {
-  var __slice = [].slice;
+  var slice = [].slice;
 
   define(['oraculum'], function(Oraculum) {
     'use strict';
@@ -60,12 +60,12 @@
        */
 
       function PolymorPhactory() {
-        var typeString, _ref, _ref1;
+        var ref, ref1, typeString;
         typeString = this.getTypeString.apply(this, arguments);
-        if (((_ref = this.typeMap) != null ? _ref[typeString] : void 0) != null) {
+        if (((ref = this.typeMap) != null ? ref[typeString] : void 0) != null) {
           typeString = this.typeMap[typeString];
         }
-        return (_ref1 = this.__factory()).get.apply(_ref1, [typeString].concat(__slice.call(arguments)));
+        return (ref1 = this.__factory()).get.apply(ref1, [typeString].concat(slice.call(arguments)));
       }
 
       return PolymorPhactory;

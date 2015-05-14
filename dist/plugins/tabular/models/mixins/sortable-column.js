@@ -28,9 +28,9 @@
           directions: [1, 0, -1]
         }
       },
-      mixconfig: function(_arg, attrs, options) {
+      mixconfig: function(arg, attrs, options) {
         var sortCollection, sortDirections, sortableColumn;
-        sortableColumn = _arg.sortableColumn;
+        sortableColumn = arg.sortableColumn;
         if (options == null) {
           options = {};
         }

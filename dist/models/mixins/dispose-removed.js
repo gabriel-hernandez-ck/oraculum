@@ -28,9 +28,9 @@
       
       @param {Boolean} disposeRemoved Whether or not to `dispose` removed `Model`s.
        */
-      mixconfig: function(mixinOptions, models, _arg) {
+      mixconfig: function(mixinOptions, models, arg) {
         var disposeRemoved;
-        disposeRemoved = (_arg != null ? _arg : {}).disposeRemoved;
+        disposeRemoved = (arg != null ? arg : {}).disposeRemoved;
         if (disposeRemoved != null) {
           return mixinOptions.disposeRemoved = disposeRemoved;
         }
@@ -56,9 +56,9 @@
           };
         })(this));
         return this.on('reset', (function(_this) {
-          return function(models, _arg) {
+          return function(models, arg) {
             var previousModels;
-            previousModels = _arg.previousModels;
+            previousModels = arg.previousModels;
             if (!_this.mixinOptions.disposeRemoved) {
               return;
             }

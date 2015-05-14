@@ -3,6 +3,9 @@ define [
   'jquery'
   'backbone'
   'underscore'
+  'oraculum/extensions/resolve-view-target'
+  'oraculum/extensions/make-evented-method'
+  'oraculum/extensions/make-middleware-method'
 ], (Oraculum, jQuery, Backbone, _) ->
   'use strict'
 

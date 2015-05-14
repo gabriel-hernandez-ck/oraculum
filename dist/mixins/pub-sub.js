@@ -1,5 +1,5 @@
 (function() {
-  var __slice = [].slice;
+  var slice = [].slice;
 
   define(['oraculum', 'oraculum/libs', 'oraculum/mixins/evented'], function(Oraculum) {
     'use strict';
@@ -26,8 +26,8 @@
        */
       publishEvent: function() {
         var args, name;
-        name = arguments[0], args = 2 <= arguments.length ? __slice.call(arguments, 1) : [];
-        return Backbone.trigger.apply(Backbone, [name].concat(__slice.call(args)));
+        name = arguments[0], args = 2 <= arguments.length ? slice.call(arguments, 1) : [];
+        return Backbone.trigger.apply(Backbone, [name].concat(slice.call(args)));
       },
 
       /*

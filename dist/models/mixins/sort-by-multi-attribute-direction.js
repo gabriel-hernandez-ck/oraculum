@@ -1,7 +1,7 @@
 (function() {
   define(['oraculum', 'oraculum/libs', 'oraculum/mixins/evented', 'oraculum/models/mixins/sort-by-multi-attribute-direction-interface'], function(Oraculum) {
     'use strict';
-    var multiDirectionSort, _;
+    var _, multiDirectionSort;
     _ = Oraculum.get('underscore');
     multiDirectionSort = function(a, b, attributes, directions, index) {
       var attribute, direction, valueA, valueB;

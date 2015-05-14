@@ -1,5 +1,5 @@
 (function() {
-  var __slice = [].slice;
+  var slice = [].slice;
 
   define(['oraculum'], function(Oraculum) {
     'use strict';
@@ -75,7 +75,7 @@
             abort: false,
             result: void 0
           };
-          fireEvent.call.apply(fireEvent, [emitter, "" + eventPrefix + methodName + ":before"].concat(__slice.call(arguments), [proxy], [emitter], [object]));
+          fireEvent.call.apply(fireEvent, [emitter, "" + eventPrefix + methodName + ":before"].concat(slice.call(arguments), [proxy], [emitter], [object]));
 
           /*
           Allow the implementation to be aborted, passing back whatever the
@@ -89,7 +89,7 @@
             return proxy.result;
           }
           proxy.result = original.apply(object, arguments);
-          fireEvent.call.apply(fireEvent, [emitter, "" + eventPrefix + methodName + ":after"].concat(__slice.call(arguments), [proxy], [emitter], [object]));
+          fireEvent.call.apply(fireEvent, [emitter, "" + eventPrefix + methodName + ":after"].concat(slice.call(arguments), [proxy], [emitter], [object]));
           return proxy.result;
         };
         evented.evented = true;

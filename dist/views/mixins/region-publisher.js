@@ -2,9 +2,9 @@
   define(['oraculum', 'oraculum/libs', 'oraculum/mixins/callback-provider'], function(Oraculum) {
     'use strict';
     return Oraculum.defineMixin('RegionPublisher.ViewMixin', {
-      mixconfig: function(mixinOptions, _arg) {
+      mixconfig: function(mixinOptions, arg) {
         var regions;
-        regions = (_arg != null ? _arg : {}).regions;
+        regions = (arg != null ? arg : {}).regions;
         return mixinOptions.regions = _.extend({}, mixinOptions.regions, regions);
       },
       mixinitialize: function() {

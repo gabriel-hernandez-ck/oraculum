@@ -1,4 +1,4 @@
-require [
+define [
   'oraculum'
   'oraculum/libs'
   'oraculum/models/mixins/disposable'

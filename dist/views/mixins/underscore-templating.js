@@ -1,7 +1,7 @@
 (function() {
   define(['oraculum', 'oraculum/libs', 'oraculum/views/mixins/templating-interface'], function(Oraculum) {
     'use strict';
-    var getTemplateData, getTemplateFunction, _;
+    var _, getTemplateData, getTemplateFunction;
     _ = Oraculum.get('underscore');
     getTemplateData = function() {
       var data;
@@ -18,7 +18,7 @@
       return data;
     };
     getTemplateFunction = function() {
-      var template, _template;
+      var _template, template;
       template = this.mixinOptions.template;
       if (_.isFunction(template)) {
         template = template.call(this);

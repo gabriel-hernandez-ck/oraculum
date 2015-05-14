@@ -22,10 +22,8 @@
       "exports": "Backbone"
     }
   },
-  "packages": [
-    {
-      "name": "oraculum",
-      "location": "."
-    }
-  ]
+  "packages": [{
+    "name": "oraculum",
+    "location": "."
+  }]
 }

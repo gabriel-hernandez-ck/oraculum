@@ -5,9 +5,9 @@
       mixinOptions: {
         autoRender: true
       },
-      mixconfig: function(mixinOptions, _arg) {
+      mixconfig: function(mixinOptions, arg) {
         var autoRender;
-        autoRender = (_arg != null ? _arg : {}).autoRender;
+        autoRender = (arg != null ? arg : {}).autoRender;
         if (autoRender != null) {
           return mixinOptions.autoRender = autoRender;
         }

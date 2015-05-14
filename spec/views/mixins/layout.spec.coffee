@@ -1,4 +1,4 @@
-require [
+define [
   'oraculum'
   'oraculum/libs'
   'oraculum/application/controller'
@@ -86,7 +86,7 @@ require [
 
     it 'should have el, $el and $ props / methods', ->
       expect(layout.el).toBe document.body
-      expect(layout.$el).toBeInstanceOf $
+      expect(layout.$el instanceof $).toBe true
 
     it 'should set the document title', ->
       spy = sinon.spy()

@@ -46,7 +46,10 @@ define [
     # For a single attribute/direction sorting mechanism, removing the current
     # attribute and clearing the sort state completely are functionally the same
     removeAttributeDirection: -> @unsort()
-    unsort: -> @sortState.unset {'attribute', 'direction'}
+
+    unsort: ->
+      @sortState.unset 'attribute'
+      @sortState.unset 'direction'
 
   }, mixins: [
     'Evented.Mixin'

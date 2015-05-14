@@ -18,10 +18,10 @@
           column: null
         }
       },
-      mixconfig: function(_arg, _arg1) {
-        var cell, column, model, _ref;
-        cell = _arg.cell;
-        _ref = _arg1 != null ? _arg1 : {}, model = _ref.model, column = _ref.column;
+      mixconfig: function(arg, arg1) {
+        var cell, column, model, ref;
+        cell = arg.cell;
+        ref = arg1 != null ? arg1 : {}, model = ref.model, column = ref.column;
         if (column != null) {
           cell.column = column;
         }
@@ -42,9 +42,9 @@
       _updateAttributeClass: function() {
         var current, previous;
         previous = this.column.previous('attribute');
-        this.$el.removeClass(("" + previous + "-cell").replace(/[\.\s]/, '-'));
+        this.$el.removeClass((previous + "-cell").replace(/[\.\s]/, '-'));
         current = this.column.get('attribute');
-        return this.$el.addClass(("" + current + "-cell").replace(/[\.\s]/, '-'));
+        return this.$el.addClass((current + "-cell").replace(/[\.\s]/, '-'));
       }
     }, {
       mixins: ['Evented.Mixin', 'Hideable.CellMixin', 'Sortable.CellMixin', 'StaticClasses.ViewMixin']
