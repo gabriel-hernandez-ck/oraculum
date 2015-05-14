@@ -1,4 +1,4 @@
-require [
+define [
   'oraculum'
   'oraculum/plugins/tabular/views/mixins/cell'
 ], (Oraculum) ->

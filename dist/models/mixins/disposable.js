@@ -32,10 +32,10 @@
       
       @param {Boolean} disposeModels Set the `disposeModels` flag.
        */
-      mixconfig: function(_arg, models, _arg1) {
+      mixconfig: function(arg, models, arg1) {
         var disposable, disposeModels;
-        disposable = _arg.disposable;
-        disposeModels = (_arg1 != null ? _arg1 : {}).disposeModels;
+        disposable = arg.disposable;
+        disposeModels = (arg1 != null ? arg1 : {}).disposeModels;
         if (disposeModels != null) {
           return disposable.disposeModels = disposeModels;
         }

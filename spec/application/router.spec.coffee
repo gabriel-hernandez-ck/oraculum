@@ -1,4 +1,4 @@
-require [
+define [
   'oraculum'
   'oraculum/libs'
   'oraculum/application/route'
@@ -54,7 +54,7 @@ require [
     describe 'Interaction with Backbone.History', ->
 
       it 'should create a Backbone.History instance', ->
-        expect(Backbone.history).toBeInstanceOf Backbone.History
+        expect(Backbone.history instanceof Backbone.History).toBe true
 
       it 'should not start the Backbone.History at once', ->
         expect(Backbone.History.started).toBeFalse()
@@ -95,7 +95,7 @@ require [
       it 'should have a match method which returns a route', ->
         expect(router.match).toBeFunction()
         route = router.match '', 'null#null'
-        expect(route).toBeInstanceOf Route
+        expect(route instanceof Route).toBe true
 
       it 'should reject reserved controller action names', ->
         for prop in ['constructor', 'initialize', 'redirectTo']

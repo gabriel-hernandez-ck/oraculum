@@ -45,31 +45,31 @@
         var cid, region;
         cid = instance.cid;
         return this.globalRegions = (function() {
-          var _i, _len, _ref, _results;
-          _ref = this.globalRegions;
-          _results = [];
-          for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-            region = _ref[_i];
+          var i, len, ref, results;
+          ref = this.globalRegions;
+          results = [];
+          for (i = 0, len = ref.length; i < len; i++) {
+            region = ref[i];
             if (region.instance.cid !== cid || region.name !== name) {
-              _results.push(region);
+              results.push(region);
             }
           }
-          return _results;
+          return results;
         }).call(this);
       },
       unregisterGlobalRegions: function(instance) {
         var region;
         return this.globalRegions = (function() {
-          var _i, _len, _ref, _results;
-          _ref = this.globalRegions;
-          _results = [];
-          for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-            region = _ref[_i];
+          var i, len, ref, results;
+          ref = this.globalRegions;
+          results = [];
+          for (i = 0, len = ref.length; i < len; i++) {
+            region = ref[i];
             if (region.instance.cid !== instance.cid) {
-              _results.push(region);
+              results.push(region);
             }
           }
-          return _results;
+          return results;
         }).call(this);
       },
       regionByName: function(name) {

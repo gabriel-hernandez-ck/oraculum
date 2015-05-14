@@ -1,4 +1,4 @@
-require [
+define [
   'oraculum'
   'oraculum/views/mixins/dom-cache'
   'oraculum/views/mixins/html-templating'
@@ -42,10 +42,10 @@ require [
       expect(view.domcache).toBeUndefined()
       view.render()
       expect(view.domcache).toBeObject()
-      expect(view.domcache['span']).toBe view.$ 'span'
-      expect(view.domcache['#id']).toBe view.$ '#id'
-      expect(view.domcache['.class']).toBe view.$ '.class'
-      expect(view.domcache['[attribute="attribute"]']).toBe view.$ '[attribute="attribute"]'
+      expect(view.domcache['span']).toBeMatchedBy view.$ 'span'
+      expect(view.domcache['#id']).toBeMatchedBy view.$ '#id'
+      expect(view.domcache['.class']).toBeMatchedBy view.$ '.class'
+      expect(view.domcache['[attribute="attribute"]']).toBeMatchedBy view.$ '[attribute="attribute"]'
       view.__dispose()
 
     it 'should cache dom nodes by data-cache attributes', ->
@@ -53,7 +53,7 @@ require [
       expect(view.domcache).toBeUndefined()
       view.render()
       expect(view.domcache).toBeObject()
-      expect(view.domcache['data_attribute']).toBe view.$ '[data-cache="data_attribute"]'
+      expect(view.domcache['data_attribute']).toBeMatchedBy view.$ '[data-cache="data_attribute"]'
       view.__dispose()
 
     it 'should trigger a "domcache" when the domcache object is available', ->
@@ -70,5 +70,5 @@ require [
       view = Oraculum.get 'DOMCache.View'
       view.render()
       view.cacheElement '.not-cached', 'singleElement'
-      expect(view.domcache.singleElement).toBe view.$ '.not-cached'
+      expect(view.domcache.singleElement).toBeMatchedBy view.$ '.not-cached'
       view.__dispose()

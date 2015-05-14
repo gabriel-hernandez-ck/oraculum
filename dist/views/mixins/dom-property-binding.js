@@ -1,5 +1,5 @@
 (function() {
-  var __indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
+  var indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
 
   define(['oraculum', 'oraculum/libs', 'oraculum/mixins/evented', 'oraculum/mixins/evented-method'], function(Oraculum) {
     'use strict';
@@ -14,10 +14,10 @@
           render: {}
         }
       },
-      mixconfig: function(_arg, _arg1) {
+      mixconfig: function(arg, arg1) {
         var domPropertyBinding, placeholder;
-        domPropertyBinding = _arg.domPropertyBinding;
-        placeholder = (_arg1 != null ? _arg1 : {}).placeholder;
+        domPropertyBinding = arg.domPropertyBinding;
+        placeholder = (arg1 != null ? arg1 : {}).placeholder;
         if (placeholder != null) {
           return domPropertyBinding.placeholder = placeholder;
         }
@@ -36,10 +36,10 @@
             propertySpec = _this.$(element).attr('data-prop').split('.');
             resolvedProperty = _this._resolveProperty(_this, propertySpec);
             if (tags = typeof resolvedProperty.__tags === "function" ? resolvedProperty.__tags() : void 0) {
-              if (__indexOf.call(tags, 'Model') >= 0) {
+              if (indexOf.call(tags, 'Model') >= 0) {
                 _this._bindToModel(element, resolvedProperty);
               }
-              if (__indexOf.call(tags, 'Collection') >= 0) {
+              if (indexOf.call(tags, 'Collection') >= 0) {
                 _this._bindToCollection(element, resolvedProperty);
               }
             }
@@ -56,10 +56,10 @@
             propertySpec = _this.$(element).attr('data-prop').split('.');
             resolvedProperty = _this._resolveProperty(_this, propertySpec);
             if (tags = typeof resolvedProperty.__tags === "function" ? resolvedProperty.__tags() : void 0) {
-              if (__indexOf.call(tags, 'Model') >= 0) {
+              if (indexOf.call(tags, 'Model') >= 0) {
                 _this._unbindFromModel(element, resolvedProperty);
               }
-              if (__indexOf.call(tags, 'Collection') >= 0) {
+              if (indexOf.call(tags, 'Collection') >= 0) {
                 return _this._unbindFromCollection(element, resolvedProperty);
               }
             }
@@ -123,9 +123,9 @@
           events = "change:" + attr;
         }
         return events;
-      }), function(_arg) {
+      }), function(arg) {
         var cid;
-        cid = _arg.cid;
+        cid = arg.cid;
         return cid;
       }),
       _resolveCollectionEvents: _.memoize((function(element) {
@@ -136,9 +136,9 @@
           events = 'add remove reset';
         }
         return events;
-      }), function(_arg) {
+      }), function(arg) {
         var cid;
-        cid = _arg.cid;
+        cid = arg.cid;
         return cid;
       }),
       _getElementHandler: _.memoize((function(element) {
@@ -148,9 +148,9 @@
             return _this._updateBoundElement(element);
           };
         })(this);
-      }), function(_arg) {
+      }), function(arg) {
         var cid;
-        cid = _arg.cid;
+        cid = arg.cid;
         return cid;
       }),
       _updateBoundElement: function(element) {
@@ -179,10 +179,10 @@
         var $element;
         $element = this.$(element);
         if (!$element.length) {
-          throw new Error("" + element + " not found in " + this + " scope");
+          throw new Error(element + " not found in " + this + " scope");
         }
         if (!$element.is('[data-prop][data-prop-attr]')) {
-          throw new Error("" + element + " does not contain necessary data attributes");
+          throw new Error(element + " does not contain necessary data attributes");
         }
         return $element;
       }

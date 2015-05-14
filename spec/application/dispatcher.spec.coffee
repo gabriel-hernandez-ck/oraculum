@@ -1,5 +1,5 @@
 # Unit tests ported from Chaplin
-require [
+define [
   'oraculum'
   'oraculum/libs'
   'oraculum/application/composer'
@@ -94,7 +94,7 @@ require [
       # loadTest1Controller ->
       for spy in [initialize, action]
         expect(spy).toHaveBeenCalledOnce()
-        expect(spy.firstCall.thisValue).toBeInstanceOf Test1Controller
+        expect(spy.firstCall.thisValue instanceof Test1Controller).toBe true
         [passedParams, passedRoute, passedOptions] = spy.firstCall.args
         expect(passedParams).toEqual params
         expect(passedRoute).toEqual route1
@@ -214,7 +214,7 @@ require [
 
       # Check that previous route is saved
       expect(dispatcher.previousRoute.controller).toBe 'Test1Controller'
-      expect(dispatcher.currentController).toBeInstanceOf Test2Controller
+      expect(dispatcher.currentController instanceof Test2Controller).toBe true
       expect(dispatcher.currentRoute).toEqual create(route2, previous: create(route1, {params}))
       expect(dispatcher.currentParams).toEqual params
       expect(dispatcher.currentQuery).toEqual options1.query
@@ -263,7 +263,7 @@ require [
 
       # Event payload should be the now disposed controller
       passedController = beforeControllerDispose.firstCall.args[0]
-      expect(passedController).toBeInstanceOf Test1Controller
+      expect(passedController instanceof Test1Controller).toBe true
       expect(passedController.disposed).toBeTrue()
 
       Backbone.off 'beforeControllerDispose', beforeControllerDispose
@@ -282,9 +282,9 @@ require [
         args = dispatch.getCall(i).args
         expect(args.length).toBe 4
         [passedController, passedParams, passedRoute, passedOptions] = args
-        expect(passedController).toBeInstanceOf(
-          if firstCall then Test1Controller else Test2Controller
-        )
+
+        expectedController = if firstCall then Test1Controller else Test2Controller
+        expect(passedController instanceof expectedController).toBe true
         expect(passedParams).toEqual params
         expect(passedRoute.controller).toBe(
           if firstCall then 'Test1Controller' else 'Test2Controller'
@@ -327,7 +327,7 @@ require [
       # if execution stopped (e.g. Test1Controller is still active)
       expect(dispatcher.previousRoute.controller).toBe 'Test1Controller'
       expect(dispatcher.currentRoute.controller).toBe 'Test1Controller'
-      expect(dispatcher.currentController).toBeInstanceOf Test1Controller
+      expect(dispatcher.currentController instanceof Test1Controller).toBe true
       expect(dispatcher.currentRoute.action).toBe actionName
       expect(dispatcher.currentRoute.path).toBe redirectToURLRoute.path
 
@@ -376,7 +376,7 @@ require [
         publishMatch beforeActionRoute, params, options
 
         expect(beforeAction).toHaveBeenCalledOnce()
-        expect(beforeAction.firstCall.thisValue).toBeInstanceOf BeforeActionController
+        expect(beforeAction.firstCall.thisValue instanceof BeforeActionController).toBe true
         expect(action).toHaveBeenCalledOnce()
         expect(beforeAction.calledBefore(action)).toBeTrue()
 
@@ -422,7 +422,7 @@ require [
 
     describe 'Asynchronous Before Actions', ->
 
-      it 'should handle asynchronous before actions', ->
+      it 'should handle asynchronous before actions', (done) ->
         dfd = new $.Deferred()
         promise = dfd.promise()
 
@@ -440,11 +440,12 @@ require [
         publishMatch route, params, options
 
         expect(action).not.toHaveBeenCalled()
+        promise = dfd.promise()
+        promise.then ->
+          expect(action).toHaveBeenCalledOnce()
+          action.restore()
+        promise.then done
         dfd.resolve()
-
-        waitsFor -> action.callCount
-        expect(action).toHaveBeenCalledOnce()
-        action.restore()
 
       it 'should support multiple asynchronous controllers', ->
         AsyncBeforeActionController = Oraculum.extend('Controller', 'AsyncBeforeActionController', {
@@ -505,16 +506,16 @@ require [
           expect(beforeAction).toHaveBeenCalledOnce()
           expect(action).not.toHaveBeenCalled()
 
+          promise = dfd.promise()
+          promise.then ->
+            expect(action).toHaveBeenCalledOnce()
+            beforeAction.restore()
+            action.restore()
+            composer.dispose()
+          promise.then done
           dfd.resolve()
-          waitsFor -> action.callCount
-          expect(action).toHaveBeenCalledOnce()
 
-          beforeAction.restore()
-          action.restore()
-
-          composer.dispose()
-
-      it 'should stop dispatching when another controller is started', ->
+      it 'should stop dispatching when another controller is started', (done) ->
         dfd = new $.Deferred()
         promise = dfd.promise()
 
@@ -547,10 +548,11 @@ require [
         expect(secondAction).toHaveBeenCalledOnce()
 
         # Test what happens when the Promise is resolved later
+        promise = dfd.promise()
+        promise.then ->
+          expect(firstAction).toHaveBeenCalledOnce()
+          beforeAction.restore()
+          firstAction.restore()
+          secondAction.restore()
+        promise.then done
         dfd.resolve()
-        waitsFor -> firstAction.callCount
-        expect(firstAction).toHaveBeenCalledOnce()
-
-        beforeAction.restore()
-        firstAction.restore()
-        secondAction.restore()

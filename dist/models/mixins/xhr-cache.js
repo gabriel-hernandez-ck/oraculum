@@ -11,9 +11,9 @@
         this._cachedXHRs.push(xhr);
         return this._cachedXHRs;
       },
-      _removeXHR: function(model, resp, _arg) {
+      _removeXHR: function(model, resp, arg) {
         var index, xhr;
-        xhr = _arg.xhr;
+        xhr = arg.xhr;
         index = this._cachedXHRs.indexOf(xhr);
         this._cachedXHRs.splice(index, 1);
         return this._cachedXHRs;

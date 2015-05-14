@@ -1,4 +1,4 @@
-require [
+define [
   'oraculum'
   'oraculum/mixins/disposable'
   'oraculum/views/mixins/attach'
@@ -101,14 +101,14 @@ require [
           view.$el.html $element
           view.createSubviews()
           subview = view.subview 'testSubview1'
-          expect(subview.$el).toBe $element
+          expect(subview.$el).toBeMatchedBy $element
 
         it 'should allow subview container targets to be configured with data attributes', ->
           $element = $ '<div data-subview-container="testSubview1"/>'
           view.$el.html $element
           view.createSubviews()
           subview = view.subview 'testSubview1'
-          expect($element).toContain subview.el
+          expect($element).toContainElement subview.el
 
       describe 'createView method', ->
 

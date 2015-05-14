@@ -1,4 +1,4 @@
-require [
+define [
   'oraculum'
   'oraculum/mixins/callback-provider'
   'oraculum/views/mixins/region-attach'

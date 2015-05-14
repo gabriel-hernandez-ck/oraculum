@@ -86,7 +86,7 @@
        */
 
       Dispatcher.prototype.dispatch = function(route, params, options) {
-        var controller, prev, previous, _ref, _ref1;
+        var controller, prev, previous, ref, ref1;
         params = _.extend({}, params);
         options = _.extend({}, options);
         if (options.query == null) {
@@ -95,7 +95,7 @@
         if (options.forceStartup !== true) {
           options.forceStartup = false;
         }
-        if (!options.forceStartup && ((_ref = this.currentRoute) != null ? _ref.action : void 0) === route.action && ((_ref1 = this.currentRoute) != null ? _ref1.controller : void 0) === route.controller && _.isEqual(this.currentParams, params) && _.isEqual(this.currentQuery, options.query)) {
+        if (!options.forceStartup && ((ref = this.currentRoute) != null ? ref.action : void 0) === route.action && ((ref1 = this.currentRoute) != null ? ref1.controller : void 0) === route.controller && _.isEqual(this.currentParams, params) && _.isEqual(this.currentQuery, options.query)) {
           return;
         }
         if (this.nextPreviousRoute = this.currentRoute) {

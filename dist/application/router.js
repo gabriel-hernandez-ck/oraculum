@@ -1,10 +1,10 @@
 (function() {
-  var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
-    __slice = [].slice;
+  var bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+    slice = [].slice;
 
   define(['oraculum', 'oraculum/libs', 'oraculum/application/route', 'oraculum/application/history', 'oraculum/mixins/pub-sub', 'oraculum/mixins/evented', 'oraculum/mixins/listener', 'oraculum/mixins/disposable', 'oraculum/mixins/callback-provider'], function(Oraculum) {
     'use strict';
-    var Router, escapeRegExp, _;
+    var Router, _, escapeRegExp;
     _ = Oraculum.get('underscore');
     escapeRegExp = function(str) {
       return String(str || '').replace(/([.*+?^=!:${}()|[\]\/\\])/g, '\\$1');
@@ -34,12 +34,12 @@
       @param {Object} options? Any options to be cached or passed to our initializers.
        */
       function Router(options) {
-        var isWeb, rootRegex, _ref;
+        var isWeb, ref, rootRegex;
         if (options == null) {
           options = {};
         }
-        this.match = __bind(this.match, this);
-        isWeb = (_ref = window.location.protocol) === 'http:' || _ref === 'https:';
+        this.match = bind(this.match, this);
+        isWeb = (ref = window.location.protocol) === 'http:' || ref === 'https:';
         this.options = _.extend({
           root: '/',
           trailing: false,
@@ -159,12 +159,12 @@
        */
 
       Router.prototype.matchWithPatternAndString = function(pattern, string, options) {
-        var action, controller, _ref;
+        var action, controller, ref;
         controller = options.controller, action = options.action;
         if (controller && action) {
           throw new Error('Router#matchWithPatternAndString cannot use both string\nand controller/action');
         }
-        _ref = string.split('#'), controller = _ref[0], action = _ref[1];
+        ref = string.split('#'), controller = ref[0], action = ref[1];
         return this.addHandler(pattern, controller, action, options);
       };
 
@@ -198,11 +198,11 @@
        */
 
       Router.prototype.addHandler = function(pattern, controller, action, options) {
-        var route, _ref;
+        var ref, route;
         _.defaults(options, {
           trailing: this.options.trailing
         });
-        route = (_ref = this.__factory()).get.apply(_ref, ['Route'].concat(__slice.call(arguments)));
+        route = (ref = this.__factory()).get.apply(ref, ['Route'].concat(slice.call(arguments)));
         Backbone.history.handlers.push({
           route: route,
           callback: route.handler
@@ -329,14 +329,14 @@
        */
 
       Router.prototype.reverse = function(pathSpec, params, query) {
-        var handler, handlers, reversed, root, _i, _len;
+        var handler, handlers, i, len, reversed, root;
         root = this.options.root;
         if ((params != null) && !(_.isObject(params) || _.isArray(params))) {
           throw new TypeError('Router#reverse: params must be an array or an object');
         }
         handlers = Backbone.history.handlers;
-        for (_i = 0, _len = handlers.length; _i < _len; _i++) {
-          handler = handlers[_i];
+        for (i = 0, len = handlers.length; i < len; i++) {
+          handler = handlers[i];
           if (!(handler.route.matches(pathSpec))) {
             continue;
           }

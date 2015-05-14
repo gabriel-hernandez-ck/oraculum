@@ -1,7 +1,7 @@
 (function() {
   define(['oraculum'], function(Oraculum) {
     'use strict';
-    var STATE_CHANGE, SYNCED, SYNCING, SyncMachine, UNSYNCED, event, _fn, _i, _len, _ref;
+    var STATE_CHANGE, SYNCED, SYNCING, SyncMachine, UNSYNCED, event, fn, i, len, ref;
     SYNCED = 'synced';
     SYNCING = 'syncing';
     UNSYNCED = 'unsynced';
@@ -27,8 +27,8 @@
         return this._syncState === UNSYNCED;
       },
       unsync: function() {
-        var _ref;
-        if ((_ref = this._syncState) !== SYNCING && _ref !== SYNCED) {
+        var ref;
+        if ((ref = this._syncState) !== SYNCING && ref !== SYNCED) {
           return;
         }
         this._previousSync = this._syncState;
@@ -37,8 +37,8 @@
         return this.trigger(STATE_CHANGE, this, this._syncState);
       },
       beginSync: function() {
-        var _ref;
-        if ((_ref = this._syncState) !== UNSYNCED && _ref !== SYNCED) {
+        var ref;
+        if ((ref = this._syncState) !== UNSYNCED && ref !== SYNCED) {
           return;
         }
         this._previousSync = this._syncState;
@@ -65,8 +65,8 @@
         return this.trigger(STATE_CHANGE, this, this._syncState);
       }
     };
-    _ref = [UNSYNCED, SYNCING, SYNCED, STATE_CHANGE];
-    _fn = function(event) {
+    ref = [UNSYNCED, SYNCING, SYNCED, STATE_CHANGE];
+    fn = function(event) {
       return SyncMachine[event] = function(callback, context) {
         if (context == null) {
           context = this;
@@ -77,9 +77,9 @@
         }
       };
     };
-    for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-      event = _ref[_i];
-      _fn(event);
+    for (i = 0, len = ref.length; i < len; i++) {
+      event = ref[i];
+      fn(event);
     }
     return Oraculum.defineMixin('SyncMachine.ModelMixin', SyncMachine);
   });

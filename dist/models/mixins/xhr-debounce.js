@@ -16,12 +16,12 @@
         })(this));
       },
       abortDebouncedXHR: function(model) {
-        var _ref;
+        var ref;
         if (model !== this) {
           return;
         }
-        if ((_ref = this._debouncedXHR) != null) {
-          _ref.abort();
+        if ((ref = this._debouncedXHR) != null) {
+          ref.abort();
         }
         return delete this._debouncedXHR;
       }

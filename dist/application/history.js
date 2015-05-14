@@ -1,10 +1,10 @@
 (function() {
-  var __hasProp = {}.hasOwnProperty,
-    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+  var extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+    hasProp = {}.hasOwnProperty;
 
   define(['oraculum', 'oraculum/libs'], function(Oraculum) {
     'use strict';
-    var Backbone, History, rootStripper, routeStripper, trailingSlash, _;
+    var Backbone, History, _, rootStripper, routeStripper, trailingSlash;
     _ = Oraculum.get('underscore');
     Backbone = Oraculum.get('Backbone');
     routeStripper = /^[#\/]|\s+$/g;
@@ -18,8 +18,8 @@
     
     @see http://backbonejs.org/#History
      */
-    return Oraculum.define('History', History = (function(_super) {
-      __extends(History, _super);
+    return Oraculum.define('History', History = (function(superClass) {
+      extend(History, superClass);
 
       function History() {
         return History.__super__.constructor.apply(this, arguments);
@@ -63,7 +63,7 @@
        */
 
       History.prototype.start = function(options) {
-        var atRoot, loc, _ref;
+        var atRoot, loc, ref;
         if (Backbone.History.started === true) {
           throw new Error('Backbone.history has already been started');
         }
@@ -73,7 +73,7 @@
         }, this.options, options);
         this.root = this.options.root;
         this.fragment = this.getFragment();
-        this._hasPushState = Boolean(this.options.pushState && ((_ref = this.history) != null ? _ref.pushState : void 0));
+        this._hasPushState = Boolean(this.options.pushState && ((ref = this.history) != null ? ref.pushState : void 0));
         this._wantsPushState = Boolean(this.options.pushState);
         this._wantsHashChange = this.options.hashChange !== false;
         this.root = ("/" + this.root + "/").replace(rootStripper, '/');
@@ -89,7 +89,7 @@
         if (this._wantsPushState && this._wantsHashChange) {
           if (!atRoot && !this._hasPushState) {
             this.fragment = this.getFragment(null, true);
-            this.location.replace("" + this.root + "#" + this.fragment);
+            this.location.replace(this.root + "#" + this.fragment);
             return true;
           } else if (atRoot && loc.hash) {
             this.fragment = this.getHash().replace(routeStripper, '');

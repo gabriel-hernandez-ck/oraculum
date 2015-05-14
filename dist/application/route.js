@@ -1,10 +1,10 @@
 (function() {
-  var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
-    __hasProp = {}.hasOwnProperty;
+  var bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+    hasProp = {}.hasOwnProperty;
 
   define(['oraculum', 'oraculum/libs', 'oraculum/mixins/pub-sub', 'oraculum/mixins/freezable', 'oraculum/application/controller'], function(Oraculum) {
     'use strict';
-    var Route, escapeRegExp, optionalRegExp, paramRegExp, _;
+    var Route, _, escapeRegExp, optionalRegExp, paramRegExp;
     _ = Oraculum.get('underscore');
     paramRegExp = /(?::|\*)(\w+)/g;
     optionalRegExp = /\((.*?)\)/g;
@@ -111,11 +111,11 @@
         }
         pairs = queryString.split('&');
         _.each(pairs, function(pair) {
-          var current, field, value, _ref;
+          var current, field, ref, value;
           if (!pair.length) {
             return;
           }
-          _ref = pair.split('='), field = _ref[0], value = _ref[1];
+          ref = pair.split('='), field = ref[0], value = ref[1];
           if (!field.length) {
             return;
           }
@@ -148,11 +148,11 @@
       @param {Object} options? Any options to be cached.
        */
 
-      function Route(pattern, controller, action, options) {
-        this.pattern = pattern;
+      function Route(pattern1, controller, action, options) {
+        this.pattern = pattern1;
         this.controller = controller;
         this.action = action;
-        this.handler = __bind(this.handler, this);
+        this.handler = bind(this.handler, this);
         if (!_.isString(this.pattern)) {
           throw new Error('Route: RegExps are not supported.\nUse strings with :names and `constraints` option of route');
         }
@@ -164,7 +164,7 @@
           throw new Error('Route: "#" cannot be used in name');
         }
         if (this.name == null) {
-          this.name = "" + this.controller + "#" + this.action;
+          this.name = this.controller + "#" + this.action;
         }
         this.allParams = [];
         this.requiredParams = [];
@@ -201,14 +201,14 @@
        */
 
       Route.prototype.matches = function(pathSpec) {
-        var invalidParamsCount, name, propCount, property, _i, _len, _ref;
+        var i, invalidParamsCount, len, name, propCount, property, ref;
         if (_.isString(pathSpec)) {
           return pathSpec === this.name;
         }
         propCount = 0;
-        _ref = ['name', 'action', 'controller'];
-        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-          name = _ref[_i];
+        ref = ['name', 'action', 'controller'];
+        for (i = 0, len = ref.length; i < len; i++) {
+          name = ref[i];
           propCount++;
           property = pathSpec[name];
           if (property && property !== this[name]) {
@@ -320,10 +320,10 @@
        */
 
       Route.prototype.testParams = function(params) {
-        var paramName, _i, _len, _ref;
-        _ref = this.requiredParams;
-        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-          paramName = _ref[_i];
+        var i, len, paramName, ref;
+        ref = this.requiredParams;
+        for (i = 0, len = ref.length; i < len; i++) {
+          paramName = ref[i];
           if (params[paramName] === void 0) {
             return false;
           }
@@ -347,7 +347,7 @@
         constraints = this.options.constraints;
         if (constraints) {
           for (name in constraints) {
-            if (!__hasProp.call(constraints, name)) continue;
+            if (!hasProp.call(constraints, name)) continue;
             constraint = constraints[name];
             if (!constraint.test(params[name])) {
               return false;
@@ -387,7 +387,7 @@
             return _this.paramCapturePattern(match);
           };
         })(this));
-        return this.regExp = RegExp("^" + pattern + "(?=/?(?=\\?|$))");
+        return this.regExp = RegExp("^" + pattern + "(?=\\/?(?=\\?|$))");
       };
 
 
@@ -487,14 +487,14 @@
        */
 
       Route.prototype.handler = function(pathSpec, options) {
-        var actionParams, params, path, query, route, _ref;
+        var actionParams, params, path, query, ref, route;
         options = _.extend({}, options);
         if (_.isObject(pathSpec)) {
           query = Route.stringifyQueryParams(options.query);
           params = pathSpec;
           path = this.reverse(params);
         } else {
-          _ref = pathSpec.split('?'), path = _ref[0], query = _ref[1];
+          ref = pathSpec.split('?'), path = ref[0], query = ref[1];
           if (query == null) {
             query = '';
           } else {

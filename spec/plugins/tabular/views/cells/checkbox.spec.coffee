@@ -1,4 +1,4 @@
-require [
+define [
   'oraculum'
   'oraculum/plugins/tabular/views/cells/checkbox'
 ], (Oraculum) ->
@@ -32,13 +32,13 @@ require [
 
     it 'should render a checkbox element', ->
       view.render()
-      expect(view.$el).toContain 'input[type="checkbox"]'
+      expect(view.$el).toContainElement 'input[type="checkbox"]'
 
     it 'should set the checkboxes checked state based on the models target attribute', ->
       view.render()
-      expect(view.$el).toContain 'input:checked'
+      expect(view.$el).toContainElement 'input:checked'
       model.set 'attribute1', false
-      expect(view.$el).not.toContain 'input:checked'
+      expect(view.$el).not.toContainElement 'input:checked'
 
     it 'should set the models target attribute based on the checkboxes checked state', ->
       view.render()
@@ -50,11 +50,11 @@ require [
 
     it 'should continue to function if the columns attribute changes', ->
       view.render()
-      expect(view.$el).toContain 'input:checked'
+      expect(view.$el).toContainElement 'input:checked'
       column.set 'attribute', 'attribute2'
-      expect(view.$el).not.toContain 'input:checked'
+      expect(view.$el).not.toContainElement 'input:checked'
       model.set 'attribute2', true
-      expect(view.$el).toContain 'input:checked'
+      expect(view.$el).toContainElement 'input:checked'
       view.$('input[type="checkbox"]').prop('checked', false).change()
       expect(model.get 'attribute2').toBeFalse()
 

@@ -5,9 +5,9 @@
     stateModelName = '_SortByAttributeDirectionInterfaceState.Model';
     Oraculum.extend('Model', stateModelName, {
       idAttribute: 'attribute',
-      validate: function(_arg) {
+      validate: function(arg) {
         var attribute, direction;
-        attribute = _arg.attribute, direction = _arg.direction;
+        attribute = arg.attribute, direction = arg.direction;
         if (!attribute) {
           return "'attribute' attribute required";
         }
@@ -27,10 +27,10 @@
           defaults: {}
         }
       },
-      mixconfig: function(_arg, models, _arg1) {
+      mixconfig: function(arg, models, arg1) {
         var sortByAttributeDirection, sortDefaults;
-        sortByAttributeDirection = _arg.sortByAttributeDirection;
-        sortDefaults = (_arg1 != null ? _arg1 : {}).sortDefaults;
+        sortByAttributeDirection = arg.sortByAttributeDirection;
+        sortDefaults = (arg1 != null ? arg1 : {}).sortDefaults;
         if (sortDefaults != null) {
           return sortByAttributeDirection.defaults = sortDefaults;
         }
@@ -68,10 +68,8 @@
         return this.unsort();
       },
       unsort: function() {
-        return this.sortState.unset({
-          'attribute': 'attribute',
-          'direction': 'direction'
-        });
+        this.sortState.unset('attribute');
+        return this.sortState.unset('direction');
       }
     }, {
       mixins: ['Evented.Mixin']

@@ -8,10 +8,10 @@
           columns: null
         }
       },
-      mixconfig: function(_arg, _arg1) {
+      mixconfig: function(arg, arg1) {
         var columns, list, table, viewOptions;
-        table = _arg.table, list = _arg.list;
-        columns = (_arg1 != null ? _arg1 : {}).columns;
+        table = arg.table, list = arg.list;
+        columns = (arg1 != null ? arg1 : {}).columns;
         if (columns != null) {
           table.columns = columns;
         }

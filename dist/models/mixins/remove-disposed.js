@@ -5,9 +5,9 @@
       mixinOptions: {
         removeDisposed: true
       },
-      mixconfig: function(mixinOptions, models, _arg) {
+      mixconfig: function(mixinOptions, models, arg) {
         var removeDisposed;
-        removeDisposed = (_arg != null ? _arg : {}).removeDisposed;
+        removeDisposed = (arg != null ? arg : {}).removeDisposed;
         if (removeDisposed != null) {
           return mixinOptions.removeDisposed = removeDisposed;
         }

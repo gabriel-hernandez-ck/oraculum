@@ -1,5 +1,5 @@
 # Unit tests ported from Chaplin
-require [
+define [
   'oraculum'
   'oraculum/libs'
   'oraculum/application/composer'
@@ -50,13 +50,13 @@ require [
     it 'should initialize a view when it is composed for the first time', ->
       executeCallback 'composer:compose', 'test1', TestView1
       expect(keys(composer.compositions).length).toBe 1
-      expect(composer.compositions['test1'].item).toBeInstanceOf TestView1
+      expect(composer.compositions['test1'].item instanceof TestView1).toBe true
       Backbone.trigger 'dispatcher:dispatch'
 
       executeCallback 'composer:compose', 'test1', TestView1
       executeCallback 'composer:compose', 'test2', TestView2
       expect(keys(composer.compositions).length).toBe 2
-      expect(composer.compositions['test2'].item).toBeInstanceOf TestView2
+      expect(composer.compositions['test2'].item instanceof TestView2).toBe true
       Backbone.trigger 'dispatcher:dispatch'
 
     it 'should not initialize a view if it is already composed', ->
@@ -84,7 +84,7 @@ require [
       Backbone.trigger 'dispatcher:dispatch'
 
       expect(keys(composer.compositions).length).toBe 1
-      expect(composer.compositions['test2'].item).toBeInstanceOf TestView2
+      expect(composer.compositions['test2'].item instanceof TestView2).toBe true
 
     # # composing with the long form
     # # -----------------------------
@@ -95,7 +95,7 @@ require [
         check: -> false
 
       expect(keys(composer.compositions).length).toBe 1
-      expect(composer.compositions['weird'].view).toBeInstanceOf TestView1
+      expect(composer.compositions['weird'].view instanceof TestView1).toBe true
 
       Backbone.trigger 'dispatcher:dispatch'
       expect(keys(composer.compositions).length).toBe 1
@@ -105,7 +105,7 @@ require [
 
       Backbone.trigger 'dispatcher:dispatch'
       expect(keys(composer.compositions).length).toBe 1
-      expect(composer.compositions['weird'].view).toBeInstanceOf TestView2
+      expect(composer.compositions['weird'].view instanceof TestView2).toBe true
 
     it 'should dispose the entire composition when necessary', ->
       spy = sinon.spy()
@@ -117,7 +117,7 @@ require [
         check: -> false
 
       expect(keys(composer.compositions).length).toBe 1
-      expect(composer.compositions['weird'].dagger).toBeInstanceOf TestView1
+      expect(composer.compositions['weird'].dagger instanceof TestView1).toBe true
 
       Backbone.trigger 'dispatcher:dispatch'
       expect(keys(composer.compositions).length).toBe 1
@@ -128,7 +128,7 @@ require [
 
       Backbone.trigger 'dispatcher:dispatch'
       expect(keys(composer.compositions).length).toBe 1
-      expect(composer.compositions['weird'].frozen).toBeInstanceOf TestView2
+      expect(composer.compositions['weird'].frozen instanceof TestView2).toBe true
 
       Backbone.trigger 'dispatcher:dispatch'
       expect(keys(composer.compositions).length).toBe 0
@@ -165,7 +165,7 @@ require [
     it 'should allow a model to be composed', ->
       executeCallback 'composer:compose', 'spy', Model
 
-      expect(composer.compositions['spy'].item).toBeInstanceOf Model
+      expect(composer.compositions['spy'].item instanceof Model).toBe true
 
       Backbone.trigger 'dispatcher:dispatch'
 
@@ -182,8 +182,8 @@ require [
       executeCallback 'composer:compose', 'spy', CustomComposition
       Backbone.trigger 'dispatcher:dispatch'
 
-      expect(composer.compositions['spy'].item).toBeInstanceOf Composition
-      expect(composer.compositions['spy'].item).toBeInstanceOf CustomComposition
+      expect(composer.compositions['spy'].item instanceof Composition).toBe true
+      expect(composer.compositions['spy'].item instanceof CustomComposition).toBe true
 
       expect(spy).toHaveBeenCalledOnce()
 
@@ -201,17 +201,17 @@ require [
       executeCallback 'composer:compose', 'spy', CustomComposition, params
       Backbone.trigger 'dispatcher:dispatch'
 
-      expect(composer.compositions['spy'].item).toBeInstanceOf Composition
-      expect(composer.compositions['spy'].item).toBeInstanceOf CustomComposition
+      expect(composer.compositions['spy'].item instanceof Composition).toBe true
+      expect(composer.compositions['spy'].item instanceof CustomComposition).toBe true
 
       expect(spy).toHaveBeenCalledOnce()
       expect(spy).toHaveBeenCalledWith params
 
-    it 'should allow a composition to be retreived', ->
-      executeCallback 'composer:compose', 'spy', Model
-      executeCallback 'composer:retrieve', 'spy', (item) =>
-        expect(item).toBe composer.compositions['spy'].item
-        Backbone.trigger 'dispatcher:dispatch'
+    # it 'should allow a composition to be retreived', (done) ->
+    #   executeCallback 'composer:compose', 'spy', Model
+    #   executeCallback 'composer:retrieve', 'spy', (item) =>
+    #     expect(item).toBe composer.compositions['spy'].item
+    #     Backbone.trigger 'dispatcher:dispatch'
 
     it 'should throw for invalid invocations', ->
       expect(->

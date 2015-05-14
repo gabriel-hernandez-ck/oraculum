@@ -1,8 +1,8 @@
 (function() {
-  var __slice = [].slice;
+  var slice = [].slice;
 
   define(['oraculum', 'oraculum/libs', 'oraculum/mixins/evented', 'oraculum/mixins/listener'], function(Oraculum) {
-    var handlers, _;
+    var _, handlers;
     _ = Oraculum.get('underscore');
 
     /*
@@ -98,10 +98,10 @@
       @param {Object} input An instance scope to remove the callbacks for.
        */
       removeCallbacks: function(input) {
-        var handler, name, _i, _len;
+        var handler, i, len, name;
         if (_.isArray(input)) {
-          for (_i = 0, _len = input.length; _i < _len; _i++) {
-            name = input[_i];
+          for (i = 0, len = input.length; i < len; i++) {
+            name = input[i];
             delete handlers[name];
           }
         } else {
@@ -140,10 +140,10 @@
       @return {Mixed} The return value of the callback, if any.
        */
       executeCallback: function() {
-        var args, handler, name, silent, _ref;
-        name = arguments[0], args = 2 <= arguments.length ? __slice.call(arguments, 1) : [];
+        var args, handler, name, ref, silent;
+        name = arguments[0], args = 2 <= arguments.length ? slice.call(arguments, 1) : [];
         if (_.isObject(name)) {
-          _ref = name, name = _ref.name, silent = _ref.silent;
+          ref = name, name = ref.name, silent = ref.silent;
         }
         handler = handlers[name];
         if (!handler && !silent) {

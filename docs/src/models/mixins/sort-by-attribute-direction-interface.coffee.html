@@ -96,7 +96,10 @@ attribute and clearing the sort state completely are functionally the same</p>
         </td>
         <td class="code highlight"><div class="highlight"><pre>
     <span class="nv">removeAttributeDirection: </span><span class="nf">-&gt;</span> <span class="nx">@unsort</span><span class="p">()</span>
-    <span class="nv">unsort: </span><span class="nf">-&gt;</span> <span class="nx">@sortState</span><span class="p">.</span><span class="nx">unset</span> <span class="p">{</span><span class="s">&#39;attribute&#39;</span><span class="p">,</span> <span class="s">&#39;direction&#39;</span><span class="p">}</span>
+
+    <span class="nv">unsort: </span><span class="nf">-&gt;</span>
+      <span class="nx">@sortState</span><span class="p">.</span><span class="nx">unset</span> <span class="s">&#39;attribute&#39;</span>
+      <span class="nx">@sortState</span><span class="p">.</span><span class="nx">unset</span> <span class="s">&#39;direction&#39;</span>
 
   <span class="p">},</span> <span class="nv">mixins: </span><span class="p">[</span>
     <span class="s">&#39;Evented.Mixin&#39;</span>

@@ -15,10 +15,10 @@
           attach: {}
         }
       },
-      mixconfig: function(_arg, _arg1) {
-        var attach, autoAttach, container, containerMethod, _ref;
-        attach = _arg.attach;
-        _ref = _arg1 != null ? _arg1 : {}, autoAttach = _ref.autoAttach, container = _ref.container, containerMethod = _ref.containerMethod;
+      mixconfig: function(arg, arg1) {
+        var attach, autoAttach, container, containerMethod, ref;
+        attach = arg.attach;
+        ref = arg1 != null ? arg1 : {}, autoAttach = ref.autoAttach, container = ref.container, containerMethod = ref.containerMethod;
         if (autoAttach != null) {
           attach.auto = autoAttach;
         }
@@ -39,8 +39,8 @@
         })(this));
       },
       attach: function() {
-        var container, containerMethod, _ref;
-        _ref = this.mixinOptions.attach, container = _ref.container, containerMethod = _ref.containerMethod;
+        var container, containerMethod, ref;
+        ref = this.mixinOptions.attach, container = ref.container, containerMethod = ref.containerMethod;
         if (!(container && containerMethod)) {
           return;
         }

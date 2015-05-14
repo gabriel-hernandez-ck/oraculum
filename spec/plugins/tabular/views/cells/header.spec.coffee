@@ -1,4 +1,4 @@
-require [
+define [
   'oraculum'
   'oraculum/plugins/tabular/views/cells/header'
 ], (Oraculum) ->
@@ -31,7 +31,7 @@ require [
 
     it 'should render an anchor with the models label or attribute', ->
       view.render()
-      expect(view.el).toContain 'a'
+      expect(view.el).toContainElement 'a'
       anchor = view.$ 'a'
       expect(anchor.text()).toBe 'Some Label'
       column.unset 'label'

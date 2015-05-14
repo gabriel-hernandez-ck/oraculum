@@ -1,9 +1,9 @@
 (function() {
-  var __slice = [].slice;
+  var slice = [].slice;
 
   define(['oraculum', 'oraculum/libs', 'oraculum/mixins/evented', 'oraculum/extensions/make-evented-method'], function(Oraculum) {
     'use strict';
-    var makeEventedMethod, _;
+    var _, makeEventedMethod;
     _ = Oraculum.get('underscore');
     makeEventedMethod = Oraculum.get('makeEventedMethod');
 
@@ -51,9 +51,9 @@
           return;
         }
         return _.each(eventingMap, (function(_this) {
-          return function(_arg, method) {
+          return function(arg, method) {
             var emitter, prefix, trigger;
-            emitter = _arg.emitter, trigger = _arg.trigger, prefix = _arg.prefix;
+            emitter = arg.emitter, trigger = arg.trigger, prefix = arg.prefix;
             return _this.makeEventedMethod(method, emitter, trigger, prefix);
           };
         })(this));
@@ -66,7 +66,7 @@
       Forces the evented method's scope to `this`.
        */
       makeEventedMethod: function() {
-        return makeEventedMethod.apply(null, [this].concat(__slice.call(arguments)));
+        return makeEventedMethod.apply(null, [this].concat(slice.call(arguments)));
       }
     }, {
       mixins: ['Evented.Mixin']

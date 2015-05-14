@@ -10,10 +10,10 @@
           attach: {}
         }
       },
-      mixconfig: function(_arg, _arg1) {
+      mixconfig: function(arg, arg1) {
         var attach, region;
-        attach = _arg.attach;
-        region = (_arg1 != null ? _arg1 : {}).region;
+        attach = arg.attach;
+        region = (arg1 != null ? arg1 : {}).region;
         if (region != null) {
           return attach.region = region;
         }

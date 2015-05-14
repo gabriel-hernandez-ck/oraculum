@@ -31,10 +31,10 @@
       @param {Boolean} autoFetch Set the `fetch` flag.
       @param {Object} fetchOptions Extend the default fetchOptions.
        */
-      mixconfig: function(_arg, attrs, _arg1) {
-        var autoFetch, fetch, fetchOptions, _ref;
-        autoFetch = _arg.autoFetch;
-        _ref = _arg1 != null ? _arg1 : {}, fetch = _ref.autoFetch, fetchOptions = _ref.fetchOptions;
+      mixconfig: function(arg, attrs, arg1) {
+        var autoFetch, fetch, fetchOptions, ref;
+        autoFetch = arg.autoFetch;
+        ref = arg1 != null ? arg1 : {}, fetch = ref.autoFetch, fetchOptions = ref.fetchOptions;
         if (fetch != null) {
           autoFetch.fetch = fetch;
         }
@@ -47,8 +47,8 @@
       Automatically fetch the model if we're still confugred to do so.
        */
       mixinitialize: function() {
-        var fetch, fetchOptions, _ref;
-        _ref = this.mixinOptions.autoFetch, fetch = _ref.fetch, fetchOptions = _ref.fetchOptions;
+        var fetch, fetchOptions, ref;
+        ref = this.mixinOptions.autoFetch, fetch = ref.fetch, fetchOptions = ref.fetchOptions;
         if (fetch) {
           return this.fetch(fetchOptions);
         }

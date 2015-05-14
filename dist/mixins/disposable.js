@@ -34,7 +34,7 @@
       The disposal interface.
        */
       dispose: function() {
-        var _ref;
+        var ref;
         if (this.disposed) {
           return this;
         }
@@ -44,7 +44,7 @@
         this.trigger('dispose:after', this);
         this.off();
         this.stopListening();
-        if ((_ref = this.mixinOptions.disposable) != null ? _ref.disposeAll : void 0) {
+        if ((ref = this.mixinOptions.disposable) != null ? ref.disposeAll : void 0) {
           _.each(this, function(prop, name) {
             return prop != null ? typeof prop.dispose === "function" ? prop.dispose() : void 0 : void 0;
           });

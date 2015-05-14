@@ -9,9 +9,9 @@
           render: {}
         }
       },
-      mixconfig: function(mixinOptions, _arg) {
+      mixconfig: function(mixinOptions, arg) {
         var subviews;
-        subviews = (_arg != null ? _arg : {}).subviews;
+        subviews = (arg != null ? arg : {}).subviews;
         return mixinOptions.subviews = _.extend({}, mixinOptions.subviews, subviews);
       },
       mixinitialize: function() {
@@ -103,11 +103,11 @@
         return view;
       },
       removeSubview: function(nameOrView, dispose) {
-        var name, view, _ref;
+        var name, ref, view;
         if (dispose == null) {
           dispose = true;
         }
-        _ref = this._resolveSubview(nameOrView), name = _ref.name, view = _ref.view;
+        ref = this._resolveSubview(nameOrView), name = ref.name, view = ref.view;
         if (!(name && view)) {
           return;
         }
@@ -117,8 +117,8 @@
         }
       },
       disposeSubview: function(nameOrView) {
-        var index, name, view, _ref;
-        _ref = this._resolveSubview(nameOrView), name = _ref.name, view = _ref.view;
+        var index, name, ref, view;
+        ref = this._resolveSubview(nameOrView), name = ref.name, view = ref.view;
         if (!(name && view)) {
           return;
         }
@@ -132,7 +132,7 @@
         return delete this._subviewsByName[name];
       },
       _resolveSubview: function(name) {
-        var otherView, view, _ref;
+        var otherView, ref, view;
         view = _.isString(name) ? this._subviewsByName[name] : name;
         if (_.isString(name)) {
           return {
@@ -140,9 +140,9 @@
             view: view
           };
         }
-        _ref = this._subviewsByName;
-        for (name in _ref) {
-          otherView = _ref[name];
+        ref = this._subviewsByName;
+        for (name in ref) {
+          otherView = ref[name];
           if (view === otherView) {
             return {
               name: name,

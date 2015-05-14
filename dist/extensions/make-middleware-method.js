@@ -1,5 +1,5 @@
 (function() {
-  var __slice = [].slice;
+  var slice = [].slice;
 
   define(['oraculum'], function(Oraculum) {
     'use strict';
@@ -60,7 +60,7 @@
          */
         middleware = object[methodName] = function() {
           var args, proxy, resolve;
-          args = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
+          args = 1 <= arguments.length ? slice.call(arguments, 0) : [];
 
           /*
           Create our `proxy` object. This object will be passed by reference
@@ -73,7 +73,7 @@
             abort: false,
             result: void 0
           };
-          fireEvent.call.apply(fireEvent, [emitter, "" + eventPrefix + ":" + methodName + ":middleware:before"].concat(__slice.call(args), [proxy], [emitter], [object]));
+          fireEvent.call.apply(fireEvent, [emitter, eventPrefix + ":" + methodName + ":middleware:before"].concat(slice.call(args), [proxy], [emitter], [object]));
 
           /*
           Allow the implementation to be aborted, passing back whatever the
@@ -87,14 +87,14 @@
             return proxy.result;
           }
           resolve = function() {
-            proxy.result = original.call.apply(original, [object].concat(__slice.call(args)));
-            return fireEvent.call.apply(fireEvent, [emitter, "" + eventPrefix + ":" + methodName + ":middleware:after"].concat(__slice.call(args), [proxy], [emitter], [object]));
+            proxy.result = original.call.apply(original, [object].concat(slice.call(args)));
+            return fireEvent.call.apply(fireEvent, [emitter, eventPrefix + ":" + methodName + ":middleware:after"].concat(slice.call(args), [proxy], [emitter], [object]));
           };
           if (proxy.wait === true) {
             proxy.dfd = new $.Deferred();
             proxy.promise = proxy.dfd.promise();
             proxy.promise.then(resolve);
-            fireEvent.call.apply(fireEvent, [emitter, "" + eventPrefix + ":" + methodName + ":middleware:defer"].concat(__slice.call(args), [proxy], [emitter], [object]));
+            fireEvent.call.apply(fireEvent, [emitter, eventPrefix + ":" + methodName + ":middleware:defer"].concat(slice.call(args), [proxy], [emitter], [object]));
           } else {
             resolve();
           }

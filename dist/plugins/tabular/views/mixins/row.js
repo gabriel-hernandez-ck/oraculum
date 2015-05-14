@@ -11,8 +11,8 @@
         staticClasses: ['row-mixin']
       },
       resolveModelView: function(column) {
-        var modelView, viewOptions, _ref;
-        _ref = this.mixinOptions.list, modelView = _ref.modelView, viewOptions = _ref.viewOptions;
+        var modelView, ref, viewOptions;
+        ref = this.mixinOptions.list, modelView = ref.modelView, viewOptions = ref.viewOptions;
         return column.get('modelView') || modelView;
       },
       resolveViewOptions: function(column) {

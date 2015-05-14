@@ -1,9 +1,9 @@
 (function() {
-  var __indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
+  var indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
 
   define(['oraculum', 'oraculum/libs', 'oraculum/mixins/listener', 'oraculum/mixins/disposable'], function(Oraculum) {
     'use strict';
-    var stateModelName, _;
+    var _, stateModelName;
     _ = Oraculum.get('underscore');
     stateModelName = '_PageableCollectionInterfaceState.Model';
     Oraculum.extend('Model', stateModelName, {
@@ -62,7 +62,7 @@
         defaultKeys = _.chain(this).result('defaults').keys().value();
         _.each(response, function(value, key) {
           var numericValue;
-          if (__indexOf.call(defaultKeys, key) < 0) {
+          if (indexOf.call(defaultKeys, key) < 0) {
             return;
           }
           numericValue = parseInt(value, 10);
@@ -84,10 +84,10 @@
           start: 0
         }
       },
-      mixconfig: function(_arg, models, _arg1) {
-        var from, pageable, size, start, _ref;
-        pageable = _arg.pageable;
-        _ref = _arg1 != null ? _arg1 : {}, start = _ref.start, from = _ref.from, size = _ref.size;
+      mixconfig: function(arg, models, arg1) {
+        var from, pageable, ref, size, start;
+        pageable = arg.pageable;
+        ref = arg1 != null ? arg1 : {}, start = ref.start, from = ref.from, size = ref.size;
         if (start != null) {
           pageable.start = start;
         }
@@ -99,8 +99,8 @@
         }
       },
       mixinitialize: function() {
-        var from, size, start, _ref;
-        _ref = this.mixinOptions.pageable, start = _ref.start, from = _ref.from, size = _ref.size;
+        var from, ref, size, start;
+        ref = this.mixinOptions.pageable, start = ref.start, from = ref.from, size = ref.size;
         this.pageState = this.__factory().get(stateModelName, {
           start: start,
           from: from,
