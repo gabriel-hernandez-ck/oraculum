@@ -1,8 +1,9 @@
 (function() {
   define(['oraculum', 'oraculum/libs', 'oraculum/mixins/evented', 'oraculum/mixins/evented-method'], function(Oraculum) {
     'use strict';
-    var _;
+    var _, composeConfig;
     _ = Oraculum.get('underscore');
+    composeConfig = Oraculum.get('composeConfig');
     return Oraculum.defineMixin('DOMCache.ViewMixin', {
       mixinOptions: {
         eventedMethods: {
@@ -12,15 +13,20 @@
       mixconfig: function(mixinOptions, arg) {
         var domcache;
         domcache = (arg != null ? arg : {}).domcache;
-        return mixinOptions.domcache = _.extend({}, mixinOptions.domcache, domcache);
+        return mixinOptions.domcache = composeConfig(mixinOptions.domcache, domcache);
       },
       mixinitialize: function() {
         return this.on('render:after', this.cacheDOM, this);
       },
       cacheDOM: function() {
+        var configOptions;
         this.domcache = {};
+        configOptions = this.mixinOptions.domcache;
+        if (_.isFunction(configOptions)) {
+          configOptions = configOptions.call(this);
+        }
         _.each(this.$('[data-cache]'), this.cacheElement, this);
-        _.each(this.mixinOptions.domcache, this.cacheElement, this);
+        _.each(configOptions, this.cacheElement, this);
         return this.trigger('domcache', this);
       },
       cacheElement: function(element, name) {

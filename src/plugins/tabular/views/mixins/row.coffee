@@ -1,9 +1,12 @@
 define [
   'oraculum'
+  'oraculum/libs'
   'oraculum/views/mixins/list'
   'oraculum/views/mixins/static-classes'
 ], (Oraculum) ->
   'use strict'
+
+  composeConfig = Oraculum.get 'composeConfig'
 
   ###
   Row.ViewMixin
@@ -21,11 +24,12 @@ define [
 
     resolveViewOptions: (column) ->
       model = @model or column
+      columnOptions = column.get 'viewOptions'
       viewOptions = @mixinOptions.list.viewOptions
-      viewOptions = if _.isFunction viewOptions
-      then viewOptions.call this, { model, column }
-      else _.extend { model, column }, viewOptions
-      return _.extend {}, viewOptions, column.get 'viewOptions'
+      viewOptions = composeConfig {model, column}, viewOptions, columnOptions
+      return if _.isFunction viewOptions
+      then viewOptions.call this, {model, column}
+      else viewOptions
 
   }, mixins: [
     'List.ViewMixin'

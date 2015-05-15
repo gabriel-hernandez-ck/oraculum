@@ -47,6 +47,9 @@
 <span class="p">],</span> <span class="nf">(Oraculum) -&gt;</span>
   <span class="s">&#39;use strict&#39;</span>
 
+  <span class="nv">_ = </span><span class="nx">Oraculum</span><span class="p">.</span><span class="nx">get</span> <span class="s">&#39;underscore&#39;</span>
+  <span class="nv">composeConfig = </span><span class="nx">Oraculum</span><span class="p">.</span><span class="nx">get</span> <span class="s">&#39;composeConfig&#39;</span>
+
   <span class="nx">Oraculum</span><span class="p">.</span><span class="nx">defineMixin</span> <span class="s">&#39;RegionPublisher.ViewMixin&#39;</span><span class="p">,</span> <span class="p">{</span>
 
 
@@ -75,12 +78,13 @@
         <td class="code highlight"><div class="highlight"><pre>
 
     <span class="nv">mixconfig: </span><span class="nf">(mixinOptions, {regions} = {}) -&gt;</span>
-      <span class="nv">mixinOptions.regions = </span><span class="nx">_</span><span class="p">.</span><span class="nx">extend</span> <span class="p">{},</span> <span class="nx">mixinOptions</span><span class="p">.</span><span class="nx">regions</span><span class="p">,</span> <span class="nx">regions</span>
+      <span class="nv">mixinOptions.regions = </span><span class="nx">composeConfig</span> <span class="nx">mixinOptions</span><span class="p">.</span><span class="nx">regions</span><span class="p">,</span> <span class="nx">regions</span>
 
     <span class="nv">mixinitialize: </span><span class="nf">-&gt;</span>
-      <span class="p">{</span><span class="nx">regions</span><span class="p">}</span> <span class="o">=</span> <span class="nx">@mixinOptions</span>
+      <span class="nv">regions = </span><span class="nx">@mixinOptions</span><span class="p">.</span><span class="nx">regions</span>
+      <span class="nv">regions = </span><span class="nx">regions</span><span class="p">.</span><span class="nx">call</span> <span class="k">this</span> <span class="k">if</span> <span class="nx">_</span><span class="p">.</span><span class="nx">isFunction</span> <span class="nx">regions</span>
       <span class="nx">@executeCallback</span> <span class="s">&#39;region:register&#39;</span><span class="p">,</span> <span class="k">this</span> <span class="k">if</span> <span class="nx">regions</span><span class="o">?</span>
-      <span class="nx">@</span><span class="kc">on</span> <span class="s">&#39;dispose&#39;</span><span class="p">,</span> <span class="nx">@unregisterAllRegions</span><span class="p">,</span> <span class="k">this</span>
+      <span class="nx">@</span><span class="kc">on</span> <span class="s">&#39;dispose&#39;</span><span class="p">,</span> <span class="o">=&gt;</span> <span class="nx">@unregisterAllRegions</span> <span class="nx">arguments</span><span class="p">...</span>
 
 
 </pre></div>

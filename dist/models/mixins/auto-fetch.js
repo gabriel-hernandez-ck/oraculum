@@ -1,8 +1,9 @@
 (function() {
   define(['oraculum', 'oraculum/libs'], function(Oraculum) {
     'use strict';
-    var _;
+    var _, composeConfig;
     _ = Oraculum.get('underscore');
+    composeConfig = Oraculum.get('composeConfig');
 
     /*
     AutoFetch.ModelMixin
@@ -38,7 +39,7 @@
         if (fetch != null) {
           autoFetch.fetch = fetch;
         }
-        return autoFetch.fetchOptions = _.extend({}, autoFetch.fetchOptions, fetchOptions);
+        return autoFetch.fetchOptions = composeConfig(autoFetch.fetchOptions, fetchOptions);
       },
 
       /*
@@ -49,6 +50,9 @@
       mixinitialize: function() {
         var fetch, fetchOptions, ref;
         ref = this.mixinOptions.autoFetch, fetch = ref.fetch, fetchOptions = ref.fetchOptions;
+        if (_.isFunction(fetchOptions)) {
+          fetchOptions = fetchOptions.call(this);
+        }
         if (fetch) {
           return this.fetch(fetchOptions);
         }

@@ -8,8 +8,7 @@ define [
   _ = Oraculum.get 'underscore'
 
   getTemplateData = ->
-    data = {}
-    _.extend data, @model.toJSON() if @model
+    data = _.extend {}, @model.toJSON() if @model
     _.defaults data, {
       items: @collection.toJSON()
       length: @collection.length

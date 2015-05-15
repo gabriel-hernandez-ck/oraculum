@@ -1,6 +1,8 @@
 (function() {
-  define(['oraculum', 'oraculum/views/mixins/list', 'oraculum/views/mixins/static-classes'], function(Oraculum) {
+  define(['oraculum', 'oraculum/libs', 'oraculum/views/mixins/list', 'oraculum/views/mixins/static-classes'], function(Oraculum) {
     'use strict';
+    var composeConfig;
+    composeConfig = Oraculum.get('composeConfig');
     return Oraculum.defineMixin('Table.ViewMixin', {
       mixinOptions: {
         staticClasses: ['table-mixin'],
@@ -9,20 +11,15 @@
         }
       },
       mixconfig: function(arg, arg1) {
-        var columns, list, table, viewOptions;
+        var columns, list, table;
         table = arg.table, list = arg.list;
         columns = (arg1 != null ? arg1 : {}).columns;
         if (columns != null) {
           table.columns = columns;
         }
-        viewOptions = list.viewOptions;
-        return list.viewOptions = !_.isFunction(viewOptions) ? _.extend({
+        return list.viewOptions = composeConfig({
           collection: table.columns
-        }, viewOptions) : function() {
-          return _.extend({
-            collection: table.columns
-          }, viewOptions.apply(this, arguments));
-        };
+        }, list.viewOptions);
       },
       mixinitialize: function() {
         this.columns = this.mixinOptions.table.columns;
