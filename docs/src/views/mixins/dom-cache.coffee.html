@@ -49,6 +49,7 @@
   <span class="s">&#39;use strict&#39;</span>
 
   <span class="nv">_ = </span><span class="nx">Oraculum</span><span class="p">.</span><span class="nx">get</span> <span class="s">&#39;underscore&#39;</span>
+  <span class="nv">composeConfig = </span><span class="nx">Oraculum</span><span class="p">.</span><span class="nx">get</span> <span class="s">&#39;composeConfig&#39;</span>
 
   <span class="nx">Oraculum</span><span class="p">.</span><span class="nx">defineMixin</span> <span class="s">&#39;DOMCache.ViewMixin&#39;</span><span class="p">,</span> <span class="p">{</span>
 
@@ -81,15 +82,17 @@
         <span class="nv">render: </span><span class="p">{}</span>
 
     <span class="nv">mixconfig: </span><span class="nf">(mixinOptions, {domcache} = {}) -&gt;</span>
-      <span class="nv">mixinOptions.domcache = </span><span class="nx">_</span><span class="p">.</span><span class="nx">extend</span> <span class="p">{},</span> <span class="nx">mixinOptions</span><span class="p">.</span><span class="nx">domcache</span><span class="p">,</span> <span class="nx">domcache</span>
+      <span class="nv">mixinOptions.domcache = </span><span class="nx">composeConfig</span> <span class="nx">mixinOptions</span><span class="p">.</span><span class="nx">domcache</span><span class="p">,</span> <span class="nx">domcache</span>
 
     <span class="nv">mixinitialize: </span><span class="nf">-&gt;</span>
       <span class="nx">@</span><span class="kc">on</span> <span class="s">&#39;render:after&#39;</span><span class="p">,</span> <span class="nx">@cacheDOM</span><span class="p">,</span> <span class="k">this</span>
 
     <span class="nv">cacheDOM: </span><span class="nf">-&gt;</span>
       <span class="vi">@domcache = </span><span class="p">{}</span>
+      <span class="nv">configOptions = </span><span class="nx">@mixinOptions</span><span class="p">.</span><span class="nx">domcache</span>
+      <span class="nv">configOptions = </span><span class="nx">configOptions</span><span class="p">.</span><span class="nx">call</span> <span class="k">this</span> <span class="k">if</span> <span class="nx">_</span><span class="p">.</span><span class="nx">isFunction</span> <span class="nx">configOptions</span>
       <span class="nx">_</span><span class="p">.</span><span class="nx">each</span> <span class="nx">@$</span><span class="p">(</span><span class="s">&#39;[data-cache]&#39;</span><span class="p">),</span> <span class="nx">@cacheElement</span><span class="p">,</span> <span class="k">this</span>
-      <span class="nx">_</span><span class="p">.</span><span class="nx">each</span> <span class="nx">@mixinOptions</span><span class="p">.</span><span class="nx">domcache</span><span class="p">,</span> <span class="nx">@cacheElement</span><span class="p">,</span> <span class="k">this</span>
+      <span class="nx">_</span><span class="p">.</span><span class="nx">each</span> <span class="nx">configOptions</span><span class="p">,</span> <span class="nx">@cacheElement</span><span class="p">,</span> <span class="k">this</span>
       <span class="nx">@trigger</span> <span class="s">&#39;domcache&#39;</span><span class="p">,</span> <span class="k">this</span>
 
     <span class="nv">cacheElement: </span><span class="nf">(element, name) -&gt;</span>

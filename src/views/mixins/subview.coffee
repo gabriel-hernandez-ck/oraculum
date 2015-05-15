@@ -6,6 +6,7 @@ define [
   'use strict'
 
   _ = Oraculum.get 'underscore'
+  composeConfig = Oraculum.get 'composeConfig'
 
   Oraculum.defineMixin 'Subview.ViewMixin', {
 
@@ -27,7 +28,7 @@ define [
         render: {}
 
     mixconfig: (mixinOptions, {subviews} = {}) ->
-      mixinOptions.subviews = _.extend {}, mixinOptions.subviews, subviews
+      mixinOptions.subviews = composeConfig mixinOptions.subviews, subviews
 
     mixinitialize: ->
       @_subviews = []
@@ -37,7 +38,9 @@ define [
 
     createSubviews: ->
       # Create a mutable local clone of the subviews
-      mutableSubviews = _.clone @mixinOptions.subviews
+      subviews = @mixinOptions.subviews
+      subviews = subviews.call this if _.isFunction subviews
+      mutableSubviews = _.clone subviews
       @_createDOMSubviews mutableSubviews
       @_createDOMContainerSubviews mutableSubviews
       _.each mutableSubviews, (spec, name) =>

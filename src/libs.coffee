@@ -3,6 +3,7 @@ define [
   'jquery'
   'backbone'
   'underscore'
+  'oraculum/extensions/compose-config'
   'oraculum/extensions/resolve-view-target'
   'oraculum/extensions/make-evented-method'
   'oraculum/extensions/make-middleware-method'

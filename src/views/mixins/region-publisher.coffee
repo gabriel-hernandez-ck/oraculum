@@ -5,6 +5,9 @@ define [
 ], (Oraculum) ->
   'use strict'
 
+  _ = Oraculum.get 'underscore'
+  composeConfig = Oraculum.get 'composeConfig'
+
   Oraculum.defineMixin 'RegionPublisher.ViewMixin', {
 
     # Example regions configuration
@@ -17,12 +20,13 @@ define [
     # ```
 
     mixconfig: (mixinOptions, {regions} = {}) ->
-      mixinOptions.regions = _.extend {}, mixinOptions.regions, regions
+      mixinOptions.regions = composeConfig mixinOptions.regions, regions
 
     mixinitialize: ->
-      {regions} = @mixinOptions
+      regions = @mixinOptions.regions
+      regions = regions.call this if _.isFunction regions
       @executeCallback 'region:register', this if regions?
-      @on 'dispose', @unregisterAllRegions, this
+      @on 'dispose', => @unregisterAllRegions arguments...
 
     # Functionally register a single region.
     registerRegion: (name, selector) ->

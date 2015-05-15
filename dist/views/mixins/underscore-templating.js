@@ -5,9 +5,8 @@
     _ = Oraculum.get('underscore');
     getTemplateData = function() {
       var data;
-      data = {};
       if (this.model) {
-        _.extend(data, this.model.toJSON());
+        data = _.extend({}, this.model.toJSON());
       }
       if (this.collection) {
         _.defaults(data, {

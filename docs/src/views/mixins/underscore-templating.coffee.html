@@ -47,8 +47,7 @@
   <span class="nv">_ = </span><span class="nx">Oraculum</span><span class="p">.</span><span class="nx">get</span> <span class="s">&#39;underscore&#39;</span>
 
   <span class="nv">getTemplateData = </span><span class="nf">-&gt;</span>
-    <span class="nv">data = </span><span class="p">{}</span>
-    <span class="nx">_</span><span class="p">.</span><span class="nx">extend</span> <span class="nx">data</span><span class="p">,</span> <span class="nx">@model</span><span class="p">.</span><span class="nx">toJSON</span><span class="p">()</span> <span class="k">if</span> <span class="nx">@model</span>
+    <span class="nv">data = </span><span class="nx">_</span><span class="p">.</span><span class="nx">extend</span> <span class="p">{},</span> <span class="nx">@model</span><span class="p">.</span><span class="nx">toJSON</span><span class="p">()</span> <span class="k">if</span> <span class="nx">@model</span>
     <span class="nx">_</span><span class="p">.</span><span class="nx">defaults</span> <span class="nx">data</span><span class="p">,</span> <span class="p">{</span>
       <span class="nv">items: </span><span class="nx">@collection</span><span class="p">.</span><span class="nx">toJSON</span><span class="p">()</span>
       <span class="nv">length: </span><span class="nx">@collection</span><span class="p">.</span><span class="nx">length</span>

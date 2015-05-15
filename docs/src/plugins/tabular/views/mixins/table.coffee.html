@@ -39,10 +39,13 @@
         </td>
         <td class="code highlight"><div class="highlight"><pre><span class="nx">define</span> <span class="p">[</span>
   <span class="s">&#39;oraculum&#39;</span>
+  <span class="s">&#39;oraculum/libs&#39;</span>
   <span class="s">&#39;oraculum/views/mixins/list&#39;</span>
   <span class="s">&#39;oraculum/views/mixins/static-classes&#39;</span>
 <span class="p">],</span> <span class="nf">(Oraculum) -&gt;</span>
   <span class="s">&#39;use strict&#39;</span>
+
+  <span class="nv">composeConfig = </span><span class="nx">Oraculum</span><span class="p">.</span><span class="nx">get</span> <span class="s">&#39;composeConfig&#39;</span>
 
   <span class="nx">Oraculum</span><span class="p">.</span><span class="nx">defineMixin</span> <span class="s">&#39;Table.ViewMixin&#39;</span><span class="p">,</span> <span class="p">{</span>
 
@@ -52,12 +55,9 @@
 
     <span class="nv">mixconfig: </span><span class="nf">({table, list}, {columns} = {}) -&gt;</span>
       <span class="nv">table.columns = </span><span class="nx">columns</span> <span class="k">if</span> <span class="nx">columns</span><span class="o">?</span>
-      <span class="nv">viewOptions = </span><span class="nx">list</span><span class="p">.</span><span class="nx">viewOptions</span>
-      <span class="nv">list.viewOptions = </span><span class="k">unless</span> <span class="nx">_</span><span class="p">.</span><span class="nx">isFunction</span> <span class="nx">viewOptions</span>
-      <span class="k">then</span> <span class="nx">_</span><span class="p">.</span><span class="nx">extend</span> <span class="p">{</span> <span class="nv">collection: </span><span class="nx">table</span><span class="p">.</span><span class="nx">columns</span> <span class="p">},</span> <span class="nx">viewOptions</span>
-      <span class="k">else</span> <span class="nf">-&gt;</span> <span class="nx">_</span><span class="p">.</span><span class="nx">extend</span> <span class="p">{</span>
+      <span class="nv">list.viewOptions = </span><span class="nx">composeConfig</span> <span class="p">{</span>
         <span class="nv">collection: </span><span class="nx">table</span><span class="p">.</span><span class="nx">columns</span>
-      <span class="p">},</span> <span class="nx">viewOptions</span><span class="p">.</span><span class="nx">apply</span> <span class="k">this</span><span class="p">,</span> <span class="nx">arguments</span>
+      <span class="p">},</span> <span class="nx">list</span><span class="p">.</span><span class="nx">viewOptions</span>
 
     <span class="nv">mixinitialize: </span><span class="nf">-&gt;</span>
       <span class="vi">@columns = </span><span class="nx">@mixinOptions</span><span class="p">.</span><span class="nx">table</span><span class="p">.</span><span class="nx">columns</span>

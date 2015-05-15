@@ -1,6 +1,8 @@
 (function() {
-  define(['oraculum', 'oraculum/views/mixins/list', 'oraculum/views/mixins/static-classes'], function(Oraculum) {
+  define(['oraculum', 'oraculum/libs', 'oraculum/views/mixins/list', 'oraculum/views/mixins/static-classes'], function(Oraculum) {
     'use strict';
+    var composeConfig;
+    composeConfig = Oraculum.get('composeConfig');
 
     /*
     Row.ViewMixin
@@ -16,17 +18,22 @@
         return column.get('modelView') || modelView;
       },
       resolveViewOptions: function(column) {
-        var model, viewOptions;
+        var columnOptions, model, viewOptions;
         model = this.model || column;
+        columnOptions = column.get('viewOptions');
         viewOptions = this.mixinOptions.list.viewOptions;
-        viewOptions = _.isFunction(viewOptions) ? viewOptions.call(this, {
+        viewOptions = composeConfig({
           model: model,
           column: column
-        }) : _.extend({
-          model: model,
-          column: column
-        }, viewOptions);
-        return _.extend({}, viewOptions, column.get('viewOptions'));
+        }, viewOptions, columnOptions);
+        if (_.isFunction(viewOptions)) {
+          return viewOptions.call(this, {
+            model: model,
+            column: column
+          });
+        } else {
+          return viewOptions;
+        }
       }
     }, {
       mixins: ['List.ViewMixin', 'StaticClasses.ViewMixin']

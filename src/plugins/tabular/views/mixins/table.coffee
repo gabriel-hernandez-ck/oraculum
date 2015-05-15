@@ -1,9 +1,12 @@
 define [
   'oraculum'
+  'oraculum/libs'
   'oraculum/views/mixins/list'
   'oraculum/views/mixins/static-classes'
 ], (Oraculum) ->
   'use strict'
+
+  composeConfig = Oraculum.get 'composeConfig'
 
   Oraculum.defineMixin 'Table.ViewMixin', {
 
@@ -13,12 +16,9 @@ define [
 
     mixconfig: ({table, list}, {columns} = {}) ->
       table.columns = columns if columns?
-      viewOptions = list.viewOptions
-      list.viewOptions = unless _.isFunction viewOptions
-      then _.extend { collection: table.columns }, viewOptions
-      else -> _.extend {
+      list.viewOptions = composeConfig {
         collection: table.columns
-      }, viewOptions.apply this, arguments
+      }, list.viewOptions
 
     mixinitialize: ->
       @columns = @mixinOptions.table.columns

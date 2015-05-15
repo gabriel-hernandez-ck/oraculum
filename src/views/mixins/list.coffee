@@ -8,6 +8,7 @@ define [
   'use strict'
 
   _ = Oraculum.get 'underscore'
+  composeConfig = Oraculum.get 'composeConfig'
 
   subviewPrefix = 'modelView:'
   subviewName = ({cid}) -> "#{subviewPrefix}#{cid}"
@@ -17,8 +18,9 @@ define [
 
   resolveViewOptions = (model) ->
     viewOptions = @mixinOptions.list.viewOptions
-    viewOptions = viewOptions.call this, { model } if _.isFunction viewOptions
-    return _.extend { model }, viewOptions
+    return if _.isFunction viewOptions
+    then viewOptions.call this, {model}
+    else _.extend { model }, viewOptions
 
   initModelView = (model) ->
     view = @resolveModelView model
@@ -61,12 +63,7 @@ define [
       {viewOptions, modelView} = options
       list.modelView = modelView if modelView?
 
-      # Allow the viewOptions constructor arg to override our mixinOptions
-      # viewOptions if it's a function, otherwise extend it as an object.
-      # **Functions always win**
-      list.viewOptions = viewOptions if _.isFunction viewOptions
-      unless _.isFunction list.viewOptions
-        list.viewOptions = _.extend {}, list.viewOptions, viewOptions
+      list.viewOptions = composeConfig list.viewOptions, viewOptions
 
       {filterer, filterCallback} = options
       list.filterer = filterer if filterer?
