@@ -18,7 +18,7 @@ define [
     return (defaultConfig, overrideConfigs...) ->
       return _.reduce overrideConfigs, ((defaultConfig, overrideConfig) ->
         return if _.isFunction(defaultConfig) or _.isFunction(overrideConfig)
-        then -> composeConfig defaultConfig, overrideConfig, arguments...
+        then -> composeConfig.call this, defaultConfig, overrideConfig, arguments...
         else composeConfig defaultConfig, overrideConfig
       ), defaultConfig
 
