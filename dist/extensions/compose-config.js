@@ -26,7 +26,7 @@
         return _.reduce(overrideConfigs, (function(defaultConfig, overrideConfig) {
           if (_.isFunction(defaultConfig) || _.isFunction(overrideConfig)) {
             return function() {
-              return composeConfig.apply(null, [defaultConfig, overrideConfig].concat(slice.call(arguments)));
+              return composeConfig.call.apply(composeConfig, [this, defaultConfig, overrideConfig].concat(slice.call(arguments)));
             };
           } else {
             return composeConfig(defaultConfig, overrideConfig);
