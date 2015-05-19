@@ -18,9 +18,8 @@ define [
 
   resolveViewOptions = (model) ->
     viewOptions = @mixinOptions.list.viewOptions
-    return if _.isFunction viewOptions
-    then viewOptions.call this, {model}
-    else _.extend { model }, viewOptions
+    viewOptions = viewOptions.call this, {model} if _.isFunction viewOptions
+    return _.extend { model }, viewOptions
 
   initModelView = (model) ->
     view = @resolveModelView model
