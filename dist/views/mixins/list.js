@@ -17,14 +17,13 @@
       var viewOptions;
       viewOptions = this.mixinOptions.list.viewOptions;
       if (_.isFunction(viewOptions)) {
-        return viewOptions.call(this, {
+        viewOptions = viewOptions.call(this, {
           model: model
         });
-      } else {
-        return _.extend({
-          model: model
-        }, viewOptions);
       }
+      return _.extend({
+        model: model
+      }, viewOptions);
     };
     initModelView = function(model) {
       var view, viewOptions;

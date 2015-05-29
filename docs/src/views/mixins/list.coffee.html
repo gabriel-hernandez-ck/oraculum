@@ -57,9 +57,8 @@
 
   <span class="nv">resolveViewOptions = </span><span class="nf">(model) -&gt;</span>
     <span class="nv">viewOptions = </span><span class="nx">@mixinOptions</span><span class="p">.</span><span class="nx">list</span><span class="p">.</span><span class="nx">viewOptions</span>
-    <span class="k">return</span> <span class="k">if</span> <span class="nx">_</span><span class="p">.</span><span class="nx">isFunction</span> <span class="nx">viewOptions</span>
-    <span class="k">then</span> <span class="nx">viewOptions</span><span class="p">.</span><span class="nx">call</span> <span class="k">this</span><span class="p">,</span> <span class="p">{</span><span class="nx">model</span><span class="p">}</span>
-    <span class="k">else</span> <span class="nx">_</span><span class="p">.</span><span class="nx">extend</span> <span class="p">{</span> <span class="nx">model</span> <span class="p">},</span> <span class="nx">viewOptions</span>
+    <span class="nv">viewOptions = </span><span class="nx">viewOptions</span><span class="p">.</span><span class="nx">call</span> <span class="k">this</span><span class="p">,</span> <span class="p">{</span><span class="nx">model</span><span class="p">}</span> <span class="k">if</span> <span class="nx">_</span><span class="p">.</span><span class="nx">isFunction</span> <span class="nx">viewOptions</span>
+    <span class="k">return</span> <span class="nx">_</span><span class="p">.</span><span class="nx">extend</span> <span class="p">{</span> <span class="nx">model</span> <span class="p">},</span> <span class="nx">viewOptions</span>
 
   <span class="nv">initModelView = </span><span class="nf">(model) -&gt;</span>
     <span class="nv">view = </span><span class="nx">@resolveModelView</span> <span class="nx">model</span>
