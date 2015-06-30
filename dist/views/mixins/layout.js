@@ -17,6 +17,10 @@
           routeLinks: 'a, .go-to',
           skipRouting: '.noscript',
           openExternalToBlank: false,
+          openExternalLink: function(href, event) {
+            event.preventDefault();
+            return window.open(href);
+          },
           titleTemplate: function(data) {
             if (data.subtitle) {
               return data.subtitle + " - " + data.title;
@@ -51,6 +55,9 @@
         }
         if (titleTemplate != null) {
           layout.titleTemplate = titleTemplate;
+        }
+        if (typeof openExternalLink !== "undefined" && openExternalLink !== null) {
+          layout.openExternalLink = openExternalLink;
         }
         if (openExternalToBlank != null) {
           return layout.openExternalToBlank = openExternalToBlank;
@@ -147,8 +154,7 @@
         isExternalLink = isAnchor && this.isExternalLink(el);
         if (isExternalLink) {
           if (openExternalToBlank) {
-            event.preventDefault();
-            window.open(href);
+            this.mixinOptions.layout.openExternalLink(href, event);
           }
           return;
         }

@@ -27,6 +27,10 @@ define [
         routeLinks: 'a, .go-to'
         skipRouting: '.noscript'
         openExternalToBlank: false
+        openExternalLink: (href, event)->
+          # Open external links normally in a new tab.
+          event.preventDefault()
+          window.open href
         titleTemplate: (data) ->
           return if data.subtitle
           then "#{data.subtitle} - #{data.title}"
@@ -43,6 +47,7 @@ define [
       {skipRouting, titleTemplate, openExternalToBlank} = options
       layout.skipRouting = skipRouting if skipRouting?
       layout.titleTemplate = titleTemplate if titleTemplate?
+      layout.openExternalLink = openExternalLink if openExternalLink?
       layout.openExternalToBlank = openExternalToBlank if openExternalToBlank?
 
     mixinitialize: ->
@@ -123,9 +128,7 @@ define [
       isExternalLink = isAnchor and @isExternalLink el
       if isExternalLink
         if openExternalToBlank
-          # Open external links normally in a new tab.
-          event.preventDefault()
-          window.open href
+          @mixinOptions.layout.openExternalLink(href, event)
         return # void 0
 
       # Pass to the router, try to route the path internally.
