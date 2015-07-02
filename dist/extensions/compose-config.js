@@ -14,6 +14,9 @@
         if (_.isFunction(overrideConfig)) {
           overrideConfig = overrideConfig.apply(this, args);
         }
+        if (overrideConfig == null) {
+          return _.clone(defaultConfig);
+        }
         if (_.isArray(defaultConfig) && _.isArray(overrideConfig)) {
           return [].concat(defaultConfig, overrideConfig);
         } else {

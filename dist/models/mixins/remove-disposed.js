@@ -26,10 +26,9 @@
         return this.off('dispose:after', this.removeDisposed, this);
       },
       removeDisposed: function(model) {
-        if (model === this) {
-          return;
+        if (model !== this) {
+          return this.remove(model);
         }
-        return this.remove(model);
       }
     });
   });

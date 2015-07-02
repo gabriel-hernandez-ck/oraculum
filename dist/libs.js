@@ -4,17 +4,20 @@
     Oraculum.define('jQuery', (function() {
       return jQuery;
     }), {
-      singleton: true
+      singleton: true,
+      tags: ['vendor']
     });
     Oraculum.define('Backbone', (function() {
       return Backbone;
     }), {
-      singleton: true
+      singleton: true,
+      tags: ['vendor']
     });
     return Oraculum.define('underscore', (function() {
       return _;
     }), {
-      singleton: true
+      singleton: true,
+      tags: ['vendor']
     });
   });
 

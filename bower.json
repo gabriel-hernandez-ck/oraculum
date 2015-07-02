@@ -21,6 +21,7 @@
     "application",
     "composition"
   ],
+  "license": "MIT",
   "description": "The Enterprise Javascript MVC Framework.",
   "homepage": "https://github.com/lookout/oraculum",
   "repository": "https://github.com/lookout/oraculum.git",

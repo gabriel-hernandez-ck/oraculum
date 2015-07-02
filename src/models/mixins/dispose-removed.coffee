@@ -1,7 +1,11 @@
 define [
   'oraculum'
+  'oraculum/libs'
+  'oraculum/mixins/evented-method'
 ], (Oraculum) ->
   'use strict'
+
+  _ = Oraculum.get 'underscore'
 
   ###
   DisposeRemoved.CollectionMixin
@@ -12,7 +16,7 @@ define [
   a separate `Collection`.
   ###
 
-  Oraculum.defineMixin 'DisposeRemoved.CollectionMixin',
+  Oraculum.defineMixin 'DisposeRemoved.CollectionMixin', {
 
     ###
     Mixin Options
@@ -22,6 +26,9 @@ define [
 
     mixinOptions:
       disposeRemoved: true # Whether or not to `dispose` removed `Model`s.
+      eventedMethods:
+        reset: {}
+        remove: {}
 
     ###
     Mixconfig
@@ -37,19 +44,32 @@ define [
     ###
     Mixinitialize
     -------------
-    Set up an event listener to respond to `remove` events by invoking `dispose`
-    on the removed `Model`. Additionally, add an event listener to respond to
-    `reset` events by invoking `dispose` on `Model`s that were removed during
-    the `reset` operation.
+    Set up an event listener to respond to `remove:after` events by invoking
+    `dispose` on the removed `Model`s.
+    Additionally, add an event listener to respond to `reset:after` events by
+    invoking `dispose` on `Model`s that were removed during the `reset`.
     By design, this will throw if the target model does not impement the
     `dispose` method.
     ###
 
     mixinitialize: ->
-      @on 'remove', (model) =>
-        return unless @mixinOptions.disposeRemoved
-        model.dispose()
+      if @mixinOptions.disposeRemoved
+      then @enableDisposeRemoved()
+      else @disableDisposeRemoved()
 
-      @on 'reset', (models, {previousModels}) =>
-        return unless @mixinOptions.disposeRemoved
-        _.invoke previousModels, 'dispose'
+    enableDisposeRemoved: ->
+      @on 'reset', @disposeRemovedReset, this
+      @on 'remove:after', @disposeRemoved, this
+
+    disableDisposeRemoved: ->
+      @off 'reset', @disposeRemovedReset, this
+      @off 'remove:after', @disposeRemoved, this
+
+    disposeRemovedReset: (target, {previousModels}) ->
+      @once 'reset:after', => @disposeRemoved previousModels
+
+    disposeRemoved: (models) ->
+      models = [models] unless _.isArray models
+      model.dispose() for model in models
+
+  }, mixins: ['EventedMethod.Mixin']

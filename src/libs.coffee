@@ -17,6 +17,14 @@ define [
   # and simply request a reference to the library from Oraculum.
   # It lends itself well to more readable code.
 
-  Oraculum.define 'jQuery', (-> jQuery), singleton: true
-  Oraculum.define 'Backbone', (-> Backbone), singleton: true
-  Oraculum.define 'underscore', (-> _), singleton: true
+  Oraculum.define 'jQuery', (-> jQuery),
+    singleton: true
+    tags: ['vendor']
+
+  Oraculum.define 'Backbone', (-> Backbone),
+    singleton: true
+    tags: ['vendor']
+
+  Oraculum.define 'underscore', (-> _),
+    singleton: true
+    tags: ['vendor']

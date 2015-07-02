@@ -62,8 +62,7 @@
       <span class="nx">@</span><span class="kc">off</span> <span class="s">&#39;dispose:after&#39;</span><span class="p">,</span> <span class="nx">@removeDisposed</span><span class="p">,</span> <span class="k">this</span>
 
     <span class="nv">removeDisposed: </span><span class="nf">(model) -&gt;</span>
-      <span class="k">return</span> <span class="k">if</span> <span class="nx">model</span> <span class="o">is</span> <span class="k">this</span>
-      <span class="nx">@remove</span> <span class="nx">model</span>
+      <span class="nx">@remove</span> <span class="nx">model</span> <span class="k">unless</span> <span class="nx">model</span> <span class="o">is</span> <span class="k">this</span>
 </pre></div>
         </td>
       </tr>

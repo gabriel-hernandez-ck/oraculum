@@ -14,9 +14,7 @@ define [
       return "'direction' attribute required" unless direction
       return "Invalid direction: '#{direction}'" unless direction in [-1, 1]
 
-  }, mixins: [
-    'Disposable.Mixin'
-  ]
+  }, mixins: ['Disposable.Mixin']
 
   Oraculum.defineMixin 'SortByAttributeDirectionInterface.CollectionMixin', {
 

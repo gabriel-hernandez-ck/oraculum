@@ -11,8 +11,10 @@ define [
   describe 'PageableInterface.CollectionMixin', ->
     collection = null
 
+    Oraculum.extend 'Model', 'PageableInterface.Model', {}, mixins: ['Disposable.Mixin']
     Oraculum.extend 'Collection', 'PageableInterface.Collection', {
-      model: 'Disposable.Model'
+      model: 'PageableInterface.Model'
+      mixinOptions: disposable: disposeModels: true
     }, mixins: [
       'Disposable.CollectionMixin'
       'PageableInterface.CollectionMixin'
