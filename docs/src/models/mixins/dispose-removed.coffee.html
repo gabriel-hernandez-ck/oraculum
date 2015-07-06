@@ -195,7 +195,7 @@ By design, this will throw if the target model does not impement the
 
     <span class="nv">disposeRemoved: </span><span class="nf">(models) -&gt;</span>
       <span class="nv">models = </span><span class="p">[</span><span class="nx">models</span><span class="p">]</span> <span class="k">unless</span> <span class="nx">_</span><span class="p">.</span><span class="nx">isArray</span> <span class="nx">models</span>
-      <span class="nx">model</span><span class="p">.</span><span class="nx">dispose</span><span class="p">()</span> <span class="k">for</span> <span class="nx">model</span> <span class="k">in</span> <span class="nx">models</span>
+      <span class="nx">model</span><span class="o">?</span><span class="p">.</span><span class="nx">dispose</span><span class="p">()</span> <span class="k">for</span> <span class="nx">model</span> <span class="k">in</span> <span class="nx">models</span>
 
   <span class="p">},</span> <span class="nv">mixins: </span><span class="p">[</span><span class="s">&#39;EventedMethod.Mixin&#39;</span><span class="p">]</span>
 </pre></div>

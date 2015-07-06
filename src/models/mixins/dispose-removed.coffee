@@ -70,6 +70,6 @@ define [
 
     disposeRemoved: (models) ->
       models = [models] unless _.isArray models
-      model.dispose() for model in models
+      model?.dispose() for model in models
 
   }, mixins: ['EventedMethod.Mixin']

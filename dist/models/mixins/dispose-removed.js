@@ -84,7 +84,7 @@
         results = [];
         for (i = 0, len = models.length; i < len; i++) {
           model = models[i];
-          results.push(model.dispose());
+          results.push(model != null ? model.dispose() : void 0);
         }
         return results;
       }
