@@ -1,6 +1,8 @@
 (function() {
-  define(['oraculum'], function(Oraculum) {
+  define(['oraculum', 'oraculum/libs', 'oraculum/mixins/evented-method'], function(Oraculum) {
     'use strict';
+    var _;
+    _ = Oraculum.get('underscore');
 
     /*
     DisposeRemoved.CollectionMixin
@@ -18,7 +20,11 @@
       Allow the `disposeRemoved` flag to be set on the definition.
        */
       mixinOptions: {
-        disposeRemoved: true
+        disposeRemoved: true,
+        eventedMethods: {
+          reset: {},
+          remove: {}
+        }
       },
 
       /*
@@ -39,33 +45,51 @@
       /*
       Mixinitialize
       -------------
-      Set up an event listener to respond to `remove` events by invoking `dispose`
-      on the removed `Model`. Additionally, add an event listener to respond to
-      `reset` events by invoking `dispose` on `Model`s that were removed during
-      the `reset` operation.
+      Set up an event listener to respond to `remove:after` events by invoking
+      `dispose` on the removed `Model`s.
+      Additionally, add an event listener to respond to `reset:after` events by
+      invoking `dispose` on `Model`s that were removed during the `reset`.
       By design, this will throw if the target model does not impement the
       `dispose` method.
        */
       mixinitialize: function() {
-        this.on('remove', (function(_this) {
-          return function(model) {
-            if (!_this.mixinOptions.disposeRemoved) {
-              return;
-            }
-            return model.dispose();
+        if (this.mixinOptions.disposeRemoved) {
+          return this.enableDisposeRemoved();
+        } else {
+          return this.disableDisposeRemoved();
+        }
+      },
+      enableDisposeRemoved: function() {
+        this.on('reset', this.disposeRemovedReset, this);
+        return this.on('remove:after', this.disposeRemoved, this);
+      },
+      disableDisposeRemoved: function() {
+        this.off('reset', this.disposeRemovedReset, this);
+        return this.off('remove:after', this.disposeRemoved, this);
+      },
+      disposeRemovedReset: function(target, arg) {
+        var previousModels;
+        previousModels = arg.previousModels;
+        return this.once('reset:after', (function(_this) {
+          return function() {
+            return _this.disposeRemoved(previousModels);
           };
         })(this));
-        return this.on('reset', (function(_this) {
-          return function(models, arg) {
-            var previousModels;
-            previousModels = arg.previousModels;
-            if (!_this.mixinOptions.disposeRemoved) {
-              return;
-            }
-            return _.invoke(previousModels, 'dispose');
-          };
-        })(this));
+      },
+      disposeRemoved: function(models) {
+        var i, len, model, results;
+        if (!_.isArray(models)) {
+          models = [models];
+        }
+        results = [];
+        for (i = 0, len = models.length; i < len; i++) {
+          model = models[i];
+          results.push(model.dispose());
+        }
+        return results;
       }
+    }, {
+      mixins: ['EventedMethod.Mixin']
     });
   });
 

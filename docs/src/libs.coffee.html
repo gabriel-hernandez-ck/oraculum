@@ -73,9 +73,17 @@ It lends itself well to more readable code.</p>
         </td>
         <td class="code highlight"><div class="highlight"><pre>
 
-  <span class="nx">Oraculum</span><span class="p">.</span><span class="nx">define</span> <span class="s">&#39;jQuery&#39;</span><span class="p">,</span> <span class="p">(</span><span class="nf">-&gt;</span> <span class="nx">jQuery</span><span class="p">),</span> <span class="nv">singleton: </span><span class="kc">true</span>
-  <span class="nx">Oraculum</span><span class="p">.</span><span class="nx">define</span> <span class="s">&#39;Backbone&#39;</span><span class="p">,</span> <span class="p">(</span><span class="nf">-&gt;</span> <span class="nx">Backbone</span><span class="p">),</span> <span class="nv">singleton: </span><span class="kc">true</span>
-  <span class="nx">Oraculum</span><span class="p">.</span><span class="nx">define</span> <span class="s">&#39;underscore&#39;</span><span class="p">,</span> <span class="p">(</span><span class="nf">-&gt;</span> <span class="nx">_</span><span class="p">),</span> <span class="nv">singleton: </span><span class="kc">true</span>
+  <span class="nx">Oraculum</span><span class="p">.</span><span class="nx">define</span> <span class="s">&#39;jQuery&#39;</span><span class="p">,</span> <span class="p">(</span><span class="nf">-&gt;</span> <span class="nx">jQuery</span><span class="p">),</span>
+    <span class="nv">singleton: </span><span class="kc">true</span>
+    <span class="nv">tags: </span><span class="p">[</span><span class="s">&#39;vendor&#39;</span><span class="p">]</span>
+
+  <span class="nx">Oraculum</span><span class="p">.</span><span class="nx">define</span> <span class="s">&#39;Backbone&#39;</span><span class="p">,</span> <span class="p">(</span><span class="nf">-&gt;</span> <span class="nx">Backbone</span><span class="p">),</span>
+    <span class="nv">singleton: </span><span class="kc">true</span>
+    <span class="nv">tags: </span><span class="p">[</span><span class="s">&#39;vendor&#39;</span><span class="p">]</span>
+
+  <span class="nx">Oraculum</span><span class="p">.</span><span class="nx">define</span> <span class="s">&#39;underscore&#39;</span><span class="p">,</span> <span class="p">(</span><span class="nf">-&gt;</span> <span class="nx">_</span><span class="p">),</span>
+    <span class="nv">singleton: </span><span class="kc">true</span>
+    <span class="nv">tags: </span><span class="p">[</span><span class="s">&#39;vendor&#39;</span><span class="p">]</span>
 </pre></div>
         </td>
       </tr>

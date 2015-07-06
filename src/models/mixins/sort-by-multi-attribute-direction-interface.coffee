@@ -1,5 +1,6 @@
 define [
   'oraculum'
+  'oraculum/libs'
   'oraculum/mixins/evented'
   'oraculum/models/mixins/disposable'
   'oraculum/models/mixins/dispose-removed'
@@ -7,10 +8,14 @@ define [
 ], (Oraculum) ->
   'use strict'
 
+  _ = Oraculum.get 'underscore'
+  composeConfig = Oraculum.get 'composeConfig'
+
   # Define the collection we want to use to store our sort specification state
   stateModelName = '_SortByMultiAttributeDirectionInterfaceState.Collection'
   Oraculum.extend 'Collection', stateModelName, {
     model: '_SortByAttributeDirectionInterfaceState.Model'
+    mixinOptions: disposable: disposeModels: true
   }, mixins: [
     'Disposable.CollectionMixin'
     'DisposeRemoved.CollectionMixin'
@@ -23,11 +28,12 @@ define [
       sortByMultiAttributeDirection:
         defaults: []
 
-    mixconfig: ({sortByMultiAttributeDirection}, models, {sortDefaults} = {}) ->
-      sortByMultiAttributeDirection.defaults = sortDefaults if sortDefaults?
+    mixconfig: ({sortByMultiAttributeDirection:conf}, m, {sortDefaults} = {}) ->
+      conf.defaults = composeConfig conf.defaults, sortDefaults
 
     mixinitialize: ->
       defaults = @mixinOptions.sortByMultiAttributeDirection.defaults
+      defaults = defaults.call this if _.isFunction defaults
       @sortState = @__factory().get stateModelName, defaults
       @on 'dispose', (target) =>
         return unless target is this
@@ -50,6 +56,4 @@ define [
     unsort: ->
       @sortState.reset() unless @sortState.isEmpty()
 
-  }, mixins: [
-    'Evented.Mixin'
-  ]
+  }, mixins: ['Evented.Mixin']

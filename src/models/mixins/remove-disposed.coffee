@@ -23,5 +23,4 @@ define [
       @off 'dispose:after', @removeDisposed, this
 
     removeDisposed: (model) ->
-      return if model is this
-      @remove model
+      @remove model unless model is this

@@ -1,8 +1,24 @@
 (function() {
   define(['oraculum', 'oraculum/libs', 'oraculum/mixins/evented', 'oraculum/models/mixins/sort-by-multi-attribute-direction-interface'], function(Oraculum) {
     'use strict';
-    var _, multiDirectionSort;
+    var _, multiDirectionSort, normalizeValue;
     _ = Oraculum.get('underscore');
+    normalizeValue = function(value) {
+      if (_.isNumber(value)) {
+        return value;
+      }
+      if (_.isString(value) && /^\d+$/.test(value)) {
+        return parseInt(value, 10);
+      }
+      if (_.isString(value)) {
+        return value;
+      }
+      if ((value != null ? value.toString : void 0) != null) {
+        return value.toString();
+      } else {
+        return value;
+      }
+    };
     multiDirectionSort = function(a, b, attributes, directions, index) {
       var attribute, direction, valueA, valueB;
       if (index == null) {
@@ -12,23 +28,11 @@
         return 0;
       }
       attribute = attributes[index];
-      if ((valueA = a.get(attribute)) == null) {
+      if ((valueA = normalizeValue(a.get(attribute))) == null) {
         return 0;
       }
-      if ((valueB = b.get(attribute)) == null) {
+      if ((valueB = normalizeValue(b.get(attribute))) == null) {
         return 0;
-      }
-      if (_.isFunction(valueA.toString)) {
-        valueA = valueA.toString();
-      }
-      if (_.isFunction(valueB.toString)) {
-        valueB = valueB.toString();
-      }
-      if (_.isFunction(valueA.toLowerCase)) {
-        valueA = valueA.toLowerCase();
-      }
-      if (_.isFunction(valueB.toLowerCase)) {
-        valueB = valueB.toLowerCase();
       }
       if (valueA === valueB) {
         if ((attributes.length - 1) === index) {
@@ -44,7 +48,11 @@
     };
     return Oraculum.defineMixin('SortByMultiAttributeDirection.CollectionMixin', {
       mixinitialize: function() {
-        return this.listenTo(this.sortState, 'add remove reset change', _.debounce(this.sort, 10));
+        return this.listenTo(this.sortState, 'add remove reset change', _.debounce(((function(_this) {
+          return function() {
+            return _this.sort.apply(_this, arguments);
+          };
+        })(this)), 10));
       },
       comparator: function(a, b) {
         var attributes, directions;

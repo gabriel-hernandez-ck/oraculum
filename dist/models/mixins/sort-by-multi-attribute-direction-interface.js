@@ -1,10 +1,17 @@
 (function() {
-  define(['oraculum', 'oraculum/mixins/evented', 'oraculum/models/mixins/disposable', 'oraculum/models/mixins/dispose-removed', 'oraculum/models/mixins/sort-by-attribute-direction'], function(Oraculum) {
+  define(['oraculum', 'oraculum/libs', 'oraculum/mixins/evented', 'oraculum/models/mixins/disposable', 'oraculum/models/mixins/dispose-removed', 'oraculum/models/mixins/sort-by-attribute-direction'], function(Oraculum) {
     'use strict';
-    var stateModelName;
+    var _, composeConfig, stateModelName;
+    _ = Oraculum.get('underscore');
+    composeConfig = Oraculum.get('composeConfig');
     stateModelName = '_SortByMultiAttributeDirectionInterfaceState.Collection';
     Oraculum.extend('Collection', stateModelName, {
-      model: '_SortByAttributeDirectionInterfaceState.Model'
+      model: '_SortByAttributeDirectionInterfaceState.Model',
+      mixinOptions: {
+        disposable: {
+          disposeModels: true
+        }
+      }
     }, {
       mixins: ['Disposable.CollectionMixin', 'DisposeRemoved.CollectionMixin']
     });
@@ -14,17 +21,18 @@
           defaults: []
         }
       },
-      mixconfig: function(arg, models, arg1) {
-        var sortByMultiAttributeDirection, sortDefaults;
-        sortByMultiAttributeDirection = arg.sortByMultiAttributeDirection;
+      mixconfig: function(arg, m, arg1) {
+        var conf, sortDefaults;
+        conf = arg.sortByMultiAttributeDirection;
         sortDefaults = (arg1 != null ? arg1 : {}).sortDefaults;
-        if (sortDefaults != null) {
-          return sortByMultiAttributeDirection.defaults = sortDefaults;
-        }
+        return conf.defaults = composeConfig(conf.defaults, sortDefaults);
       },
       mixinitialize: function() {
         var defaults;
         defaults = this.mixinOptions.sortByMultiAttributeDirection.defaults;
+        if (_.isFunction(defaults)) {
+          defaults = defaults.call(this);
+        }
         this.sortState = this.__factory().get(stateModelName, defaults);
         return this.on('dispose', (function(_this) {
           return function(target) {

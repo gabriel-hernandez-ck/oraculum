@@ -11,6 +11,7 @@ define [
         defaultConfig = defaultConfig.apply this, args
       if _.isFunction overrideConfig
         overrideConfig = overrideConfig.apply this, args
+      return _.clone(defaultConfig) unless overrideConfig?
       return if _.isArray(defaultConfig) and _.isArray(overrideConfig)
       then [].concat defaultConfig, overrideConfig
       else _.extend {}, defaultConfig, overrideConfig

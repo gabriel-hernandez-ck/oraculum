@@ -12,16 +12,14 @@ jasmineConfig =
         type: 'lcov'
         options:
           dir: 'build/coverage/lcov'
-    specs: [
-      'build/spec/**/*.helper.js'
-      'build/spec/**/*.spec.js'
-    ]
+    specs: ['build/spec/**/*.spec.js']
     helpers: [
       'bower_components/sinonjs/sinon.js'
       'bower_components/jasmine-sinon/lib/jasmine-sinon.js'
       'bower_components/jquery/dist/jquery.js'
       'bower_components/jasmine-jquery/lib/jasmine-jquery.js'
       'bower_components/jasmine-expect/dist/jasmine-matchers.js'
+      'build/spec/**/*.helper.js'
     ]
 
 module.exports = (grunt) ->

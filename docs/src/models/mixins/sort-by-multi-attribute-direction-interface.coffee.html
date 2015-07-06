@@ -39,12 +39,16 @@
         </td>
         <td class="code highlight"><div class="highlight"><pre><span class="nx">define</span> <span class="p">[</span>
   <span class="s">&#39;oraculum&#39;</span>
+  <span class="s">&#39;oraculum/libs&#39;</span>
   <span class="s">&#39;oraculum/mixins/evented&#39;</span>
   <span class="s">&#39;oraculum/models/mixins/disposable&#39;</span>
   <span class="s">&#39;oraculum/models/mixins/dispose-removed&#39;</span>
   <span class="s">&#39;oraculum/models/mixins/sort-by-attribute-direction&#39;</span>
 <span class="p">],</span> <span class="nf">(Oraculum) -&gt;</span>
   <span class="s">&#39;use strict&#39;</span>
+
+  <span class="nv">_ = </span><span class="nx">Oraculum</span><span class="p">.</span><span class="nx">get</span> <span class="s">&#39;underscore&#39;</span>
+  <span class="nv">composeConfig = </span><span class="nx">Oraculum</span><span class="p">.</span><span class="nx">get</span> <span class="s">&#39;composeConfig&#39;</span>
 
 
 </pre></div>
@@ -61,6 +65,7 @@
   <span class="nv">stateModelName = </span><span class="s">&#39;_SortByMultiAttributeDirectionInterfaceState.Collection&#39;</span>
   <span class="nx">Oraculum</span><span class="p">.</span><span class="nx">extend</span> <span class="s">&#39;Collection&#39;</span><span class="p">,</span> <span class="nx">stateModelName</span><span class="p">,</span> <span class="p">{</span>
     <span class="nv">model: </span><span class="s">&#39;_SortByAttributeDirectionInterfaceState.Model&#39;</span>
+    <span class="nv">mixinOptions: disposable: disposeModels: </span><span class="kc">true</span>
   <span class="p">},</span> <span class="nv">mixins: </span><span class="p">[</span>
     <span class="s">&#39;Disposable.CollectionMixin&#39;</span>
     <span class="s">&#39;DisposeRemoved.CollectionMixin&#39;</span>
@@ -73,11 +78,12 @@
       <span class="nv">sortByMultiAttributeDirection:</span>
         <span class="nv">defaults: </span><span class="p">[]</span>
 
-    <span class="nv">mixconfig: </span><span class="nf">({sortByMultiAttributeDirection}, models, {sortDefaults} = {}) -&gt;</span>
-      <span class="nv">sortByMultiAttributeDirection.defaults = </span><span class="nx">sortDefaults</span> <span class="k">if</span> <span class="nx">sortDefaults</span><span class="o">?</span>
+    <span class="nv">mixconfig: </span><span class="nf">({sortByMultiAttributeDirection:conf}, m, {sortDefaults} = {}) -&gt;</span>
+      <span class="nv">conf.defaults = </span><span class="nx">composeConfig</span> <span class="nx">conf</span><span class="p">.</span><span class="nx">defaults</span><span class="p">,</span> <span class="nx">sortDefaults</span>
 
     <span class="nv">mixinitialize: </span><span class="nf">-&gt;</span>
       <span class="nv">defaults = </span><span class="nx">@mixinOptions</span><span class="p">.</span><span class="nx">sortByMultiAttributeDirection</span><span class="p">.</span><span class="nx">defaults</span>
+      <span class="nv">defaults = </span><span class="nx">defaults</span><span class="p">.</span><span class="nx">call</span> <span class="k">this</span> <span class="k">if</span> <span class="nx">_</span><span class="p">.</span><span class="nx">isFunction</span> <span class="nx">defaults</span>
       <span class="vi">@sortState = </span><span class="nx">@__factory</span><span class="p">().</span><span class="nx">get</span> <span class="nx">stateModelName</span><span class="p">,</span> <span class="nx">defaults</span>
       <span class="nx">@</span><span class="kc">on</span> <span class="s">&#39;dispose&#39;</span><span class="p">,</span> <span class="nf">(target) =&gt;</span>
         <span class="k">return</span> <span class="k">unless</span> <span class="nx">target</span> <span class="o">is</span> <span class="k">this</span>
@@ -100,9 +106,7 @@
     <span class="nv">unsort: </span><span class="nf">-&gt;</span>
       <span class="nx">@sortState</span><span class="p">.</span><span class="nx">reset</span><span class="p">()</span> <span class="k">unless</span> <span class="nx">@sortState</span><span class="p">.</span><span class="nx">isEmpty</span><span class="p">()</span>
 
-  <span class="p">},</span> <span class="nv">mixins: </span><span class="p">[</span>
-    <span class="s">&#39;Evented.Mixin&#39;</span>
-  <span class="p">]</span>
+  <span class="p">},</span> <span class="nv">mixins: </span><span class="p">[</span><span class="s">&#39;Evented.Mixin&#39;</span><span class="p">]</span>
 </pre></div>
         </td>
       </tr>

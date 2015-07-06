@@ -51,8 +51,12 @@
         </td>
         <td class="code highlight"><div class="highlight"><pre><span class="nx">define</span> <span class="p">[</span>
   <span class="s">&#39;oraculum&#39;</span>
+  <span class="s">&#39;oraculum/libs&#39;</span>
+  <span class="s">&#39;oraculum/mixins/evented-method&#39;</span>
 <span class="p">],</span> <span class="nf">(Oraculum) -&gt;</span>
   <span class="s">&#39;use strict&#39;</span>
+
+  <span class="nv">_ = </span><span class="nx">Oraculum</span><span class="p">.</span><span class="nx">get</span> <span class="s">&#39;underscore&#39;</span>
 
 
 </pre></div>
@@ -80,7 +84,7 @@ a separate <code>Collection</code>.</p>
         </td>
         <td class="code highlight"><div class="highlight"><pre>
 
-  <span class="nx">Oraculum</span><span class="p">.</span><span class="nx">defineMixin</span> <span class="s">&#39;DisposeRemoved.CollectionMixin&#39;</span><span class="p">,</span>
+  <span class="nx">Oraculum</span><span class="p">.</span><span class="nx">defineMixin</span> <span class="s">&#39;DisposeRemoved.CollectionMixin&#39;</span><span class="p">,</span> <span class="p">{</span>
 
 
 </pre></div>
@@ -107,6 +111,9 @@ a separate <code>Collection</code>.</p>
 
     <span class="nv">mixinOptions:</span>
       <span class="nv">disposeRemoved: </span><span class="kc">true</span> <span class="c1"># Whether or not to `dispose` removed `Model`s.</span>
+      <span class="nv">eventedMethods:</span>
+        <span class="nv">reset: </span><span class="p">{}</span>
+        <span class="nv">remove: </span><span class="p">{}</span>
 
 
 </pre></div>
@@ -157,10 +164,10 @@ a separate <code>Collection</code>.</p>
 </div>
 
 
-<p>Set up an event listener to respond to <code>remove</code> events by invoking <code>dispose</code>
-on the removed <code>Model</code>. Additionally, add an event listener to respond to
-<code>reset</code> events by invoking <code>dispose</code> on <code>Model</code>s that were removed during
-the <code>reset</code> operation.
+<p>Set up an event listener to respond to <code>remove:after</code> events by invoking
+<code>dispose</code> on the removed <code>Model</code>s.
+Additionally, add an event listener to respond to <code>reset:after</code> events by
+invoking <code>dispose</code> on <code>Model</code>s that were removed during the <code>reset</code>.
 By design, this will throw if the target model does not impement the
 <code>dispose</code> method.</p>
   </div>
@@ -171,13 +178,26 @@ By design, this will throw if the target model does not impement the
         <td class="code highlight"><div class="highlight"><pre>
 
     <span class="nv">mixinitialize: </span><span class="nf">-&gt;</span>
-      <span class="nx">@</span><span class="kc">on</span> <span class="s">&#39;remove&#39;</span><span class="p">,</span> <span class="nf">(model) =&gt;</span>
-        <span class="k">return</span> <span class="k">unless</span> <span class="nx">@mixinOptions</span><span class="p">.</span><span class="nx">disposeRemoved</span>
-        <span class="nx">model</span><span class="p">.</span><span class="nx">dispose</span><span class="p">()</span>
+      <span class="k">if</span> <span class="nx">@mixinOptions</span><span class="p">.</span><span class="nx">disposeRemoved</span>
+      <span class="k">then</span> <span class="nx">@enableDisposeRemoved</span><span class="p">()</span>
+      <span class="k">else</span> <span class="nx">@disableDisposeRemoved</span><span class="p">()</span>
 
-      <span class="nx">@</span><span class="kc">on</span> <span class="s">&#39;reset&#39;</span><span class="p">,</span> <span class="nf">(models, {previousModels}) =&gt;</span>
-        <span class="k">return</span> <span class="k">unless</span> <span class="nx">@mixinOptions</span><span class="p">.</span><span class="nx">disposeRemoved</span>
-        <span class="nx">_</span><span class="p">.</span><span class="nx">invoke</span> <span class="nx">previousModels</span><span class="p">,</span> <span class="s">&#39;dispose&#39;</span>
+    <span class="nv">enableDisposeRemoved: </span><span class="nf">-&gt;</span>
+      <span class="nx">@</span><span class="kc">on</span> <span class="s">&#39;reset&#39;</span><span class="p">,</span> <span class="nx">@disposeRemovedReset</span><span class="p">,</span> <span class="k">this</span>
+      <span class="nx">@</span><span class="kc">on</span> <span class="s">&#39;remove:after&#39;</span><span class="p">,</span> <span class="nx">@disposeRemoved</span><span class="p">,</span> <span class="k">this</span>
+
+    <span class="nv">disableDisposeRemoved: </span><span class="nf">-&gt;</span>
+      <span class="nx">@</span><span class="kc">off</span> <span class="s">&#39;reset&#39;</span><span class="p">,</span> <span class="nx">@disposeRemovedReset</span><span class="p">,</span> <span class="k">this</span>
+      <span class="nx">@</span><span class="kc">off</span> <span class="s">&#39;remove:after&#39;</span><span class="p">,</span> <span class="nx">@disposeRemoved</span><span class="p">,</span> <span class="k">this</span>
+
+    <span class="nv">disposeRemovedReset: </span><span class="nf">(target, {previousModels}) -&gt;</span>
+      <span class="nx">@once</span> <span class="s">&#39;reset:after&#39;</span><span class="p">,</span> <span class="o">=&gt;</span> <span class="nx">@disposeRemoved</span> <span class="nx">previousModels</span>
+
+    <span class="nv">disposeRemoved: </span><span class="nf">(models) -&gt;</span>
+      <span class="nv">models = </span><span class="p">[</span><span class="nx">models</span><span class="p">]</span> <span class="k">unless</span> <span class="nx">_</span><span class="p">.</span><span class="nx">isArray</span> <span class="nx">models</span>
+      <span class="nx">model</span><span class="p">.</span><span class="nx">dispose</span><span class="p">()</span> <span class="k">for</span> <span class="nx">model</span> <span class="k">in</span> <span class="nx">models</span>
+
+  <span class="p">},</span> <span class="nv">mixins: </span><span class="p">[</span><span class="s">&#39;EventedMethod.Mixin&#39;</span><span class="p">]</span>
 </pre></div>
         </td>
       </tr>
