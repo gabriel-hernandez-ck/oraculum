@@ -289,21 +289,25 @@ listeners.</p>
         <td class="code highlight"><div class="highlight"><pre>
 
     <span class="nv">delegateListener: </span><span class="nf">(spec, method) -&gt;</span>
-      <span class="nv">events = </span><span class="nx">spec</span><span class="p">.</span><span class="nx">split</span> <span class="s">&#39; &#39;</span>
-      <span class="nv">target = </span><span class="nx">events</span><span class="p">.</span><span class="nx">splice</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
-      <span class="nv">events = </span><span class="nx">events</span><span class="p">.</span><span class="nx">join</span> <span class="s">&#39; &#39;</span>
-      <span class="nv">callback = </span><span class="k">if</span> <span class="nx">_</span><span class="p">.</span><span class="nx">isString</span><span class="p">(</span><span class="nx">method</span><span class="p">)</span> <span class="k">then</span> <span class="nx">@</span><span class="p">[</span><span class="nx">method</span><span class="p">]</span> <span class="k">else</span> <span class="nx">method</span>
-      <span class="k">throw</span> <span class="k">new</span> <span class="nx">TypeError</span> <span class="s">&quot;&quot;&quot;</span>
-<span class="s">        Listener.Mixin </span><span class="si">#{</span><span class="nx">callback</span><span class="si">}</span><span class="s"> is not a function</span>
-<span class="s">      &quot;&quot;&quot;</span> <span class="k">unless</span> <span class="nx">_</span><span class="p">.</span><span class="nx">isFunction</span> <span class="nx">callback</span>
-      <span class="nv">target = </span><span class="k">this</span> <span class="k">if</span> <span class="nx">target</span> <span class="k">in</span> <span class="p">[</span><span class="s">&#39;this&#39;</span><span class="p">,</span> <span class="s">&#39;self&#39;</span><span class="p">]</span>
-      <span class="nv">target = </span><span class="nx">Backbone</span> <span class="k">if</span> <span class="nx">target</span> <span class="k">in</span> <span class="p">[</span><span class="s">&#39;pubsub&#39;</span><span class="p">,</span> <span class="s">&#39;mediator&#39;</span><span class="p">]</span>
-      <span class="nv">target = </span><span class="nx">@</span><span class="p">[</span><span class="nx">target</span><span class="p">]</span> <span class="k">if</span> <span class="nx">_</span><span class="p">.</span><span class="nx">isString</span> <span class="nx">target</span>
-      <span class="nx">@listenTo</span> <span class="nx">target</span><span class="p">,</span> <span class="nx">events</span><span class="p">,</span> <span class="nx">callback</span> <span class="k">if</span> <span class="nx">target</span><span class="o">?</span>
+      <span class="nv">target = </span><span class="nx">spec</span><span class="p">.</span><span class="nx">split</span><span class="p">(</span><span class="s">&#39; &#39;</span><span class="p">).</span><span class="nx">slice</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+      <span class="nv">events = </span><span class="nx">spec</span><span class="p">.</span><span class="nx">split</span><span class="p">(</span><span class="s">&#39; &#39;</span><span class="p">).</span><span class="nx">slice</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">).</span><span class="nx">join</span><span class="p">(</span><span class="s">&#39; &#39;</span><span class="p">)</span>
 
-  <span class="p">},</span> <span class="nv">mixins: </span><span class="p">[</span>
-    <span class="s">&#39;Evented.Mixin&#39;</span>
-  <span class="p">]</span>
+      <span class="nv">callback = </span><span class="k">if</span> <span class="nx">_</span><span class="p">.</span><span class="nx">isFunction</span> <span class="nx">method</span> <span class="k">then</span> <span class="nx">method</span> <span class="k">else</span> <span class="nx">@</span><span class="p">[</span><span class="nx">method</span><span class="p">]</span>
+      <span class="k">throw</span> <span class="k">new</span> <span class="nx">TypeError</span> <span class="s">&quot;&quot;&quot;</span>
+<span class="s">        Listener.Mixin </span><span class="si">#{</span><span class="nx">method</span><span class="si">}</span><span class="s"> is not a function.</span>
+<span class="s">      &quot;&quot;&quot;</span> <span class="k">unless</span> <span class="nx">_</span><span class="p">.</span><span class="nx">isFunction</span> <span class="nx">callback</span>
+
+      <span class="nv">emitter = </span><span class="k">if</span> <span class="nx">target</span> <span class="k">in</span> <span class="p">[</span><span class="s">&#39;this&#39;</span><span class="p">,</span> <span class="s">&#39;self&#39;</span><span class="p">]</span> <span class="k">then</span> <span class="k">this</span>
+      <span class="k">else</span> <span class="k">if</span> <span class="nx">target</span> <span class="k">in</span> <span class="p">[</span><span class="s">&#39;pubsub&#39;</span><span class="p">,</span> <span class="s">&#39;mediator&#39;</span><span class="p">]</span> <span class="k">then</span> <span class="nx">Backbone</span>
+      <span class="k">else</span> <span class="nx">@</span><span class="p">[</span><span class="nx">target</span><span class="p">]</span>
+
+      <span class="k">throw</span> <span class="k">new</span> <span class="nx">TypeError</span> <span class="s">&quot;&quot;&quot;</span>
+<span class="s">        Listener.Mixin </span><span class="si">#{</span><span class="nx">target</span><span class="si">}</span><span class="s"> is not an emitter.</span>
+<span class="s">      &quot;&quot;&quot;</span> <span class="k">unless</span> <span class="nx">_</span><span class="p">.</span><span class="nx">isFunction</span> <span class="nx">emitter</span><span class="o">?</span><span class="p">.</span><span class="nx">on</span>
+
+      <span class="nx">@listenTo</span> <span class="nx">emitter</span><span class="p">,</span> <span class="nx">events</span><span class="p">,</span> <span class="nx">callback</span>
+
+  <span class="p">},</span> <span class="nv">mixins: </span><span class="p">[</span><span class="s">&#39;Evented.Mixin&#39;</span><span class="p">]</span>
 </pre></div>
         </td>
       </tr>

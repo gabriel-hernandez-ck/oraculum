@@ -88,18 +88,22 @@ define [
     ###
 
     delegateListener: (spec, method) ->
-      events = spec.split ' '
-      target = events.splice(-1, 1)[0]
-      events = events.join ' '
-      callback = if _.isString(method) then @[method] else method
-      throw new TypeError """
-        Listener.Mixin #{callback} is not a function
-      """ unless _.isFunction callback
-      target = this if target in ['this', 'self']
-      target = Backbone if target in ['pubsub', 'mediator']
-      target = @[target] if _.isString target
-      @listenTo target, events, callback if target?
+      target = spec.split(' ').slice(-1)[0]
+      events = spec.split(' ').slice(0, -1).join(' ')
 
-  }, mixins: [
-    'Evented.Mixin'
-  ]
+      callback = if _.isFunction method then method else @[method]
+      throw new TypeError """
+        Listener.Mixin #{method} is not a function.
+      """ unless _.isFunction callback
+
+      emitter = if target in ['this', 'self'] then this
+      else if target in ['pubsub', 'mediator'] then Backbone
+      else @[target]
+
+      throw new TypeError """
+        Listener.Mixin #{target} is not an emitter.
+      """ unless _.isFunction emitter?.on
+
+      @listenTo emitter, events, callback
+
+  }, mixins: ['Evented.Mixin']

@@ -11,6 +11,13 @@ define [
     view = null
 
     Oraculum.extend 'View', 'ListenerParent.View',
+
+      initialize: ->
+        @model = @__factory().get 'Model'
+        @thing1 = @__factory().get 'Model'
+        @thing2 = @__factory().get 'Model'
+        @collection = @__factory().get 'Collection'
+
       mixinOptions:
         listen:
           # self
@@ -56,7 +63,11 @@ define [
           'ns:a thing1': 'a2Handler'
           'ns:b thing2': 'b2Handler'
 
-      initialize: ({@thing1, @thing2} = {}) ->
+      initialize: ->
+        @model = @__factory().get 'Model'
+        @thing1 = @__factory().get 'Model'
+        @thing2 = @__factory().get 'Model'
+        @collection = @__factory().get 'Collection'
         @a1Handler = sinon.spy()
         @b1Handler = sinon.spy()
         @a2Handler = sinon.spy()
@@ -68,8 +79,7 @@ define [
       view.__dispose() if Oraculum.verifyTags view
 
     it 'should bind to own events declaratively', ->
-      model = Oraculum.get 'Model'
-      view = Oraculum.get 'ListenerChild.View', {model}
+      view = Oraculum.get 'ListenerChild.View'
 
       expect(view.a1Handler).not.toHaveBeenCalled()
       expect(view.b1Handler).not.toHaveBeenCalled()
@@ -89,42 +99,40 @@ define [
       expect(view.b2Handler).toHaveBeenCalledOnce()
 
     it 'should bind to model events declaratively', ->
-      model = Oraculum.get 'Model'
-      view = Oraculum.get 'ListenerChild.View', {model}
+      view = Oraculum.get 'ListenerChild.View'
 
       expect(view.a1Handler).not.toHaveBeenCalled()
       expect(view.a2Handler).not.toHaveBeenCalled()
       expect(view.b1Handler).not.toHaveBeenCalled()
       expect(view.b2Handler).not.toHaveBeenCalled()
 
-      model.set 'a', 1
+      view.model.set 'a', 1
       expect(view.a1Handler).not.toHaveBeenCalled()
       expect(view.b1Handler).not.toHaveBeenCalled()
       expect(view.a2Handler).toHaveBeenCalledOnce()
       expect(view.b2Handler).not.toHaveBeenCalled()
 
-      model.set 'b', 2
+      view.model.set 'b', 2
       expect(view.a1Handler).not.toHaveBeenCalled()
       expect(view.b1Handler).not.toHaveBeenCalled()
       expect(view.a2Handler).toHaveBeenCalledOnce()
       expect(view.b2Handler).toHaveBeenCalledOnce()
 
     it 'should bind to collection events declaratively', ->
-      collection = Oraculum.get 'Collection'
-      view = Oraculum.get 'ListenerChild.View', {collection}
+      view = Oraculum.get 'ListenerChild.View'
 
       expect(view.a1Handler).not.toHaveBeenCalled()
       expect(view.a2Handler).not.toHaveBeenCalled()
       expect(view.b1Handler).not.toHaveBeenCalled()
       expect(view.b2Handler).not.toHaveBeenCalled()
 
-      collection.reset [{a: 1}]
+      view.collection.reset [{a: 1}]
       expect(view.a1Handler).not.toHaveBeenCalled()
       expect(view.b1Handler).not.toHaveBeenCalled()
       expect(view.a2Handler).toHaveBeenCalledOnce()
       expect(view.b2Handler).not.toHaveBeenCalled()
 
-      collection.trigger 'custom'
+      view.collection.trigger 'custom'
       expect(view.a1Handler).not.toHaveBeenCalled()
       expect(view.b1Handler).not.toHaveBeenCalled()
       expect(view.a2Handler).toHaveBeenCalledOnce()
@@ -151,22 +159,20 @@ define [
       expect(view.b2Handler).toHaveBeenCalledOnce()
 
     it 'should bind to abritrary property\'s events declaratively', ->
-      thing1 = Oraculum.get 'Model'
-      thing2 = Oraculum.get 'Model'
-      view = Oraculum.get 'ListenerChild.View', {thing1, thing2}
+      view = Oraculum.get 'ListenerChild.View'
 
       expect(view.a1Handler).not.toHaveBeenCalled()
       expect(view.b1Handler).not.toHaveBeenCalled()
       expect(view.a2Handler).not.toHaveBeenCalled()
       expect(view.b2Handler).not.toHaveBeenCalled()
 
-      thing1.trigger 'ns:a'
+      view.thing1.trigger 'ns:a'
       expect(view.a1Handler).not.toHaveBeenCalled()
       expect(view.b1Handler).not.toHaveBeenCalled()
       expect(view.a2Handler).toHaveBeenCalledOnce()
       expect(view.b2Handler).not.toHaveBeenCalled()
 
-      thing2.trigger 'ns:b'
+      view.thing2.trigger 'ns:b'
       expect(view.a1Handler).not.toHaveBeenCalled()
       expect(view.b1Handler).not.toHaveBeenCalled()
       expect(view.a2Handler).toHaveBeenCalledOnce()

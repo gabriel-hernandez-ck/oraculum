@@ -69,26 +69,18 @@
       @param {Function} method A function to bind.
        */
       delegateListener: function(spec, method) {
-        var callback, events, target;
-        events = spec.split(' ');
-        target = events.splice(-1, 1)[0];
-        events = events.join(' ');
-        callback = _.isString(method) ? this[method] : method;
+        var callback, emitter, events, target;
+        target = spec.split(' ').slice(-1)[0];
+        events = spec.split(' ').slice(0, -1).join(' ');
+        callback = _.isFunction(method) ? method : this[method];
         if (!_.isFunction(callback)) {
-          throw new TypeError("Listener.Mixin " + callback + " is not a function");
+          throw new TypeError("Listener.Mixin " + method + " is not a function.");
         }
-        if (target === 'this' || target === 'self') {
-          target = this;
+        emitter = target === 'this' || target === 'self' ? this : target === 'pubsub' || target === 'mediator' ? Backbone : this[target];
+        if (!_.isFunction(emitter != null ? emitter.on : void 0)) {
+          throw new TypeError("Listener.Mixin " + target + " is not an emitter.");
         }
-        if (target === 'pubsub' || target === 'mediator') {
-          target = Backbone;
-        }
-        if (_.isString(target)) {
-          target = this[target];
-        }
-        if (target != null) {
-          return this.listenTo(target, events, callback);
-        }
+        return this.listenTo(emitter, events, callback);
       }
     }, {
       mixins: ['Evented.Mixin']
