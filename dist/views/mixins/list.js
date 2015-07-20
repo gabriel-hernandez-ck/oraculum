@@ -100,10 +100,14 @@
           this.resolveViewOptions = resolveViewOptions;
         }
         this.visibleModels = [];
-        this.listenTo(this.collection, 'add', this.modelAdded);
-        this.listenTo(this.collection, 'remove', this.modelRemoved);
-        this.listenTo(this.collection, 'reset sort', this.renderAllModels);
-        return this.on('render:after', this.renderCollection, this);
+        this.on('render:after', this.renderCollection, this);
+        return this.once('visibilityChange', (function(_this) {
+          return function() {
+            _this.listenTo(_this.collection, 'add', _this.modelAdded);
+            _this.listenTo(_this.collection, 'remove', _this.modelRemoved);
+            return _this.listenTo(_this.collection, 'reset sort', _this.renderAllModels);
+          };
+        })(this));
       },
       modelAdded: function(model, collection, arg) {
         var index, view;
