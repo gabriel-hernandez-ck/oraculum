@@ -81,10 +81,15 @@ define [
       @resolveViewOptions ?= resolveViewOptions
 
       @visibleModels = []
-      @listenTo @collection, 'add', @modelAdded
-      @listenTo @collection, 'remove', @modelRemoved
-      @listenTo @collection, 'reset sort', @renderAllModels
       @on 'render:after', @renderCollection, this
+
+      # Wait until after the initial render is complete before adding
+      # event listeners to the collection which may result in DOM errors
+      # depending on the method's implementation.
+      @once 'visibilityChange', =>
+        @listenTo @collection, 'add', @modelAdded
+        @listenTo @collection, 'remove', @modelRemoved
+        @listenTo @collection, 'reset sort', @renderAllModels
 
     modelAdded: (model, collection, {at:index}) ->
       view = @renderModel model

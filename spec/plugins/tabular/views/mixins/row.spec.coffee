@@ -38,6 +38,7 @@ define [
       testView = Oraculum.get 'Row.ViewMixin.Test.View', {model, collection}
       createView = sinon.stub(testView, 'createView').returns render: ->
       insertView = sinon.stub(testView, 'insertView')
+      testView.render()
 
     afterEach ->
       testView.dispose()

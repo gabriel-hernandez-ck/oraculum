@@ -131,10 +131,26 @@ Hides excluded items by default.</p>
       <span class="nx">@resolveViewOptions</span> <span class="o">?=</span> <span class="nx">resolveViewOptions</span>
 
       <span class="vi">@visibleModels = </span><span class="p">[]</span>
-      <span class="nx">@listenTo</span> <span class="nx">@collection</span><span class="p">,</span> <span class="s">&#39;add&#39;</span><span class="p">,</span> <span class="nx">@modelAdded</span>
-      <span class="nx">@listenTo</span> <span class="nx">@collection</span><span class="p">,</span> <span class="s">&#39;remove&#39;</span><span class="p">,</span> <span class="nx">@modelRemoved</span>
-      <span class="nx">@listenTo</span> <span class="nx">@collection</span><span class="p">,</span> <span class="s">&#39;reset sort&#39;</span><span class="p">,</span> <span class="nx">@renderAllModels</span>
       <span class="nx">@</span><span class="kc">on</span> <span class="s">&#39;render:after&#39;</span><span class="p">,</span> <span class="nx">@renderCollection</span><span class="p">,</span> <span class="k">this</span>
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-3" id="section-3">&#182;</a>
+</div>
+<p>Wait until after the initial render is complete before adding
+event listeners to the collection which may result in DOM errors
+depending on the method's implementation.</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+      <span class="nx">@once</span> <span class="s">&#39;visibilityChange&#39;</span><span class="p">,</span> <span class="o">=&gt;</span>
+        <span class="nx">@listenTo</span> <span class="nx">@collection</span><span class="p">,</span> <span class="s">&#39;add&#39;</span><span class="p">,</span> <span class="nx">@modelAdded</span>
+        <span class="nx">@listenTo</span> <span class="nx">@collection</span><span class="p">,</span> <span class="s">&#39;remove&#39;</span><span class="p">,</span> <span class="nx">@modelRemoved</span>
+        <span class="nx">@listenTo</span> <span class="nx">@collection</span><span class="p">,</span> <span class="s">&#39;reset sort&#39;</span><span class="p">,</span> <span class="nx">@renderAllModels</span>
 
     <span class="nv">modelAdded: </span><span class="nf">(model, collection, {at:index}) -&gt;</span>
       <span class="nv">view = </span><span class="nx">@renderModel</span> <span class="nx">model</span>
@@ -190,7 +206,7 @@ Hides excluded items by default.</p>
       <tr>
         <td class="docs">
 <div class="pilwrap">
-  <a class="pilcrow" href="#section-3" id="section-3">&#182;</a>
+  <a class="pilcrow" href="#section-4" id="section-4">&#182;</a>
 </div>
 <p>Applies a filter to the collection view.
 Expects an iterator function as first parameter
@@ -207,7 +223,7 @@ show/hide the view or mark it otherwise as filtered.</p>
       <tr>
         <td class="docs">
 <div class="pilwrap">
-  <a class="pilcrow" href="#section-4" id="section-4">&#182;</a>
+  <a class="pilcrow" href="#section-5" id="section-5">&#182;</a>
 </div>
 <p>Save the filterer and filterCallback functions.</p>
         </td>
@@ -233,7 +249,7 @@ show/hide the view or mark it otherwise as filtered.</p>
       <tr>
         <td class="docs">
 <div class="pilwrap">
-  <a class="pilcrow" href="#section-5" id="section-5">&#182;</a>
+  <a class="pilcrow" href="#section-6" id="section-6">&#182;</a>
 </div>
 <p>Show/hide existing views.</p>
         </td>
@@ -248,7 +264,7 @@ show/hide the view or mark it otherwise as filtered.</p>
       <tr>
         <td class="docs">
 <div class="pilwrap">
-  <a class="pilcrow" href="#section-6" id="section-6">&#182;</a>
+  <a class="pilcrow" href="#section-7" id="section-7">&#182;</a>
 </div>
 <p>Apply filter to the model.</p>
         </td>
@@ -264,7 +280,7 @@ show/hide the view or mark it otherwise as filtered.</p>
       <tr>
         <td class="docs">
 <div class="pilwrap">
-  <a class="pilcrow" href="#section-7" id="section-7">&#182;</a>
+  <a class="pilcrow" href="#section-8" id="section-8">&#182;</a>
 </div>
 <p>Show/hide the view accordingly.</p>
         </td>
@@ -277,7 +293,7 @@ show/hide the view or mark it otherwise as filtered.</p>
       <tr>
         <td class="docs">
 <div class="pilwrap">
-  <a class="pilcrow" href="#section-8" id="section-8">&#182;</a>
+  <a class="pilcrow" href="#section-9" id="section-9">&#182;</a>
 </div>
 <p>A view has not been created for this model yet.</p>
         </td>
@@ -293,7 +309,7 @@ show/hide the view or mark it otherwise as filtered.</p>
       <tr>
         <td class="docs">
 <div class="pilwrap">
-  <a class="pilcrow" href="#section-9" id="section-9">&#182;</a>
+  <a class="pilcrow" href="#section-10" id="section-10">&#182;</a>
 </div>
 <p>Show/hide or mark the view accordingly.</p>
         </td>
@@ -308,7 +324,7 @@ show/hide the view or mark it otherwise as filtered.</p>
       <tr>
         <td class="docs">
 <div class="pilwrap">
-  <a class="pilcrow" href="#section-10" id="section-10">&#182;</a>
+  <a class="pilcrow" href="#section-11" id="section-11">&#182;</a>
 </div>
 <p>Update visibleModels list, but do not trigger an event immediately.</p>
         </td>
@@ -322,7 +338,7 @@ show/hide the view or mark it otherwise as filtered.</p>
       <tr>
         <td class="docs">
 <div class="pilwrap">
-  <a class="pilcrow" href="#section-11" id="section-11">&#182;</a>
+  <a class="pilcrow" href="#section-12" id="section-12">&#182;</a>
 </div>
 <p>Trigger a combined <code>visibilityChange</code> event.</p>
         </td>
@@ -344,7 +360,7 @@ show/hide the view or mark it otherwise as filtered.</p>
       <tr>
         <td class="docs">
 <div class="pilwrap">
-  <a class="pilcrow" href="#section-12" id="section-12">&#182;</a>
+  <a class="pilcrow" href="#section-13" id="section-13">&#182;</a>
 </div>
 <p>Use .css instead of .toggle to avoid jquery's assumptions
 about what display mode an element should have</p>
