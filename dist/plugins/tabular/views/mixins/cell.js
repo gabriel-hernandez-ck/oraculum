@@ -36,15 +36,16 @@
       },
       mixinitialize: function() {
         this.column = this.mixinOptions.cell.column;
-        this.listenTo(this.column, 'change:attribute', this._updateAttributeClass);
-        return this._updateAttributeClass();
+        this.listenTo(this.column, 'change:attribute', this._updateCellAttributes);
+        return this._updateCellAttributes();
       },
-      _updateAttributeClass: function() {
+      _updateCellAttributes: function() {
         var current, previous;
-        previous = this.column.previous('attribute');
-        this.$el.removeClass((previous + "-cell").replace(/[\.\s]/, '-'));
         current = this.column.get('attribute');
-        return this.$el.addClass((current + "-cell").replace(/[\.\s]/, '-'));
+        previous = this.column.previous('attribute');
+        this.$el.addClass((current + "-cell").replace(/[\.\s]/, '-'));
+        this.$el.removeClass((previous + "-cell").replace(/[\.\s]/, '-'));
+        return this.$el.attr('data-column-attr', current);
       }
     }, {
       mixins: ['Evented.Mixin', 'Hideable.CellMixin', 'Sortable.CellMixin', 'StaticClasses.ViewMixin']

@@ -35,14 +35,15 @@ define [
 
     mixinitialize: ->
       @column = @mixinOptions.cell.column
-      @listenTo @column, 'change:attribute', @_updateAttributeClass
-      @_updateAttributeClass()
+      @listenTo @column, 'change:attribute', @_updateCellAttributes
+      @_updateCellAttributes()
 
-    _updateAttributeClass: ->
-      previous = @column.previous 'attribute'
-      @$el.removeClass "#{previous}-cell".replace /[\.\s]/, '-'
+    _updateCellAttributes: ->
       current = @column.get 'attribute'
+      previous = @column.previous 'attribute'
       @$el.addClass "#{current}-cell".replace /[\.\s]/, '-'
+      @$el.removeClass "#{previous}-cell".replace /[\.\s]/, '-'
+      @$el.attr 'data-column-attr', current
 
   }, mixins: [
     'Evented.Mixin'
