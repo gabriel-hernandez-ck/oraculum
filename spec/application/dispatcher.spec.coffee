@@ -1,558 +1,322 @@
-# Unit tests ported from Chaplin
-define [
-  'oraculum'
-  'oraculum/libs'
-  'oraculum/application/composer'
-  'oraculum/application/controller'
-  'oraculum/application/dispatcher'
-], (Oraculum) ->
+define ['oraculum'], (Oraculum) ->
   'use strict'
 
   $ = Oraculum.get 'jQuery'
   _ = Oraculum.get 'underscore'
-  Backbone = Oraculum.get 'Backbone'
-  provideCallback = Oraculum.mixins['CallbackProvider.Mixin'].provideCallback
-  removeCallbacks = Oraculum.mixins['CallbackProvider.Mixin'].removeCallbacks
 
   describe 'Dispatcher', ->
-    Dispatcher = Oraculum.getConstructor 'Dispatcher'
-    definition = Oraculum.definitions['Dispatcher']
-    ctor = definition.constructor
-
-    # Initialize shared variables
-    dispatcher = composer = null
-    params = path = options = stdOptions = null
-    route1 = route2 = redirectToURLRoute = redirectToControllerRoute = null
-
-    # Default options which are added on first dispatching
-    addedOptions =
-      forceStartup: false
 
     # Test controllers
-    Test1Controller = Oraculum.extend('Controller', 'Test1Controller', {
+    test1ControllerShow = sinon.stub()
+    test1ControllerDispose = sinon.stub()
+    Test1Controller = Oraculum.extend 'Controller', 'Dispatcher.Test1.Controller', {
+      show: test1ControllerShow
+      constructed: -> @dispose = test1ControllerDispose
       redirectToURL: -> @redirectTo '/test/123'
-      dispose: -> @disposed = true
-      show: -> '\x90'
-    }, mixins: [
-      'PubSub.Mixin'
-      'Evented.Mixin'
-      'CallbackDelegate.Mixin'
-    ]).getConstructor 'Test1Controller'
+    }, inheritMixins: true
+    Test1Controller = Oraculum.getConstructor 'Dispatcher.Test1.Controller'
 
-    Test2Controller = Oraculum.extend('Controller', 'Test2Controller', {
-      show: (params, options) -> '\x90'
-      dispose: -> @disposed = true
-    }, mixins: [
-      'PubSub.Mixin'
-      'Evented.Mixin'
-      'CallbackDelegate.Mixin'
-    ]).getConstructor 'Test2Controller'
+    test2ControllerShow = sinon.stub()
+    test2ControllerDispose = sinon.stub()
+    Oraculum.extend 'Controller', 'Dispatcher.Test2.Controller', {
+      show: test2ControllerShow
+      constructed: -> @dispose = test2ControllerDispose
+    }, inheritMixins: true
 
-    # Shortcut for publishing router:match events
-    publishMatch = ->
-      Backbone.trigger 'router:match', arguments...
-
-    # Helper for creating params/options to compare with
-    create = -> _.extend {}, arguments...
-
-    # Reset helper: Create fresh params and options
-    refreshParams = ->
+    # Always reset our env
+    params = path = options = stdOptions = null
+    route1 = route2 = redirectToURLRoute = redirectToControllerRoute = null
+    beforeEach ->
       params = id: _.uniqueId('paramsId')
       path = "test/#{params.id}"
       options = {}
-      stdOptions = create addedOptions, query: {}
+      stdOptions = {forceStartup: false, query: {}}
+      route1 = {
+        path
+        action: 'show'
+        controller: 'Dispatcher.Test1.Controller'
+      }
+      route2 = {
+        path
+        action: 'show'
+        controller: 'Dispatcher.Test2.Controller'
+      }
+      redirectToURLRoute = {
+        path
+        action: 'redirectToURL'
+        controller: 'Dispatcher.Test1.Controller'
+      }
+      redirectToControllerRoute = {
+        path
+        action: 'redirectToController'
+        controller: 'Dispatcher.Test1.Controller'
+      }
 
-      # Fake route objects, walk like a route and swim like a route
-      route1 = {controller: 'Test1Controller', action: 'show', path}
-      route2 = {controller: 'Test2Controller', action: 'show', path}
-      redirectToURLRoute = {controller: 'Test1Controller', action: 'redirectToURL', path}
-      redirectToControllerRoute = {controller: 'Test1Controller', action: 'redirectToController', path}
-
+    # Create the instances we will be testing with
+    listener = null
+    dispatcher = null
     beforeEach ->
-      # Create a fresh Dispatcher instance for each test
-      dispatcher = new Dispatcher()
-      refreshParams()
+      listener = Oraculum.get 'Listener.SpecHelper'
+      dispatcher = Oraculum.get 'Dispatcher'
+      test1ControllerShow.reset()
+      test2ControllerShow.reset()
+      test1ControllerDispose.reset()
+      test2ControllerDispose.reset()
 
     afterEach ->
-      dispatcher?.dispose()
-      dispatcher = null
+      listener.dispose()
+      dispatcher.dispose()
 
-    containsMixins definition,
-      'PubSub.Mixin'
-      'Listener.Mixin'
-      'Disposable.Mixin'
-
-    # The Tests
+    it 'should use PubSub.Mixin', -> expect(dispatcher).toUseMixin 'PubSub.Mixin'
+    it 'should use Evented.Mixin', -> expect(dispatcher).toUseMixin 'Evented.Mixin'
+    it 'should use Listener.Mixin', -> expect(dispatcher).toUseMixin 'Listener.Mixin'
+    it 'should use Disposable.Mixin', -> expect(dispatcher).toUseMixin 'Disposable.Mixin'
 
     it 'should dispatch routes to controller actions', ->
-      proto = Test1Controller.prototype
-      initialize = sinon.spy proto, 'initialize'
-      action     = sinon.spy proto, 'show'
+      listener.publishEvent 'router:match', route1, params, options
+      controller = dispatcher.currentController
+      expect(test1ControllerShow).toHaveBeenCalledOnce()
+      expect(test1ControllerShow).toHaveBeenCalledOn controller
+      expect(test1ControllerShow).toHaveBeenCalledWith params, route1, stdOptions
 
-      publishMatch route1, params, options
+    it 'should not initialize the same controller if params/query are equal', ->
+      listener.publishEvent 'router:match', route1, params, options
+      listener.publishEvent 'router:match', route1, params, options
+      expect(test1ControllerShow).toHaveBeenCalledOnce()
 
-      # loadTest1Controller ->
-      for spy in [initialize, action]
-        expect(spy).toHaveBeenCalledOnce()
-        expect(spy.firstCall.thisValue instanceof Test1Controller).toBe true
-        [passedParams, passedRoute, passedOptions] = spy.firstCall.args
-        expect(passedParams).toEqual params
-        expect(passedRoute).toEqual route1
-        expect(passedOptions).toEqual stdOptions
+    it 'should initialize the same controller if params differ', ->
+      listener.publishEvent 'router:match', route1, params, options
+      expect(test1ControllerShow).toHaveBeenCalledOnce()
+      listener.publishEvent 'router:match', route1, {'id'}, options
+      expect(test1ControllerShow).toHaveBeenCalledTwice()
 
-      initialize.restore()
-      action.restore()
+    it 'should initialize the same controller if queries differ', ->
+      listener.publishEvent 'router:match', route1, params, options
+      expect(test1ControllerShow).toHaveBeenCalledOnce()
+      listener.publishEvent 'router:match', route1, params, query: {'qs'}
+      expect(test1ControllerShow).toHaveBeenCalledTwice()
 
-    it 'should not start the same controller if params match', ->
-      publishMatch route1, params, options
+    it 'should initialize the same controller if forced', ->
+      listener.publishEvent 'router:match', route1, params, options
+      expect(test1ControllerShow).toHaveBeenCalledOnce()
+      listener.publishEvent 'router:match', route1, params, forceStartup: true
+      expect(test1ControllerShow).toHaveBeenCalledTwice()
 
-      proto = Test1Controller.prototype
-      initialize = sinon.spy proto, 'initialize'
-      action     = sinon.spy proto, 'show'
-
-      publishMatch route1, params, create(options, query: {})
-
-      expect(initialize).not.toHaveBeenCalled()
-      expect(action).not.toHaveBeenCalled()
-
-      initialize.restore()
-      action.restore()
-
-    it 'should start the same controller if params differ', ->
-      proto = Test1Controller.prototype
-      initialize = sinon.spy proto, 'initialize'
-      action     = sinon.spy proto, 'show'
-
-      paramsStore = []
-      optionsStore = []
-
-      for i in [0..1]
-        refreshParams()
-        paramsStore.push params
-        optionsStore.push options
-        publishMatch route1, params, options
-
-      expect(initialize).toHaveBeenCalledTwice()
-      expect(action).toHaveBeenCalledTwice()
-
-      for i in [0..1]
-        for spy in [initialize, action]
-          [passedParams, passedRoute, passedOptions] = spy.args[i]
-          expect(passedParams).toEqual paramsStore[i]
-          expect(passedRoute.controller).toEqual route1.controller
-          expect(passedRoute.action).toEqual route1.action
-          if i is 1
-            expect(passedRoute.previous.controller).toEqual route1.controller
-          expect(passedOptions).toEqual stdOptions
-
-      initialize.restore()
-      action.restore()
-
-    it 'should start the same controller if query parameters differ', ->
-      proto = Test1Controller.prototype
-      initialize = sinon.spy proto, 'initialize'
-      action     = sinon.spy proto, 'show'
-
-      optionsStore = []
-
-      optionsStore.push query: key: 'a'
-      optionsStore.push query: key: 'b'
-
-      publishMatch route1, params, optionsStore[0]
-      publishMatch route1, params, optionsStore[1]
-
-      expect(initialize).toHaveBeenCalledTwice()
-      expect(action).toHaveBeenCalledTwice()
-
-      for i in [0..1]
-        for spy in [initialize, action]
-          [passedParams, passedRoute, passedOptions] = spy.args[i]
-          expect(passedParams).toEqual params
-          expect(passedRoute.controller).toEqual route1.controller
-          expect(passedRoute.action).toEqual route1.action
-          if i is 1
-            expect(passedRoute.previous.controller).toEqual route1.controller
-          expect(passedOptions).toEqual create(stdOptions, optionsStore[i])
-
-      initialize.restore()
-      action.restore()
-
-    it 'should start the same controller if forced', ->
-      proto = Test1Controller.prototype
-      initialize = sinon.spy proto, 'initialize'
-      action     = sinon.spy proto, 'show'
-
-      paramsStore = []
-      optionsStore = []
-
-      for i in [0..1]
-        refreshParams()
-        paramsStore.push params
-        optionsStore.push options
-        options.forceStartup = true if i is 1
-        publishMatch route1, params, options
-
-      for i in [0..1]
-        for spy in [initialize, action]
-          [passedParams, passedRoute, passedOptions] = spy.args[i]
-          expect(passedParams).toEqual paramsStore[i]
-          expect(passedRoute.controller).toBe route1.controller
-          expect(passedRoute.action).toBe route1.action
-          expectedOptions = create stdOptions, optionsStore[i], {
-            forceStartup: (if i is 0 then false else true)
-          }
-          expect(passedOptions).toEqual expectedOptions
-
-        initialize.restore()
-        action.restore()
-
-    it 'should save the controller, action, params, query and path', ->
-      publishMatch route1, params, options
-
-      options1 = create(options, query: key: 'a')
-      publishMatch route2, params, options1
-
-      # Check that previous route is saved
-      expect(dispatcher.previousRoute.controller).toBe 'Test1Controller'
-      expect(dispatcher.currentController instanceof Test2Controller).toBe true
-      expect(dispatcher.currentRoute).toEqual create(route2, previous: create(route1, {params}))
+    it 'should cache the controller, action, params, query, and path', ->
+      listener.publishEvent 'router:match', route1, params, options
+      expect(dispatcher.currentRoute).toEqual route1
+      expect(dispatcher.currentQuery).toEqual stdOptions.query
       expect(dispatcher.currentParams).toEqual params
-      expect(dispatcher.currentQuery).toEqual options1.query
+      expect(dispatcher.currentController).toBeInstanceOf Test1Controller
 
-    it 'should add the previous controller name to the route', ->
-      action = sinon.spy Test2Controller.prototype, 'show'
+    it 'should cache the previous route', ->
+      listener.publishEvent 'router:match', route1, params, options
+      listener.publishEvent 'router:match', route2, params, options
+      expect(dispatcher.previousRoute).toEqual route1
 
-      publishMatch route1, params, options
-      publishMatch route2, params, options
-
-      expect(action).toHaveBeenCalledOnce()
-      route = action.firstCall.args[1]
-      expect(route.controller).toBe route2.controller
-      expect(route.action).toBe route2.action
-      expect(route.previous).toBeObject()
-      expect(route.previous.controller).toBe route1.controller
-      expect(route.previous.action).toBe route1.action
-
-      action.restore()
+    it 'should add the previous route to the current route', ->
+      listener.publishEvent 'router:match', route1, params, options
+      firstRoute = _.extend {params}, dispatcher.currentRoute
+      listener.publishEvent 'router:match', route2, params, options
+      expect(dispatcher.currentRoute.previous).toEqual firstRoute
 
     it 'should dispose inactive controllers', ->
-      dispose = sinon.spy Test1Controller.prototype, 'dispose'
-      publishMatch route1, params, options
-      publishMatch route2, params, options
-
-      # It should pass the params and the new controller name
-      expect(dispose).toHaveBeenCalledOnce()
-      [passedParams, passedRoute] = dispose.firstCall.args
-      expect(passedParams).toEqual params
-      expect(passedRoute.controller).toEqual route2.controller
-      expect(passedRoute.action).toEqual route2.action
-      expect(passedRoute.path).toEqual route2.path
-
-      dispose.restore()
+      listener.publishEvent 'router:match', route1, params, options
+      listener.publishEvent 'router:match', route2, params, options
+      expect(test1ControllerDispose).toHaveBeenCalledOnce()
+      [callParams, callRoute, callOptions] = test1ControllerDispose.firstCall.args
+      expect(callRoute).toImplement route2
+      expect(callParams).toEqual params
+      expect(callOptions).toEqual stdOptions
 
     it 'should fire beforeControllerDispose events', ->
-      publishMatch route1, params, options
-
-      beforeControllerDispose = sinon.spy()
-      Backbone.on 'beforeControllerDispose', beforeControllerDispose
-
-      # Now route to Test2Controller
-      publishMatch route2, params, options
-
-      expect(beforeControllerDispose).toHaveBeenCalledOnce()
-
-      # Event payload should be the now disposed controller
-      passedController = beforeControllerDispose.firstCall.args[0]
-      expect(passedController instanceof Test1Controller).toBe true
-      expect(passedController.disposed).toBeTrue()
-
-      Backbone.off 'beforeControllerDispose', beforeControllerDispose
+      listener.publishEvent 'router:match', route1, params, options
+      controller = dispatcher.currentController
+      dispatchStub = sinon.stub()
+      listener.subscribeEvent 'beforeControllerDispose', dispatchStub
+      listener.publishEvent 'router:match', route2, params, options
+      expect(dispatchStub).toHaveBeenCalledOnce()
+      expect(dispatchStub).toHaveBeenCalledWith controller
 
     it 'should publish dispatch events', ->
-      dispatch = sinon.spy()
-      Backbone.on 'dispatcher:dispatch', dispatch
+      dispatchStub = sinon.spy()
+      listener.subscribeEvent 'dispatcher:dispatch', dispatchStub
 
-      publishMatch route1, params, options
-      publishMatch route2, params, options
+      listener.publishEvent 'router:match', route1, params, options
+      controller1 = dispatcher.currentController
+      expect(dispatchStub).toHaveBeenCalledOnce()
+      [c, callParams, callRoute, callOptions] = dispatchStub.firstCall.args
+      expect(c).toBe controller1
+      expect(callRoute).toImplement route1
+      expect(callParams).toEqual params
+      expect(callOptions).toEqual stdOptions
 
-      expect(dispatch).toHaveBeenCalledTwice()
+      listener.publishEvent 'router:match', route2, params, options
+      controller2 = dispatcher.currentController
+      expect(dispatchStub).toHaveBeenCalledTwice()
+      [c, callParams, callRoute, callOptions] = dispatchStub.secondCall.args
+      expect(c).toBe controller2
+      expect(callRoute).toImplement route2
+      expect(callParams).toEqual params
+      expect(callOptions).toEqual stdOptions
 
-      for i in [0..1]
-        firstCall = i is 0
-        args = dispatch.getCall(i).args
-        expect(args.length).toBe 4
-        [passedController, passedParams, passedRoute, passedOptions] = args
+    it 'should support redirection in an action', ->
+      listener.publishEvent 'router:match', route1, params, options
+      listener.subscribeEvent 'dispatcher:dispatch', dispatchStub = sinon.stub()
+      listener.provideCallback 'router:route', routeStub = sinon.stub()
+      redirectToURL = sinon.spy Test1Controller::, 'redirectToURL'
+      listener.publishEvent 'router:match', redirectToURLRoute, params, options
+      expect(redirectToURL).toHaveBeenCalledOnce()
+      [callParams, callRoute, callOptions] = redirectToURL.firstCall.args
+      expect(callParams).toEqual params
+      expect(callRoute.previous).toEqual _.extend {params}, route1
+      expect(callOptions).toEqual stdOptions
+      expect(dispatcher.previousRoute).toEqual route1
+      previous = _.extend {params}, route1
+      currentRoute = _.extend {previous}, redirectToURLRoute
+      expect(dispatcher.currentRoute).toEqual currentRoute
+      expect(dispatcher.currentController).toBeInstanceOf Test1Controller
+      expect(routeStub).toHaveBeenCalledOnce()
+      expect(dispatchStub).not.toHaveBeenCalled()
+      expect(test1ControllerDispose).toHaveBeenCalledOnce()
 
-        expectedController = if firstCall then Test1Controller else Test2Controller
-        expect(passedController instanceof expectedController).toBe true
-        expect(passedParams).toEqual params
-        expect(passedRoute.controller).toBe(
-          if firstCall then 'Test1Controller' else 'Test2Controller'
-        )
-        expect(passedRoute.action).toBe 'show'
-        if firstCall
-          expect(passedRoute.previous).toBeUndefined()
-        else
-          expect(passedRoute.previous.controller).toBe('Test1Controller')
-        expect(passedOptions).toEqual stdOptions
+    describe 'beforeAction', ->
 
-      Backbone.off 'dispatcher:dispatch', dispatch
-
-    it 'should support redirection to an URL', ->
-      dispatch = sinon.spy()
-      Backbone.on 'dispatcher:dispatch', dispatch
-
-      removeCallbacks()
-      route = sinon.spy()
-      provideCallback 'router:route', route
-
-      # Dispatch a route to check if previous controller info is correct after
-      # redirection
-      publishMatch route1, params, options
-
-      # Open another route that redirects somewhere
-      refreshParams()
-      actionName = 'redirectToURL'
-      action = sinon.spy Test1Controller.prototype, actionName
-      publishMatch redirectToURLRoute, params, options
-
-      expect(action).toHaveBeenCalledOnce()
-      [passedParams, passedRoute, passedOptions] = action.firstCall.args
-      expect(passedParams).toEqual params
-      expect(passedRoute.previous.controller).toEqual 'Test1Controller'
-      expect(passedOptions).toEqual stdOptions
-
-      # Don’t expect that the new controller was called
-      # because we’re not testing the router. Just test
-      # if execution stopped (e.g. Test1Controller is still active)
-      expect(dispatcher.previousRoute.controller).toBe 'Test1Controller'
-      expect(dispatcher.currentRoute.controller).toBe 'Test1Controller'
-      expect(dispatcher.currentController instanceof Test1Controller).toBe true
-      expect(dispatcher.currentRoute.action).toBe actionName
-      expect(dispatcher.currentRoute.path).toBe redirectToURLRoute.path
-
-      expect(dispatch).toHaveBeenCalledOnce()
-      expect(route).toHaveBeenCalledOnce()
-
-      Backbone.off 'dispatcher:dispatch', dispatch
-      action.restore()
-
-    it 'should dispose when redirecting to a URL from controller action', ->
-      Oraculum.extend 'Controller', 'RedirectingController', {
-        show: -> dispatcher.dispatch route1, null, {changeURL: true}
-        dispose: -> @disposed = true
-      }, mixins: [
-        'PubSub.Mixin'
-        'Evented.Mixin'
-        'CallbackDelegate.Mixin'
-      ]
-
-      RedirectingController = Oraculum.getConstructor 'RedirectingController'
-      dispose = sinon.spy RedirectingController.prototype, 'dispose'
-
-      route = {controller: 'RedirectingController', action: 'show', path}
-      publishMatch route, params, options
-      expect(dispose).toHaveBeenCalledOnce()
-      dispose.restore()
-
-    describe 'Before actions', ->
-
-      NoBeforeController = Oraculum.extend('Controller', 'NoBeforeController', {
+      test3ControllerShow = sinon.stub()
+      Oraculum.extend 'Controller', 'Dispatcher.Test3.Controller', {
+        show: test3ControllerShow
         beforeAction: null
-        show: sinon.stub()
-      }, inheritMixins: true).getConstructor 'NoBeforeController'
+      }, inheritMixins: true
 
-      BeforeActionController = Oraculum.extend('Controller', 'BeforeActionController', {
-        beforeAction: ->
-        show: ->
-      }, inheritMixins: true).getConstructor 'BeforeActionController'
+      route3 = null
+      beforeEach ->
+        test3ControllerShow.reset()
+        route3 = {
+          path
+          action: 'show'
+          controller: 'Dispatcher.Test3.Controller'
+        }
 
-      beforeActionRoute = {controller: 'BeforeActionController', action: 'show', path}
+      test4ControllerShow = sinon.stub()
+      test4ControllerBeforeAction = sinon.stub()
+      Oraculum.extend 'Controller', 'Dispatcher.Test4.Controller', {
+        show: test4ControllerShow
+        beforeAction: test4ControllerBeforeAction
+      }, inheritMixins: true
 
-      it 'should run the before action', ->
-        proto = BeforeActionController.prototype
-        beforeAction = sinon.spy proto, 'beforeAction'
-        action = sinon.spy proto, 'show'
-        publishMatch beforeActionRoute, params, options
+      route4 = null
+      beforeEach ->
+        test4ControllerShow.reset()
+        test4ControllerBeforeAction.reset()
+        route4 = {
+          path
+          action: 'show'
+          controller: 'Dispatcher.Test4.Controller'
+        }
 
-        expect(beforeAction).toHaveBeenCalledOnce()
-        expect(beforeAction.firstCall.thisValue instanceof BeforeActionController).toBe true
-        expect(action).toHaveBeenCalledOnce()
-        expect(beforeAction.calledBefore(action)).toBeTrue()
+      it 'should execute the target action if there is no beforeAction method', ->
+        listener.publishEvent 'router:match', route3, params, options
+        expect(test3ControllerShow).toHaveBeenCalledOnce()
 
-        beforeAction.restore()
-        action.restore()
-
-      it 'should proceed if there is no before action', ->
-        route = {controller: 'NoBeforeController', action: 'show', path}
-        publishMatch route, params, options
-        expect(NoBeforeController::show).toHaveBeenCalledOnce()
+      it 'should execute the target action after beforeAction is there is a beforeAction method', ->
+        listener.publishEvent 'router:match', route4, params, options
+        controller = dispatcher.currentController
+        expect(test4ControllerBeforeAction).toHaveBeenCalledOnce()
+        expect(test4ControllerBeforeAction).toHaveBeenCalledOn controller
+        expect(test4ControllerBeforeAction).toHaveBeenCalledBefore test4ControllerShow
+        expect(test4ControllerShow).toHaveBeenCalledOnce()
 
       it 'should throw an error if a before action method isn’t a function', ->
-        BrokenController = Oraculum.extend('Controller', 'BrokenController', {
-          beforeAction: {}
-          show: ->
-        }, inheritMixins: true).getConstructor 'BrokenController'
-        route = {controller: 'BrokenController', action: 'show', path}
-        failFunction = ->
-          # Assume implementation detail (`controllerLoaded` method)
-          # to bypass the asynchronous require(). An alternative would be
-          # to mock require() so it’s synchronous.
-          dispatcher.dispatch route, params, options
-        expect(failFunction).toThrow()
+        Oraculum.extend 'Controller', 'BrokenController', {
+          'beforeAction', show: ->
+        }, inheritMixins: true
+        BrokenController = Oraculum.getConstructor 'BrokenController'
+        brokenRoute = {controller: 'BrokenController', action: 'show', path}
+        brokenRouteAttempt = -> listener.publishEvent 'router:match', brokenRoute, params, options
+        expect(brokenRouteAttempt).toThrow()
 
-      it 'should run the before action with the same arguments', ->
-        action = sinon.spy()
+      it 'should execute the target action with the same arguments as beforeAction', ->
+        listener.publishEvent 'router:match', route4, params, options
+        expect(test4ControllerBeforeAction).toHaveBeenCalledOnce()
+        expect(test4ControllerShow).toHaveBeenCalledOnce()
+        expect(test4ControllerShow.firstCall.args).toEqual test4ControllerBeforeAction.firstCall.args
 
-        BeforeActionChainController = Oraculum.extend('Controller', 'BeforeActionChainController', {
-          beforeAction: (params, route, options) ->
-            params.newParam = 'foo'
-            options.newOption = 'bar'
-          show: action
-        }, inheritMixins: true).getConstructor 'BeforeActionChainController'
+      describe 'when returning a promise', ->
 
-        route = {controller: 'BeforeActionChainController', action: 'show', path}
-        publishMatch route, params, options
+        test5ControllerPromise = null
+        test5ControllerShow = sinon.stub()
+        test5ControllerBeforeAction = sinon.stub()
+        Oraculum.extend 'Controller', 'Dispatcher.Test5.Controller', {
+          show: test5ControllerShow
+          beforeAction: test5ControllerBeforeAction
+        }, inheritMixins: true
 
-        expect(action).toHaveBeenCalledOnce()
-        [passedParams, passedRoute, passedOptions] = action.firstCall.args
-        expect(passedParams).toEqual create(params, newParam: 'foo')
-        expect(passedRoute).toEqual create(route)
-        expect(passedOptions).toEqual create(stdOptions, newOption: 'bar')
+        route5 = null
+        beforeEach ->
+          test5ControllerShow.reset()
+          test5ControllerBeforeAction.reset()
+          test5ControllerPromise = $.Deferred()
+          test5ControllerBeforeAction.returns test5ControllerPromise
+          route5 = {
+            path
+            action: 'show'
+            controller: 'Dispatcher.Test5.Controller'
+          }
 
-    describe 'Asynchronous Before Actions', ->
+        test6ControllerPromise = null
+        test6ControllerShow = sinon.stub()
+        Oraculum.extend 'Controller', 'Dispatcher.Test6.Controller', {
+          show: test6ControllerShow
+          beforeAction: -> @reuse 'composition', -> test6ControllerPromise
+        }, inheritMixins: true
 
-      it 'should handle asynchronous before actions', (done) ->
-        dfd = new $.Deferred()
-        promise = dfd.promise()
+        route6 = null
+        beforeEach ->
+          test6ControllerShow.reset()
+          test6ControllerPromise = $.Deferred()
+          route6 = {
+            path
+            action: 'show'
+            controller: 'Dispatcher.Test6.Controller'
+          }
 
-        AsyncBeforeActionController = Oraculum.extend('Controller', 'AsyncBeforeActionController', {
-          beforeAction: -> promise
-          show: ->
-        }, {
-          override: true
-          inheritMixins: true
-        }).getConstructor 'AsyncBeforeActionController'
+        composer = null
+        beforeEach -> composer = Oraculum.get 'Composer'
+        afterEach -> composer.dispose()
 
-        action = sinon.spy AsyncBeforeActionController.prototype, 'show'
+        it 'should wait until the returned promise is resolved before executing the target action', ->
+          listener.publishEvent 'router:match', route5, params, options
+          expect(test5ControllerBeforeAction).toHaveBeenCalledOnce()
+          expect(test5ControllerShow).not.toHaveBeenCalled()
+          test5ControllerPromise.resolve()
+          expect(test5ControllerShow).toHaveBeenCalledOnce()
+          expect(test5ControllerShow.firstCall.args).toEqual test5ControllerBeforeAction.firstCall.args
 
-        route = {controller: 'AsyncBeforeActionController', action: 'show', path}
-        publishMatch route, params, options
+        it 'should support multiple asynchronous controllers', ->
+          test5ControllerPromise.resolve()
+          (test = (count) ->
+            lastTest = count >= 3
+            listener.publishEvent 'router:match', route5, params, options
+            expect(test5ControllerBeforeAction).toHaveBeenCalledOnce()
+            expect(test5ControllerShow).toHaveBeenCalledOnce()
+            test5ControllerBeforeAction.reset()
+            test5ControllerShow.reset()
+            test(count + 1) if lastTest
+          )(0)
 
-        expect(action).not.toHaveBeenCalled()
-        promise = dfd.promise()
-        promise.then ->
-          expect(action).toHaveBeenCalledOnce()
-          action.restore()
-        promise.then done
-        dfd.resolve()
+        it 'should support promises created in compositions', ->
+          listener.publishEvent 'router:match', route6, params, options
+          expect(test6ControllerShow).not.toHaveBeenCalled()
+          test6ControllerPromise.resolve()
+          expect(test6ControllerShow).toHaveBeenCalledOnce()
 
-      it 'should support multiple asynchronous controllers', ->
-        AsyncBeforeActionController = Oraculum.extend('Controller', 'AsyncBeforeActionController', {
-          beforeAction: ->
-            # Return an already resolved Promise
-            { then : (callback) -> callback() }
-          show: ->
-        }, {
-          override: true
-          inheritMixins: true
-        }).getConstructor 'AsyncBeforeActionController'
+        it 'should stop dispatching when another controller is started', ->
+          # Fire up a controller whose beforeAction returns a promise.
+          listener.publishEvent 'router:match', route5, params, options
+          expect(test5ControllerBeforeAction).toHaveBeenCalledOnce()
+          expect(test5ControllerShow).not.toHaveBeenCalled()
 
-        route = {controller: 'AsyncBeforeActionController', action: 'show', path}
-        options.forceStartup = true
-
-        proto = AsyncBeforeActionController.prototype
-        i = 0
-        times = 4
-
-        test = ->
-          beforeAction = sinon.spy proto, 'beforeAction'
-          action = sinon.spy proto, 'show'
-          publishMatch route, params, options
-
-          expect(beforeAction).toHaveBeenCalledOnce()
-          expect(action).toHaveBeenCalledOnce()
-
-          beforeAction.restore()
-          action.restore()
-
-          test() if ++i < times
-
-        test()
-
-      it 'should kick around promises from compositions', (done) ->
-        composer = Oraculum.get 'Composer'
-        dfd = new $.Deferred()
-        promise = dfd.promise()
-
-        AsyncBeforeActionController = Oraculum.extend('Controller', 'AsyncBeforeActionController', {
-          beforeAction: -> @reuse 'a', -> promise
-          show: ->
-        }, {
-          override: true
-          inheritMixins: true
-        }).getConstructor 'AsyncBeforeActionController'
-
-        route = {controller: 'AsyncBeforeActionController', action: 'show', path}
-        options.forceStartup = true
-
-        proto = AsyncBeforeActionController.prototype
-
-        do ->
-          beforeAction = sinon.spy proto, 'beforeAction'
-          action = sinon.spy proto, 'show'
-          publishMatch route, params, options
-
-          expect(beforeAction).toHaveBeenCalledOnce()
-          expect(action).not.toHaveBeenCalled()
-
-          promise = dfd.promise()
-          promise.then ->
-            expect(action).toHaveBeenCalledOnce()
-            beforeAction.restore()
-            action.restore()
-            composer.dispose()
-          promise.then done
-          dfd.resolve()
-
-      it 'should stop dispatching when another controller is started', (done) ->
-        dfd = new $.Deferred()
-        promise = dfd.promise()
-
-        NeverendingController = Oraculum.extend('Controller', 'NeverendingController', {
-          beforeAction: -> promise
-          show: ->
-        }, {
-          override: true
-          inheritMixins: true
-        }).getConstructor 'NeverendingController'
-
-        firstRoute = {controller: 'NeverendingController', action: 'show', path}
-        secondRoute = route2
-
-        # Spies
-        proto = NeverendingController.prototype
-        beforeAction = sinon.spy proto, 'beforeAction'
-        firstAction = sinon.spy proto, 'show'
-        secondAction = sinon.spy Test2Controller.prototype, 'show'
-
-        # Start the neverending controller
-        publishMatch firstRoute, params, options
-
-        expect(beforeAction).toHaveBeenCalledOnce()
-        expect(firstAction).not.toHaveBeenCalled()
-
-        # While the promise is pending, start another controller
-        publishMatch secondRoute, params, options
-
-        expect(secondAction).toHaveBeenCalledOnce()
-
-        # Test what happens when the Promise is resolved later
-        promise = dfd.promise()
-        promise.then ->
-          expect(firstAction).toHaveBeenCalledOnce()
-          beforeAction.restore()
-          firstAction.restore()
-          secondAction.restore()
-        promise.then done
-        dfd.resolve()
+          # Before resolving the promise, fire up another, simple controller.
+          listener.publishEvent 'router:match', route1, params, options
+          expect(test5ControllerShow).not.toHaveBeenCalled()
+          expect(test1ControllerShow).toHaveBeenCalledOnce()

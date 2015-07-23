@@ -1,222 +1,108 @@
 # Unit tests ported from Chaplin
-define [
-  'oraculum'
-  'oraculum/libs'
-  'oraculum/application/composer'
-  'oraculum/mixins/callback-provider'
-], (Oraculum) ->
+define ['oraculum'], (Oraculum) ->
   'use strict'
 
   _ = Oraculum.get 'underscore'
-  Backbone = Oraculum.get 'Backbone'
-  {executeCallback} = Oraculum.mixins['CallbackDelegate.Mixin']
 
   describe 'Composer', ->
-    definition = Oraculum.definitions['Composer']
-    ctor = definition.constructor
 
     composer = null
-    dispatcher = null
+    listener = null
 
-    Model = Oraculum.getConstructor 'Model'
-    Composer = Oraculum.getConstructor 'Composer'
-    Composition = Oraculum.getConstructor 'Composition'
-
-    TestView1 = Oraculum.extend('View', 'TestView1', {}).getConstructor 'TestView1'
-    TestView2 = Oraculum.extend('View', 'TestView2', {}).getConstructor 'TestView2'
-    TestView3 = Oraculum.extend('View', 'TestView3', {}).getConstructor 'TestView3'
-    TestView4 = Oraculum.extend('View', 'TestView4', {}).getConstructor 'TestView4'
-
-    keys = Object.keys or _.keys
+    Oraculum.extend('View', 'Composer.Test1.View', {})
+    Oraculum.extend('View', 'Composer.Test2.View', {})
+    TestView1 = Oraculum.getConstructor 'Composer.Test1.View'
+    TestView2 = Oraculum.getConstructor 'Composer.Test2.View'
 
     beforeEach ->
-      composer = new Composer
+      composer = Oraculum.get 'Composer'
+      listener = Oraculum.get 'Listener.SpecHelper'
 
     afterEach ->
+      listener.publishEvent 'dispatcher:dispatch'
+      listener.dispose()
       composer.dispose()
 
-    containsMixins definition,
-      'PubSub.Mixin'
-      'Listener.Mixin'
-      'Disposable.Mixin'
-      'CallbackProvider.Mixin'
+    it 'should use PubSub.Mixin', -> expect(composer).toUseMixin 'PubSub.Mixin'
+    it 'should use Listener.Mixin', -> expect(composer).toUseMixin 'Listener.Mixin'
+    it 'should use Disposable.Mixin', -> expect(composer).toUseMixin 'Disposable.Mixin'
+    it 'should use CallbackProvider.Mixin', -> expect(composer).toUseMixin 'CallbackProvider.Mixin'
 
-    it 'should initialize', ->
-      expect(composer.compositions).toEqual {}
+    it 'should initialize an instance when it is composed for the first time', ->
+      listener.executeCallback 'composer:compose', 'test1', TestView1
+      instance = listener.executeCallback 'composer:retrieve', 'test1'
+      expect(instance).toBeInstanceOf TestView1
 
-    # composing with the short form
-    # -----------------------------
+    it 'should not initialize an instance if it is already composed', ->
+      instance1 = listener.executeCallback 'composer:compose', 'test1', TestView1
+      instance2 = listener.executeCallback 'composer:compose', 'test1', TestView1
+      instance3 = listener.executeCallback 'composer:compose', 'test2', TestView2
+      expect(instance1).toBe instance2
+      expect(instance2).not.toBe instance3
+      expect(instance1).toBeInstanceOf TestView1
+      expect(instance3).toBeInstanceOf TestView2
 
-    it 'should initialize a view when it is composed for the first time', ->
-      executeCallback 'composer:compose', 'test1', TestView1
-      expect(keys(composer.compositions).length).toBe 1
-      expect(composer.compositions['test1'].item instanceof TestView1).toBe true
-      Backbone.trigger 'dispatcher:dispatch'
+    it 'should dispose a composed view if it is not re-composed', ->
+      listener.executeCallback 'composer:compose', 'test1', TestView1
+      listener.executeCallback 'composer:compose', 'test2', TestView2
 
-      executeCallback 'composer:compose', 'test1', TestView1
-      executeCallback 'composer:compose', 'test2', TestView2
-      expect(keys(composer.compositions).length).toBe 2
-      expect(composer.compositions['test2'].item instanceof TestView2).toBe true
-      Backbone.trigger 'dispatcher:dispatch'
+      # Trigger a cleanup
+      listener.publishEvent 'dispatcher:dispatch'
 
-    it 'should not initialize a view if it is already composed', ->
-      executeCallback 'composer:compose', 'test1', TestView1
-      expect(keys(composer.compositions).length).toBe 1
-      Backbone.trigger 'dispatcher:dispatch'
+      # Try to get the instances
+      instance1 = listener.executeCallback 'composer:retrieve', 'test1'
+      instance2 = listener.executeCallback 'composer:retrieve', 'test2'
 
-      executeCallback 'composer:compose', 'test1', TestView1
-      executeCallback 'composer:compose', 'test2', TestView2
-      expect(keys(composer.compositions).length).toBe 2
-      Backbone.trigger 'dispatcher:dispatch'
-
-      executeCallback 'composer:compose', 'test1', TestView1
-      executeCallback 'composer:compose', 'test2', TestView2
-      executeCallback 'composer:compose', 'test1', TestView1
-      expect(keys(composer.compositions).length).toBe 2
-      Backbone.trigger 'dispatcher:dispatch'
-
-    it 'should dispose a compose view if it is not re-composed', ->
-      executeCallback 'composer:compose', 'test1', TestView1
-      expect(keys(composer.compositions).length).toBe 1
-
-      Backbone.trigger 'dispatcher:dispatch'
-      executeCallback 'composer:compose', 'test2', TestView2
-      Backbone.trigger 'dispatcher:dispatch'
-
-      expect(keys(composer.compositions).length).toBe 1
-      expect(composer.compositions['test2'].item instanceof TestView2).toBe true
-
-    # # composing with the long form
-    # # -----------------------------
-
-    it 'should invoke compose when a view should be composed', ->
-      executeCallback 'composer:compose', 'weird',
-        compose: -> @view = new TestView1()
-        check: -> false
-
-      expect(keys(composer.compositions).length).toBe 1
-      expect(composer.compositions['weird'].view instanceof TestView1).toBe true
-
-      Backbone.trigger 'dispatcher:dispatch'
-      expect(keys(composer.compositions).length).toBe 1
-
-      executeCallback 'composer:compose', 'weird',
-        compose: -> @view = new TestView2()
-
-      Backbone.trigger 'dispatcher:dispatch'
-      expect(keys(composer.compositions).length).toBe 1
-      expect(composer.compositions['weird'].view instanceof TestView2).toBe true
-
-    it 'should dispose the entire composition when necessary', ->
-      spy = sinon.spy()
-
-      executeCallback 'composer:compose', 'weird',
-        compose: ->
-          @dagger = new TestView1()
-          @dagger2 = new TestView1()
-        check: -> false
-
-      expect(keys(composer.compositions).length).toBe 1
-      expect(composer.compositions['weird'].dagger instanceof TestView1).toBe true
-
-      Backbone.trigger 'dispatcher:dispatch'
-      expect(keys(composer.compositions).length).toBe 1
-
-      executeCallback 'composer:compose', 'weird',
-        compose: -> @frozen = new TestView2()
-        check: -> false
-
-      Backbone.trigger 'dispatcher:dispatch'
-      expect(keys(composer.compositions).length).toBe 1
-      expect(composer.compositions['weird'].frozen instanceof TestView2).toBe true
-
-      Backbone.trigger 'dispatcher:dispatch'
-      expect(keys(composer.compositions).length).toBe 0
-
-    it 'should allow a function to be composed', ->
-      spy = sinon.spy()
-
-      executeCallback 'composer:compose', 'spy', spy
-      Backbone.trigger 'dispatcher:dispatch'
-
-      expect(spy).toHaveBeenCalledOnce()
+      # Expect to have failed
+      expect(instance1).not.toBeDefined()
+      expect(instance2).not.toBeDefined()
 
     it 'should allow a function to be composed with options', ->
-      spy = sinon.spy()
-      params = {foo: 123, bar: 123}
+      options = {}
+      compose = sinon.stub()
+      listener.executeCallback 'composer:compose', 'spy', compose, options
+      listener.publishEvent 'dispatcher:dispatch'
+      expect(compose).toHaveBeenCalledOnce()
+      expect(compose).toHaveBeenCalledWith options
 
-      executeCallback 'composer:compose', 'spy', params, spy
-      Backbone.trigger 'dispatcher:dispatch'
+    it 'should allow a function to be composed with the object interface', ->
+      options = {}
+      compose = sinon.stub()
+      listener.executeCallback 'composer:compose', 'spy', {compose, options}
+      listener.publishEvent 'dispatcher:dispatch'
+      expect(compose).toHaveBeenCalledOnce()
+      expect(compose).toHaveBeenCalledWith options
 
-      expect(spy).toHaveBeenCalledWith(params)
+    it 'should invoke compose when an instance should be composed', ->
+      composition = listener.executeCallback 'composer:compose', 'weird',
+        check: -> false
+        compose: -> @view = new TestView1()
+      expect(composition.view).toBeInstanceOf TestView1
 
-    it 'should allow a options hash with a function to be composed with options', ->
-      spy = sinon.spy()
-      params = {foo: 123, bar: 123}
+      composition = listener.executeCallback 'composer:compose', 'weird',
+        compose: -> @view = new TestView2()
+      expect(composition.view).toBeInstanceOf TestView2
 
-      executeCallback 'composer:compose', 'spy',
-        options: params
-        compose: spy
-
-      Backbone.trigger 'dispatcher:dispatch'
-
-      expect(spy).toHaveBeenCalledWith params
-
-    it 'should allow a model to be composed', ->
-      executeCallback 'composer:compose', 'spy', Model
-
-      expect(composer.compositions['spy'].item instanceof Model).toBe true
-
-      Backbone.trigger 'dispatcher:dispatch'
+    it 'should dispose the entire composition when necessary', ->
+      composition = listener.executeCallback 'composer:compose', 'weird',
+        check: -> false
+        compose: ->
+          @view1 = new TestView1()
+          @view2 = new TestView1()
+      expect(composition.view1).toBeInstanceOf TestView1
+      expect(composition.view2).toBeInstanceOf TestView1
+      expect(composition.view1).not.toBe composition.view2
 
     it 'should allow a composition to be composed', ->
-      spy = sinon.spy()
-
+      options = {}
+      compose = sinon.stub()
       CustomComposition = Oraculum.extend('Composition', 'CustomComposition', {
-        compose: spy
-      }, {
-        override: true
-        inheritMixins: true
-      }).getConstructor 'CustomComposition'
-
-      executeCallback 'composer:compose', 'spy', CustomComposition
-      Backbone.trigger 'dispatcher:dispatch'
-
-      expect(composer.compositions['spy'].item instanceof Composition).toBe true
-      expect(composer.compositions['spy'].item instanceof CustomComposition).toBe true
-
-      expect(spy).toHaveBeenCalledOnce()
-
-    it 'should allow a composition to be composed with options', ->
-      spy = sinon.spy()
-      params = {foo: 123, bar: 123}
-
-      CustomComposition = Oraculum.extend('Composition', 'CustomComposition', {
-        compose: spy
-      }, {
-        override: true
-        inheritMixins: true
-      }).getConstructor 'CustomComposition'
-
-      executeCallback 'composer:compose', 'spy', CustomComposition, params
-      Backbone.trigger 'dispatcher:dispatch'
-
-      expect(composer.compositions['spy'].item instanceof Composition).toBe true
-      expect(composer.compositions['spy'].item instanceof CustomComposition).toBe true
-
-      expect(spy).toHaveBeenCalledOnce()
-      expect(spy).toHaveBeenCalledWith params
-
-    # it 'should allow a composition to be retreived', (done) ->
-    #   executeCallback 'composer:compose', 'spy', Model
-    #   executeCallback 'composer:retrieve', 'spy', (item) =>
-    #     expect(item).toBe composer.compositions['spy'].item
-    #     Backbone.trigger 'dispatcher:dispatch'
+        compose
+      }, { inheritMixins: true }).getConstructor 'CustomComposition'
+      listener.executeCallback 'composer:compose', 'spy', CustomComposition, options
+      expect(compose).toHaveBeenCalledOnce()
+      expect(compose).toHaveBeenCalledWith options
 
     it 'should throw for invalid invocations', ->
-      expect(->
-        executeCallback 'composer:compose', 'spy', null
-      ).toThrow()
-      expect(->
-        executeCallback 'composer:compose', compose: /a/, check: ''
-      ).toThrow()
+      expect(-> listener.executeCallback 'composer:compose', 'spy', null).toThrow()
+      expect(-> listener.executeCallback 'composer:compose', compose: /a/, check: '').toThrow()

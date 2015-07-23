@@ -1,18 +1,7 @@
-define [
-  'oraculum'
-  'oraculum/libs'
-  'oraculum/application/controller'
-  'oraculum/mixins/disposable'
-  'oraculum/views/mixins/layout'
-  'oraculum/mixins/callback-provider'
-], (Oraculum) ->
+define ['oraculum'], (Oraculum) ->
   'use strict'
 
   _ = Oraculum.get 'underscore'
-  Backbone = Oraculum.get 'Backbone'
-
-  provideCallback = Oraculum.mixins['CallbackProvider.Mixin'].provideCallback
-  removeCallbacks = Oraculum.mixins['CallbackProvider.Mixin'].removeCallbacks
 
   describe 'Layout', ->
     # Initialize shared variables
@@ -54,28 +43,26 @@ define [
 
     expectWasRouted = (linkAttributes) ->
       stub = sinon.stub()
-      provideCallback 'router:route', stub
+      listener.provideCallback 'router:route', stub
       appendClickRemove createLink linkAttributes
       expect(stub).toHaveBeenCalledOnce()
       [passedPath] = stub.firstCall.args
       expect(passedPath).toEqual url: linkAttributes.href
-      removeCallbacks(['router:route'])
+      listener.removeCallbacks(['router:route'])
       return stub
 
     expectWasNotRouted = (linkAttributes) ->
       spy = sinon.spy()
-      provideCallback 'router:route', spy
+      listener.provideCallback 'router:route', spy
       appendClickRemove createLink linkAttributes
       expect(spy).not.toHaveBeenCalled()
-      removeCallbacks(['router:route'])
+      listener.removeCallbacks(['router:route'])
       return spy
 
+    listener = null
     beforeEach ->
-      # Create the layout
-      layout = Oraculum.get 'Layout.View',
-        title: 'Test Site Title'
-
-      # Create a test controller
+      listener = Oraculum.get 'Listener.SpecHelper'
+      layout = Oraculum.get 'Layout.View', title: 'Test Site Title'
       testController = Oraculum.get 'Controller'
       testController.view = Oraculum.get 'View'
       testController.title = 'Test Controller Title'
@@ -83,6 +70,7 @@ define [
     afterEach ->
       testController.dispose()
       layout.dispose()
+      listener.dispose()
 
     it 'should have el, $el and $ props / methods', ->
       expect(layout.el).toBe document.body
@@ -107,13 +95,13 @@ define [
       query = 'foo=bar&baz=qux'
 
       stub = sinon.spy()
-      provideCallback 'router:route', stub
+      listener.provideCallback 'router:route', stub
       linkAttributes = href: "#{path}?#{query}"
       appendClickRemove createLink linkAttributes
       expect(stub).toHaveBeenCalledOnce()
       [passedPath] = stub.firstCall.args
       expect(passedPath).toEqual url: linkAttributes.href
-      removeCallbacks(['router:route'])
+      listener.removeCallbacks(['router:route'])
 
     it 'should not route links without href attributes', ->
       expectWasNotRouted name: 'foo'
@@ -154,7 +142,7 @@ define [
 
     it 'should route clicks on elements with the “go-to” class', ->
       stub = sinon.stub()
-      provideCallback 'router:route', stub
+      listener.provideCallback 'router:route', stub
       path = '/internal/link'
       span = document.createElement 'span'
       span.className = 'go-to'
@@ -163,7 +151,7 @@ define [
       expect(stub).toHaveBeenCalledOnce()
       passedPath = stub.firstCall.args[0]
       expect(passedPath).toEqual url: path
-      removeCallbacks(['router:route'])
+      listener.removeCallbacks(['router:route'])
 
     # With custom external checks
     # ---------------------------

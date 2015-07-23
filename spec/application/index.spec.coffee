@@ -1,128 +1,73 @@
-define [
-  'oraculum'
-  'oraculum/libs'
-  'oraculum/application/index'
-], (Oraculum) ->
+define ['oraculum'], (Oraculum) ->
   'use strict'
 
   describe 'Application', ->
-    definition = Oraculum.definitions['Application']
-    ctor = definition.constructor
-    mockApplication = null
 
-    containsMixins definition,
-      'PubSub.Mixin'
-      'Freezable.Mixin'
-      'Disposable.Mixin'
+    Oraculum.extend 'Application', 'Application.Test.Application', {
+    }, inheritMixins: true
+
+    Oraculum.extend 'Router', 'Application.Test.Router', {
+      initialize: (@options) -> # noop
+    }, inheritMixins: true
+
+    Oraculum.extend 'Dispatcher', 'Application.Test.Dispatcher', {
+      initialize: (@options) -> # noop
+    }, inheritMixins: true
+
+    Oraculum.extend 'View', 'Application.Test.Layout', {
+      initialize: (@options) -> # noop
+    }, mixins: ['Disposable.Mixin']
+
+    Oraculum.extend 'Composer', 'Application.Test.Composer', {
+      initialize: (@options) -> # noop
+    }, inheritMixins: true
+
+    options = null
+    application = null
+    beforeEach ->
+      application = Oraculum.get 'Application.Test.Application', options = {
+        router: 'Application.Test.Router'
+        dispatcher: 'Application.Test.Dispatcher'
+        layout: 'Application.Test.Layout'
+        composer: 'Application.Test.Composer'
+      }
+
+    afterEach -> application.dispose()
 
     describe 'mixin configuration', ->
+      it 'should use PubSub.Mixin', -> expect(application).toUseMixin 'PubSub.Mixin'
+      it 'should use Freezable.Mixin', -> expect(application).toUseMixin 'Freezable.Mixin'
+      it 'should use Disposable.Mixin', -> expect(application).toUseMixin 'Disposable.Mixin'
+
       it 'should set the disposeAll bit to true on the disposable mixin by default', ->
-        expect(ctor::mixinOptions.disposable.disposeAll).toBeTrue()
+        expect(application.mixinOptions.disposable.disposeAll).toBeTrue()
 
-    describe 'constructor', ->
+      it 'should set the freeze bit to true on the freezable mixin by default', ->
+        expect(application.mixinOptions.freeze).toBe true
+        expect(Object.isFrozen application).toBe true
 
-      beforeEach ->
-        mockApplication = mockFactoryInstance 'initRouter', 'initDispatcher',
-          'initLayout', 'initComposer', 'initialize', 'start'
+    describe 'initialization', ->
 
-      it 'should invoke @initRouter with the correct arguments', ->
-        ctor.call mockApplication, options = {'routes'}
-        expect(mockApplication.initRouter).toHaveBeenCalledOnce()
-        expect(mockApplication.initRouter.firstCall.args[0]).toBe 'routes'
-        expect(mockApplication.initRouter.firstCall.args[1]).toBe options
+      it 'should export an instance of the requested Router', ->
+        expect(application.router.__type()).toBe 'Application.Test.Router'
+        expect(application.router.options).toEqual _.extend {
+          root: '/'
+          trailing: false
+          pushState: window.location.protocol in ['http:', 'https:']
+        }, options
 
-      it 'should invoke @initDispatcher with the correct arguments', ->
-        ctor.call mockApplication, options = {}
-        expect(mockApplication.initDispatcher).toHaveBeenCalledOnce()
-        expect(mockApplication.initDispatcher.firstCall.args[0]).toBe options
+      it 'should export an instance of the requested Dispatcher', ->
+        expect(application.dispatcher.__type()).toBe 'Application.Test.Dispatcher'
+        expect(application.dispatcher.options).toBe options
 
-      it 'should invoke @initLayout with the correct arguments', ->
-        ctor.call mockApplication, options = {}
-        expect(mockApplication.initLayout).toHaveBeenCalledOnce()
-        expect(mockApplication.initLayout.firstCall.args[0]).toBe options
+      it 'should export an instance of the requested Layout', ->
+        expect(application.layout.__type()).toBe 'Application.Test.Layout'
+        expect(application.layout.options).toBe options
 
-      it 'should invoke @initComposer with the correct arguments', ->
-        ctor.call mockApplication, options = {}
-        expect(mockApplication.initComposer).toHaveBeenCalledOnce()
-        expect(mockApplication.initComposer.firstCall.args[0]).toBe options
+      it 'should export an instance of the requested Composer', ->
+        expect(application.composer.__type()).toBe 'Application.Test.Composer'
+        expect(application.composer.options).toBe options
 
-      it 'should invoke @initialize with the correct arguments', ->
-        ctor.apply mockApplication, args = ['arg0']
-        expect(mockApplication.initialize).toHaveBeenCalledOnce()
-        expect(mockApplication.initialize.firstCall.args[0]).toBe 'arg0'
-
-      it 'should invoke @start', ->
-        ctor.call mockApplication
-        expect(mockApplication.start).toHaveBeenCalledOnce()
-
-    describe 'initRouter', ->
-
-      beforeEach ->
-        mockApplication = mockFactoryInstance()
-
-      it 'should export an instance of Router as @router', ->
-        ctor::initRouter.call mockApplication
-        expect(mockApplication.router).toContain 'Router'
-        ctor::initRouter.call mockApplication, null, options = {router: 'DifferentRouter'}
-        expect(mockApplication.router).toContain 'DifferentRouter', options
-
-      it 'should invoke the routes method, if provided, with the router\'s match method', ->
-        mockApplication.__get = sinon.stub().withArgs('Router').returns {'match'}
-        ctor::initRouter.call mockApplication, routes = sinon.stub()
-        expect(routes).toHaveBeenCalledOnce()
-        expect(routes).toHaveBeenCalledWith 'match'
-
-    describe 'initDispatcher', ->
-
-      beforeEach ->
-        mockApplication = mockFactoryInstance()
-
-      it 'should export an instance of Dispatcher as @dispatcher', ->
-        ctor::initDispatcher.call mockApplication
-        expect(mockApplication.dispatcher).toContain 'Dispatcher'
-        ctor::initDispatcher.call mockApplication, options = {dispatcher: 'DifferentDispatcher'}
-        expect(mockApplication.dispatcher).toContain 'DifferentDispatcher', options
-
-    describe 'initLayout', ->
-
-      beforeEach ->
-        mockApplication = mockFactoryInstance()
-        mockApplication.title = 'title'
-
-      it 'should export an instance of Layout as @layout', ->
-        ctor::initLayout.call mockApplication, options = {layout: 'Layout'}
-        expect(options.title).toBe 'title'
-        expect(mockApplication.layout).toContain 'Layout', options
-        ctor::initLayout.call mockApplication, options = {layout: 'AlternateLayout'}
-        expect(mockApplication.layout).toContain 'AlternateLayout', options
-
-    describe 'initComposer', ->
-
-      beforeEach ->
-        mockApplication = mockFactoryInstance()
-
-      it 'should export an instance of Composer as @composer', ->
-        ctor::initComposer.call mockApplication
-        expect(mockApplication.composer).toContain 'Composer'
-        ctor::initComposer.call mockApplication, options = {composer: 'DifferentComposer'}
-        expect(mockApplication.composer).toContain 'DifferentComposer', options
-
-    describe 'initialize', ->
-      it 'should throw an exception if the application was already started', ->
-        mockApplication = { started: false }
-        expect(-> ctor::initialize.call mockApplication).not.toThrow()
-        mockApplication.started = true
-        expect(-> ctor::initialize.call mockApplication).toThrow()
-
-    describe 'start', ->
-
-      beforeEach ->
-        mockApplication = router: startHistory: sinon.stub()
-
-      it 'should invoke startHistory on @router', ->
-        ctor::start.call mockApplication
-        expect(mockApplication.router.startHistory).toHaveBeenCalledOnce()
-
-      it 'should set @started to true', ->
-        ctor::start.call mockApplication
-        expect(mockApplication.started).toBeTrue()
+      it 'should start the router', ->
+        expect(application.started).toBe true
+        expect(Backbone.History.started).toBe true

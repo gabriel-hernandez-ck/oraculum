@@ -7,107 +7,92 @@ define [
   'use strict'
 
   describe 'DOMPropertyBinding.ViewMixin', ->
-    view = null
-    model = null
-    collection = null
 
     Oraculum.extend 'View', 'DOMPropertyBinding.Test.View', {
-      mixinOptions:
-        domPropertyBinding: {'placeholder'}
+      mixinOptions: domPropertyBinding: {'placeholder'}
     }, mixins: [
       'Disposable.Mixin'
       'HTMLTemplating.ViewMixin'
       'DOMPropertyBinding.ViewMixin'
     ]
 
-    afterEach ->
-      view?.__dispose()
+    view = null
+    afterEach -> view?.dispose()
 
-    dependsMixins Oraculum, 'DOMPropertyBinding.ViewMixin',
-      'Evented.Mixin'
-      'EventedMethod.Mixin'
+    describe 'mixin configuration', ->
 
-    it 'should read placeholder at construction', ->
-      view = Oraculum.get 'DOMPropertyBinding.Test.View'
-      expect(view.mixinOptions.domPropertyBinding.placeholder).toBe 'placeholder'
-      view.__dispose()
-      view = Oraculum.get 'DOMPropertyBinding.Test.View', placeholder: 'somethingElse'
-      expect(view.mixinOptions.domPropertyBinding.placeholder).toBe 'somethingElse'
+      beforeEach -> view = Oraculum.get 'DOMPropertyBinding.Test.View'
+
+      it 'should use Evented.Mixin', ->
+        expect(view).toUseMixin 'Evented.Mixin'
+
+      it 'should use EventedMethod.Mixin', ->
+        expect(view).toUseMixin 'EventedMethod.Mixin'
+
+    describe 'mixin initialization', ->
+
+      it 'should read placeholder at construction', ->
+        view = Oraculum.get 'DOMPropertyBinding.Test.View', placeholder: 'somethingElse'
+        expect(view.mixinOptions.domPropertyBinding.placeholder).toBe 'somethingElse'
 
     describe 'Model binding', ->
 
-      beforeEach ->
-        model = Oraculum.get 'Model', {'attribute'}
-
-      afterEach ->
-        model.__dispose()
+      model = null
+      beforeEach -> model = Oraculum.get 'Model', {'attribute'}
+      afterEach -> model.__dispose()
 
       it 'should bind model attributes to an element', ->
-        template = '''<div
-          class="test"
-          data-prop="model"
-          data-prop-attr="attribute"
-        />'''
+        template = '<div class="test" data-prop="model" data-prop-attr="attribute"/>'
         view = Oraculum.get 'DOMPropertyBinding.Test.View', {model, template}
+        expect(view.$ '.test').not.toContainText 'attribute'
         view.render()
-        elem = view.$ '.test'
-        expect(elem.text()).toBe 'attribute'
+        expect(view.$ '.test').toContainText 'attribute'
         model.set 'attribute', 'somethingElse'
-        expect(elem.text()).toBe 'somethingElse'
+        expect(view.$ '.test').toContainText 'somethingElse'
 
       it 'should allow alternate dom manipulation methods', ->
-        template = '''<input
-          type="text"
-          class="test"
-          data-prop="model"
-          data-prop-attr="attribute"
-          data-prop-method="val"
-        />'''
+        template = '<input type="text" class="test" data-prop="model" data-prop-attr="attribute" data-prop-method="val">'
         view = Oraculum.get 'DOMPropertyBinding.Test.View', {model, template}
+        expect(view.$ '.test').not.toHaveValue 'attribute'
         view.render()
-        elem = view.$ '.test'
-        expect(elem).toHaveValue 'attribute'
+        expect(view.$ '.test').toHaveValue 'attribute'
         model.set 'attribute', 'somethingElse'
-        expect(elem).toHaveValue 'somethingElse'
+        expect(view.$ '.test').toHaveValue 'somethingElse'
 
       it 'should respect custom event listeners', ->
-        template = '''<div
-          class="test"
-          data-prop="model"
-          data-prop-attr="attribute"
-          data-prop-events="customEvent1 customEvent2"
-        />'''
+        template = '<div class="test" data-prop="model" data-prop-attr="attribute" data-prop-events="customEvent1 customEvent2"/>'
         view = Oraculum.get 'DOMPropertyBinding.Test.View', {model, template}
+        expect(view.$ '.test').not.toContainText 'attribute'
+
         view.render()
-        elem = view.$ '.test'
-        expect(elem.text()).toBe 'attribute'
+        expect(view.$ '.test').toContainText 'attribute'
+
         model.set 'attribute', 'somethingElse'
-        expect(elem.text()).toBe 'attribute'
+        expect(view.$ '.test').toContainText 'attribute'
+
         model.trigger 'customEvent1'
-        expect(elem.text()).toBe 'somethingElse'
+        expect(view.$ '.test').toContainText 'somethingElse'
+
         model.set 'attribute', 'somethingNew'
-        expect(elem.text()).toBe 'somethingElse'
+        expect(view.$ '.test').toContainText 'somethingElse'
+
         model.trigger 'customEvent2'
-        expect(elem.text()).toBe 'somethingNew'
+        expect(view.$ '.test').toContainText 'somethingNew'
 
       it 'should allow empty (no) event listeners', ->
-        template = '''<div
-          class="test"
-          data-prop="model"
-          data-prop-attr="attribute"
-          data-prop-events=""
-        />'''
+        template = '<div class="test" data-prop="model" data-prop-attr="attribute" data-prop-events=""/>'
         view = Oraculum.get 'DOMPropertyBinding.Test.View', {model, template}
+        expect(view.$ '.test').not.toContainText 'attribute'
         view.render()
-        elem = view.$ '.test'
-        expect(elem.text()).toBe 'attribute'
+        expect(view.$ '.test').toContainText 'attribute'
         model.set 'attribute', 'somethingElse'
-        expect(elem.text()).toBe 'attribute'
+        expect(view.$ '.test').toContainText 'attribute'
         model.set 'attribute', 'somethingNew'
-        expect(elem.text()).toBe 'attribute'
+        expect(view.$ '.test').toContainText 'attribute'
 
     describe 'Collection binding', ->
 
+      collection = null
       beforeEach ->
         collection = Oraculum.get 'Collection', [
           {id: 'one'}
@@ -119,117 +104,95 @@ define [
         collection.__dispose()
 
       it 'should bind collection attributes to an element', ->
-        template = '''<div
-          class="test"
-          data-prop="collection"
-          data-prop-attr="length"
-        />'''
+        template = '<div class="test" data-prop="collection" data-prop-attr="length"/>'
         view = Oraculum.get 'DOMPropertyBinding.Test.View', {collection, template}
+        expect(view.$ '.test').not.toContainText '3'
         view.render()
-        elem = view.$ '.test'
-        expect(elem.text()).toBe collection.length.toString()
+        expect(view.$ '.test').toContainText '3'
         collection.reset()
-        expect(elem.text()).toBe collection.length.toString()
+        expect(view.$ '.test').toContainText '0'
 
       it 'should bind collection model attributes to an element', ->
-        template = '''<div
-          class="test"
-          data-prop="collection"
-          data-prop-attr="models.0.id"
-        />'''
-        model = collection.models[0]
+        template = '<div class="test" data-prop="collection" data-prop-attr="models.0.id"/>'
         view = Oraculum.get 'DOMPropertyBinding.Test.View', {collection, template}
+        expect(view.$ '.test').not.toContainText 'one'
         view.render()
-        elem = view.$ '.test'
-        expect(elem.text()).toBe model.id
+        expect(view.$ '.test').toContainText 'one'
         collection.reset [{id:'four'}]
-        model = collection.models[0]
-        expect(elem.text()).toBe model.id
+        expect(view.$ '.test').toContainText 'four'
 
     describe 'Object binding', ->
 
       it 'should be able to resolve a property on an object', ->
-        template = '''<div
-          class="test"
-          data-prop="someObject"
-          data-prop-attr="some.property"
-        />'''
-        someObject = some: {'property'}
+        template = '<div class="test" data-prop="someObject" data-prop-attr="some.property"/>'
         view = Oraculum.get 'DOMPropertyBinding.Test.View', {template}
-        view.someObject = someObject
+        view.someObject = someObject = some: {'property'}
+        expect(view.$ '.test').not.toContainText 'property'
+
         view.render()
-        elem = view.$ '.test'
-        expect(elem.text()).toBe 'property'
+        expect(view.$ '.test').toContainText 'property'
+
         someObject.some.property = 'otherProperty'
+        expect(view.$ '.test').toContainText 'property'
+
         view.render()
-        elem = view.$ '.test'
-        expect(elem.text()).toBe 'otherProperty'
+        expect(view.$ '.test').toContainText 'otherProperty'
 
       it 'should be able to resolve a function on an object', ->
-        template = '''<div
-          class="test"
-          data-prop="someObject"
-          data-prop-attr="some.function"
-        />'''
-        someObject = some: function: -> 'result'
+        template = '<div class="test" data-prop="someObject" data-prop-attr="some.function"/>'
         view = Oraculum.get 'DOMPropertyBinding.Test.View', {template}
-        view.someObject = someObject
+        view.someObject = someObject = some: function: -> 'result'
+        expect(view.$ '.test').not.toContainText 'result'
+
         view.render()
-        elem = view.$ '.test'
-        expect(elem.text()).toBe 'result'
+        expect(view.$ '.test').toContainText 'result'
+
         someObject.some.function = -> 'otherResult'
+        expect(view.$ '.test').toContainText 'result'
+
         view.render()
-        elem = view.$ '.test'
-        expect(elem.text()).toBe 'otherResult'
+        expect(view.$ '.test').toContainText 'otherResult'
 
       it 'should be able to resolve a property on an array', ->
-        template = '''<div
-          class="test"
-          data-prop="someArray"
-          data-prop-attr="1.2"
-        />'''
-        someArray = [null,[null,null,'value',null],null]
+        template = '<div class="test" data-prop="someArray" data-prop-attr="1.2"/>'
         view = Oraculum.get 'DOMPropertyBinding.Test.View', {template}
-        view.someArray = someArray
-        view.render()
-        elem = view.$ '.test'
-        expect(elem.text()).toBe 'value'
-        someArray[1][2] = 'otherValue'
-        view.render()
-        elem = view.$ '.test'
-        expect(elem.text()).toBe 'otherValue'
+        view.someArray = someArray = [null,[null,null,'value',null],null]
+        expect(view.$ '.test').not.toContainText 'value'
 
-    describe 'Error conditions', ->
+        view.render()
+        expect(view.$ '.test').toContainText 'value'
+
+        someArray[1][2] = 'otherValue'
+        expect(view.$ '.test').toContainText 'value'
+
+        view.render()
+        expect(view.$ '.test').toContainText 'otherValue'
+
+    describe 'error conditions', ->
 
       it 'should throw an error if a bound property does not exist', ->
-        template = '''<div
-          class="test"
-          data-prop="nonexistant"
-          data-prop-attr="nonexistant"
-        />'''
+        template = '<div class="test" data-prop="nonexistant" data-prop-attr="nonexistant"/>'
         view = Oraculum.get 'DOMPropertyBinding.Test.View', {template}
         expect(-> view.render()).toThrow()
 
       it 'should render a placeholder when a property\'s attribute is nullish', ->
-        template = '''<div
-          class="test"
-          data-prop="someObject"
-          data-prop-attr="nonexistant"
-        />'''
+        template = '<div class="test" data-prop="someObject" data-prop-attr="nonexistant"/>'
         view = Oraculum.get 'DOMPropertyBinding.Test.View', {template}
-        view.someObject = {}
+        view.someObject = someObject = {}
+        expect(view.$ '.test').not.toContainText 'placeholder'
+
         view.render()
-        elem = view.$ '.test'
-        expect(elem.text()).toBe 'placeholder'
+        expect(view.$ '.test').toContainText 'placeholder'
+
         view.mixinOptions.domPropertyBinding.placeholder = 'otherPlaceholder'
+        expect(view.$ '.test').toContainText 'placeholder'
+
         view.render()
-        elem = view.$ '.test'
-        expect(elem.text()).toBe 'otherPlaceholder'
+        expect(view.$ '.test').toContainText 'otherPlaceholder'
 
       it 'should not throw if rendered after the initial render', ->
-        template = '<div data-prop="model" data-prop-attr="attribute" />'
-        view = Oraculum.get 'DOMPropertyBinding.Test.View', {model, template}
-        view.render()
+        template = '<div data-prop="model" data-prop-attr="attribute"/>'
+        view = Oraculum.get 'DOMPropertyBinding.Test.View', {model: {'attribute'}, template}
         expect(-> view.render()).not.toThrow()
         expect(-> view.render()).not.toThrow()
         expect(-> view.render()).not.toThrow()

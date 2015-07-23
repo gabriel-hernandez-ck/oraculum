@@ -1,40 +1,42 @@
-define [
-  'oraculum'
-  'oraculum/mixins/disposable'
-  'oraculum/views/mixins/remove-disposed'
-], (Oraculum) ->
+define ['oraculum'], (Oraculum) ->
   'use strict'
 
   describe 'RemoveDisposed.ViewMixin', ->
-    view = null
-    remove = sinon.stub()
 
-    Oraculum.extend 'View', 'RemoveDisposed.View', {
-      mixinOptions:
-        disposable:
-          keepElement: 'truthyValue'
-      remove: remove
+    Oraculum.extend 'View', 'RemoveDisposed.Test.View', {
+      mixinOptions: disposable: keepElement: 'truthyValue'
+      remove: remove = sinon.stub()
     }, mixins: [
       'Disposable.Mixin'
       'RemoveDisposed.ViewMixin'
     ]
 
-    dependsMixins Oraculum, 'RemoveDisposed.ViewMixin',
-      'Evented.Mixin'
+    view = null
+    beforeEach ->
+      view = Oraculum.get 'RemoveDisposed.Test.View'
+      remove.reset()
 
-    it 'should read keepElement at construction', ->
-      view = Oraculum.get 'RemoveDisposed.View'
+    afterEach ->
+      view.dispose()
+
+    it 'should use Evented.Mixin', ->
+      expect(view).toUseMixin 'Evented.Mixin'
+
+    it 'should remove the element on `dispose` when keepElement is `false`', ->
+      view = Oraculum.get 'RemoveDisposed.Test.View', keepElement: false
+      expect(view.mixinOptions.disposable.keepElement).toBe false
+      view.dispose()
+      expect(remove).toHaveBeenCalledOnce()
+
+    it 'should not remove the element on `dispose` when keepElement is not `false`', ->
+      view = Oraculum.get 'RemoveDisposed.Test.View'
       expect(view.mixinOptions.disposable.keepElement).toBe 'truthyValue'
       view.dispose()
       expect(remove).toHaveBeenCalledOnce()
 
-      view = Oraculum.get 'RemoveDisposed.View', keepElement: false
-      expect(view.mixinOptions.disposable.keepElement).toBe false
-      view.dispose()
-      expect(remove).toHaveBeenCalledTwice()
-
-      view = Oraculum.get 'RemoveDisposed.View', keepElement: true
+    it 'should not remove the element on `dispose` when keepElement is `true`', ->
+      view = Oraculum.get 'RemoveDisposed.Test.View', keepElement: true
       expect(view.mixinOptions.disposable.keepElement).toBe true
       view.dispose()
-      expect(remove).toHaveBeenCalledTwice()
+      expect(remove).not.toHaveBeenCalled()
 

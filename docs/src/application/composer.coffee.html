@@ -843,8 +843,7 @@ Declare all active compositions as stale for the next dispatch cycle.</p>
         <span class="k">if</span> <span class="nx">composition</span><span class="p">.</span><span class="nx">stale</span><span class="p">()</span>
           <span class="nx">composition</span><span class="p">.</span><span class="nx">dispose</span><span class="p">()</span>
           <span class="k">delete</span> <span class="nx">@compositions</span><span class="p">[</span><span class="nx">name</span><span class="p">]</span>
-        <span class="k">else</span>
-          <span class="nx">composition</span><span class="p">.</span><span class="nx">stale</span> <span class="kc">true</span>
+        <span class="k">else</span> <span class="nx">composition</span><span class="p">.</span><span class="nx">stale</span> <span class="kc">true</span>
 
 
 </pre></div>

@@ -34,13 +34,16 @@
       The disposal interface.
        */
       dispose: function() {
-        var ref;
+        var frozen, ref;
         if (this.disposed) {
           return this;
         }
+        frozen = typeof Object.isFrozen === "function" ? Object.isFrozen(this) : void 0;
         this.trigger('dispose:before', this);
         this.trigger('dispose', this);
-        this.disposed = true;
+        if (!frozen) {
+          this.disposed = true;
+        }
         this.trigger('dispose:after', this);
         this.off();
         this.stopListening();
@@ -49,7 +52,7 @@
             return prop != null ? typeof prop.dispose === "function" ? prop.dispose() : void 0 : void 0;
           });
         }
-        if (!(typeof Object.isFrozen === "function" ? Object.isFrozen(this) : void 0)) {
+        if (!frozen) {
           _.each(this, (function(_this) {
             return function(prop, name) {
               if (_.isFunction(prop)) {

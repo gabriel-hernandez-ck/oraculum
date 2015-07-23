@@ -151,6 +151,7 @@ instance it was called on.</p>
         </td>
         <td class="code highlight"><div class="highlight"><pre>
       <span class="k">return</span> <span class="k">this</span> <span class="k">if</span> <span class="nx">@disposed</span>
+      <span class="nv">frozen = </span><span class="nb">Object</span><span class="p">.</span><span class="nx">isFrozen</span><span class="o">?</span> <span class="k">this</span>
 
 
 </pre></div>
@@ -170,7 +171,7 @@ to clean up after themselves.</p>
 
       <span class="nx">@trigger</span> <span class="s">&#39;dispose:before&#39;</span><span class="p">,</span> <span class="k">this</span>
       <span class="nx">@trigger</span> <span class="s">&#39;dispose&#39;</span><span class="p">,</span> <span class="k">this</span>
-      <span class="vi">@disposed = </span><span class="kc">true</span>
+      <span class="vi">@disposed = </span><span class="kc">true</span> <span class="k">unless</span> <span class="nx">frozen</span>
       <span class="nx">@trigger</span> <span class="s">&#39;dispose:after&#39;</span><span class="p">,</span> <span class="k">this</span>
 
 
@@ -215,7 +216,7 @@ to clean up after themselves.</p>
 <p>Delete all of our non-object primitives, assuming we're not frozen.</p>
         </td>
         <td class="code highlight"><div class="highlight"><pre>
-      <span class="k">unless</span> <span class="nb">Object</span><span class="p">.</span><span class="nx">isFrozen</span><span class="o">?</span> <span class="k">this</span>
+      <span class="k">unless</span> <span class="nx">frozen</span>
         <span class="nx">_</span><span class="p">.</span><span class="nx">each</span> <span class="k">this</span><span class="p">,</span> <span class="nf">(prop, name) =&gt;</span>
           <span class="k">return</span> <span class="k">if</span> <span class="nx">_</span><span class="p">.</span><span class="nx">isFunction</span> <span class="nx">prop</span>
           <span class="k">return</span> <span class="k">unless</span> <span class="nx">_</span><span class="p">.</span><span class="nx">isObject</span> <span class="nx">prop</span>

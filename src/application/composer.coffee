@@ -265,8 +265,7 @@ define [
         if composition.stale()
           composition.dispose()
           delete @compositions[name]
-        else
-          composition.stale true
+        else composition.stale true
 
     ###
     Dispose Compositions

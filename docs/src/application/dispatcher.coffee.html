@@ -429,8 +429,7 @@ of the returned promise.</p>
         <span class="k">if</span> <span class="nx">controller</span><span class="p">.</span><span class="nx">redirected</span> <span class="o">or</span>
         <span class="nx">@currentRoute</span> <span class="o">and</span> <span class="nx">route</span> <span class="o">is</span> <span class="nx">@currentRoute</span>
           <span class="vi">@nextPreviousRoute = @nextCurrentRoute = </span><span class="kc">null</span>
-          <span class="nx">controller</span><span class="p">.</span><span class="nx">dispose</span><span class="p">()</span>
-          <span class="k">return</span>
+          <span class="k">return</span> <span class="nx">controller</span><span class="p">.</span><span class="nx">dispose</span><span class="p">()</span>
         <span class="vi">@currentRoute = </span><span class="nx">@nextCurrentRoute</span>
         <span class="vi">@previousRoute = </span><span class="nx">@nextPreviousRoute</span>
         <span class="vi">@nextPreviousRoute = @nextCurrentRoute = </span><span class="kc">null</span>

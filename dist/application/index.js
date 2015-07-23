@@ -96,7 +96,13 @@
         if (options == null) {
           options = {};
         }
-        this.initRouter(options.routes, options);
+        if (options.title == null) {
+          options.title = this.title;
+        }
+        if (options.router == null) {
+          options.router = 'Router';
+        }
+        this.initRouter(options);
         this.initDispatcher(options);
         this.initLayout(options);
         this.initComposer(options);
@@ -124,6 +130,23 @@
 
 
       /*
+      Initialize
+      ----------
+      We provide a basic `initialize` method to perform the most common use case
+      implementation while keeping this logic out of `constructor` so that an
+      extending definition can override `initialize`, taking control over the
+      `@start` method's invocation.
+      Throws if invoked after `@started` is set to `true`.
+       */
+
+      Application.prototype.initialize = function() {
+        if (this.started) {
+          throw new Error('Application#initialize: App was already started');
+        }
+      };
+
+
+      /*
       Initialize Router
       -----------------
       Creates the global `Router`, passing it all of our `options`.
@@ -139,15 +162,15 @@
       @param {Object} object? Any options to pass to the `Router`'s constructor.
        */
 
-      Application.prototype.initRouter = function(routes, options) {
+      Application.prototype.initRouter = function(options) {
         if (options == null) {
           options = {};
         }
-        if (options.router == null) {
-          options.router = 'Router';
-        }
         this.router = _.isString(options.router) ? this.__factory().get(options.router, options) : new options.router(options);
-        return typeof routes === "function" ? routes(this.router.match) : void 0;
+        if (this.routes == null) {
+          this.routes = _.isString(options.routes) ? this.__factory().get(options.routes, options) : options.routes;
+        }
+        return typeof this.routes === "function" ? this.routes(this.router.match) : void 0;
       };
 
 
@@ -193,9 +216,6 @@
         if (options == null) {
           options = {};
         }
-        if (options.title == null) {
-          options.title = this.title;
-        }
         return this.layout = _.isString(options.layout) ? this.__factory().get(options.layout, options) : new options.layout(options);
       };
 
@@ -221,23 +241,6 @@
           options.composer = 'Composer';
         }
         return this.composer = _.isString(options.composer) ? this.__factory().get(options.composer, options) : new options.composer(options);
-      };
-
-
-      /*
-      Initialize
-      ----------
-      We provide a basic `initialize` method to perform the most common use case
-      implementation while keeping this logic out of `constructor` so that an
-      extending definition can override `initialize`, taking control over the
-      `@start` method's invocation.
-      Throws if invoked after `@started` is set to `true`.
-       */
-
-      Application.prototype.initialize = function() {
-        if (this.started) {
-          throw new Error('Application#initialize: App was already started');
-        }
       };
 
 
