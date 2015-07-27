@@ -23,9 +23,10 @@ define [
       'HTMLTemplating.ViewMixin'
     ]
 
-    dependsMixins Oraculum, 'DOMCache.ViewMixin',
-      'Evented.Mixin'
-      'EventedMethod.Mixin'
+    it 'should use Evented.Mixin', ->
+      expect(Oraculum.get 'DOMCache.View').toUseMixin 'Evented.Mixin'
+    it 'should use EventedMethod.Mixin', ->
+      expect(Oraculum.get 'DOMCache.View').toUseMixin 'EventedMethod.Mixin'
 
     it 'should read domcache at construction', ->
       view = Oraculum.get 'DOMCache.View'

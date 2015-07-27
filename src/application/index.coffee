@@ -94,9 +94,11 @@ define [
     ###
 
     constructor: (options = {}) ->
+      options.title ?= @title
+      options.router ?= 'Router'
 
       # Register all of our `Route`s, passing through our `options`.
-      @initRouter options.routes, options
+      @initRouter options
 
       # Dispatcher listens for routing events and initialises controllers.
       @initDispatcher options
@@ -129,6 +131,22 @@ define [
         disposeAll: true
 
     ###
+    Initialize
+    ----------
+    We provide a basic `initialize` method to perform the most common use case
+    implementation while keeping this logic out of `constructor` so that an
+    extending definition can override `initialize`, taking control over the
+    `@start` method's invocation.
+    Throws if invoked after `@started` is set to `true`.
+    ###
+
+    initialize: ->
+      # Check if app is already started.
+      throw new Error '''
+        Application#initialize: App was already started
+      ''' if @started
+
+    ###
     Initialize Router
     -----------------
     Creates the global `Router`, passing it all of our `options`.
@@ -144,16 +162,19 @@ define [
     @param {Object} object? Any options to pass to the `Router`'s constructor.
     ###
 
-    initRouter: (routes, options = {}) ->
+    initRouter: (options = {}) ->
       # Save the reference for testing introspection only.
       # Modules should communicate with each other via **publish/subscribe**.
-      options.router ?= 'Router'
       @router = if _.isString options.router
       then @__factory().get options.router, options
       else new options.router options
 
+      @routes ?= if _.isString options.routes
+      then @__factory().get options.routes, options
+      else options.routes
+
       # Register any provided routes.
-      routes? @router.match
+      @routes? @router.match
 
 
     ###
@@ -190,7 +211,6 @@ define [
     ###
 
     initLayout: (options = {}) ->
-      options.title ?= @title
       @layout = if _.isString options.layout
       then @__factory().get options.layout, options
       else new options.layout options
@@ -213,22 +233,6 @@ define [
       @composer = if _.isString options.composer
       then @__factory().get options.composer, options
       else new options.composer options
-
-    ###
-    Initialize
-    ----------
-    We provide a basic `initialize` method to perform the most common use case
-    implementation while keeping this logic out of `constructor` so that an
-    extending definition can override `initialize`, taking control over the
-    `@start` method's invocation.
-    Throws if invoked after `@started` is set to `true`.
-    ###
-
-    initialize: ->
-      # Check if app is already started.
-      throw new Error '''
-        Application#initialize: App was already started
-      ''' if @started
 
     ###
     Start

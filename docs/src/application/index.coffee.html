@@ -37,6 +37,9 @@
         <a href="#mixin%20options">Mixin Options</a>
       </div>
       <div class="heading h2">
+        <a href="#initialize">Initialize</a>
+      </div>
+      <div class="heading h2">
         <a href="#initialize%20router">Initialize Router</a>
       </div>
       <div class="heading h2">
@@ -47,9 +50,6 @@
       </div>
       <div class="heading h2">
         <a href="#initialize%20composer">Initialize Composer</a>
-      </div>
-      <div class="heading h2">
-        <a href="#initialize">Initialize</a>
       </div>
       <div class="heading h2">
         <a href="#start">Start</a>
@@ -364,6 +364,8 @@ to <code>true</code> upon invoking <code>@start</code>.</p>
         <td class="code highlight"><div class="highlight"><pre>
 
     <span class="nv">constructor: </span><span class="nf">(options = {}) -&gt;</span>
+      <span class="nx">options</span><span class="p">.</span><span class="nx">title</span> <span class="o">?=</span> <span class="nx">@title</span>
+      <span class="nx">options</span><span class="p">.</span><span class="nx">router</span> <span class="o">?=</span> <span class="s">&#39;Router&#39;</span>
 
 
 </pre></div>
@@ -377,7 +379,7 @@ to <code>true</code> upon invoking <code>@start</code>.</p>
 <p>Register all of our <code>Route</code>s, passing through our <code>options</code>.</p>
         </td>
         <td class="code highlight"><div class="highlight"><pre>
-      <span class="nx">@initRouter</span> <span class="nx">options</span><span class="p">.</span><span class="nx">routes</span><span class="p">,</span> <span class="nx">options</span>
+      <span class="nx">@initRouter</span> <span class="nx">options</span>
 
 
 </pre></div>
@@ -496,6 +498,50 @@ to <code>true</code> upon invoking <code>@start</code>.</p>
       <tr>
         <td class="docs"><div class="dox">
   <div class="summary">
+<div class="pilwrap" id="initialize">
+  <h2>
+    <a href="#initialize" name="initialize" class="pilcrow">&#182;</a>
+    Initialize
+  </h2>
+</div>
+
+
+<p>We provide a basic <code>initialize</code> method to perform the most common use case
+implementation while keeping this logic out of <code>constructor</code> so that an
+extending definition can override <code>initialize</code>, taking control over the
+<code>@start</code> method's invocation.
+Throws if invoked after <code>@started</code> is set to <code>true</code>.</p>
+  </div>
+  <div class="body">
+  </div>
+</div>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+
+    <span class="nv">initialize: </span><span class="nf">-&gt;</span>
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-19" id="section-19">&#182;</a>
+</div>
+<p>Check if app is already started.</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+      <span class="k">throw</span> <span class="k">new</span> <span class="nb">Error</span> <span class="s">&#39;&#39;&#39;</span>
+<span class="s">        Application#initialize: App was already started</span>
+<span class="s">      &#39;&#39;&#39;</span> <span class="k">if</span> <span class="nx">@started</span>
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs"><div class="dox">
+  <div class="summary">
 <div class="pilwrap" id="initialize%20router">
   <h2>
     <a href="#initialize%20router" name="initialize%20router" class="pilcrow">&#182;</a>
@@ -538,7 +584,7 @@ If <code>options.router</code> is not defined, it will default to <code>'Router'
         </td>
         <td class="code highlight"><div class="highlight"><pre>
 
-    <span class="nv">initRouter: </span><span class="nf">(routes, options = {}) -&gt;</span>
+    <span class="nv">initRouter: </span><span class="nf">(options = {}) -&gt;</span>
 
 </pre></div>
         </td>
@@ -546,16 +592,19 @@ If <code>options.router</code> is not defined, it will default to <code>'Router'
       <tr>
         <td class="docs">
 <div class="pilwrap">
-  <a class="pilcrow" href="#section-19" id="section-19">&#182;</a>
+  <a class="pilcrow" href="#section-21" id="section-21">&#182;</a>
 </div>
 <p>Save the reference for testing introspection only.
 Modules should communicate with each other via <strong>publish/subscribe</strong>.</p>
         </td>
         <td class="code highlight"><div class="highlight"><pre>
-      <span class="nx">options</span><span class="p">.</span><span class="nx">router</span> <span class="o">?=</span> <span class="s">&#39;Router&#39;</span>
       <span class="vi">@router = </span><span class="k">if</span> <span class="nx">_</span><span class="p">.</span><span class="nx">isString</span> <span class="nx">options</span><span class="p">.</span><span class="nx">router</span>
       <span class="k">then</span> <span class="nx">@__factory</span><span class="p">().</span><span class="nx">get</span> <span class="nx">options</span><span class="p">.</span><span class="nx">router</span><span class="p">,</span> <span class="nx">options</span>
       <span class="k">else</span> <span class="k">new</span> <span class="nx">options</span><span class="p">.</span><span class="nx">router</span> <span class="nx">options</span>
+
+      <span class="nx">@routes</span> <span class="o">?=</span> <span class="k">if</span> <span class="nx">_</span><span class="p">.</span><span class="nx">isString</span> <span class="nx">options</span><span class="p">.</span><span class="nx">routes</span>
+      <span class="k">then</span> <span class="nx">@__factory</span><span class="p">().</span><span class="nx">get</span> <span class="nx">options</span><span class="p">.</span><span class="nx">routes</span><span class="p">,</span> <span class="nx">options</span>
+      <span class="k">else</span> <span class="nx">options</span><span class="p">.</span><span class="nx">routes</span>
 
 
 </pre></div>
@@ -564,12 +613,12 @@ Modules should communicate with each other via <strong>publish/subscribe</strong
       <tr>
         <td class="docs">
 <div class="pilwrap">
-  <a class="pilcrow" href="#section-20" id="section-20">&#182;</a>
+  <a class="pilcrow" href="#section-22" id="section-22">&#182;</a>
 </div>
 <p>Register any provided routes.</p>
         </td>
         <td class="code highlight"><div class="highlight"><pre>
-      <span class="nx">routes</span><span class="o">?</span> <span class="nx">@router</span><span class="p">.</span><span class="nx">match</span>
+      <span class="nx">@routes</span><span class="o">?</span> <span class="nx">@router</span><span class="p">.</span><span class="nx">match</span>
 
 
 
@@ -662,7 +711,6 @@ If <code>options.layout</code> is not defined, it will throw.</p>
         <td class="code highlight"><div class="highlight"><pre>
 
     <span class="nv">initLayout: </span><span class="nf">(options = {}) -&gt;</span>
-      <span class="nx">options</span><span class="p">.</span><span class="nx">title</span> <span class="o">?=</span> <span class="nx">@title</span>
       <span class="vi">@layout = </span><span class="k">if</span> <span class="nx">_</span><span class="p">.</span><span class="nx">isString</span> <span class="nx">options</span><span class="p">.</span><span class="nx">layout</span>
       <span class="k">then</span> <span class="nx">@__factory</span><span class="p">().</span><span class="nx">get</span> <span class="nx">options</span><span class="p">.</span><span class="nx">layout</span><span class="p">,</span> <span class="nx">options</span>
       <span class="k">else</span> <span class="k">new</span> <span class="nx">options</span><span class="p">.</span><span class="nx">layout</span> <span class="nx">options</span>
@@ -711,50 +759,6 @@ If <code>options.composer</code> is not defined, it will default to <code>'Compo
       <span class="vi">@composer = </span><span class="k">if</span> <span class="nx">_</span><span class="p">.</span><span class="nx">isString</span> <span class="nx">options</span><span class="p">.</span><span class="nx">composer</span>
       <span class="k">then</span> <span class="nx">@__factory</span><span class="p">().</span><span class="nx">get</span> <span class="nx">options</span><span class="p">.</span><span class="nx">composer</span><span class="p">,</span> <span class="nx">options</span>
       <span class="k">else</span> <span class="k">new</span> <span class="nx">options</span><span class="p">.</span><span class="nx">composer</span> <span class="nx">options</span>
-
-
-</pre></div>
-        </td>
-      </tr>
-      <tr>
-        <td class="docs"><div class="dox">
-  <div class="summary">
-<div class="pilwrap" id="initialize">
-  <h2>
-    <a href="#initialize" name="initialize" class="pilcrow">&#182;</a>
-    Initialize
-  </h2>
-</div>
-
-
-<p>We provide a basic <code>initialize</code> method to perform the most common use case
-implementation while keeping this logic out of <code>constructor</code> so that an
-extending definition can override <code>initialize</code>, taking control over the
-<code>@start</code> method's invocation.
-Throws if invoked after <code>@started</code> is set to <code>true</code>.</p>
-  </div>
-  <div class="body">
-  </div>
-</div>
-        </td>
-        <td class="code highlight"><div class="highlight"><pre>
-
-    <span class="nv">initialize: </span><span class="nf">-&gt;</span>
-
-</pre></div>
-        </td>
-      </tr>
-      <tr>
-        <td class="docs">
-<div class="pilwrap">
-  <a class="pilcrow" href="#section-25" id="section-25">&#182;</a>
-</div>
-<p>Check if app is already started.</p>
-        </td>
-        <td class="code highlight"><div class="highlight"><pre>
-      <span class="k">throw</span> <span class="k">new</span> <span class="nb">Error</span> <span class="s">&#39;&#39;&#39;</span>
-<span class="s">        Application#initialize: App was already started</span>
-<span class="s">      &#39;&#39;&#39;</span> <span class="k">if</span> <span class="nx">@started</span>
 
 
 </pre></div>

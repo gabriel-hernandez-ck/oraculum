@@ -23,12 +23,11 @@ define [
       view.mixinOptions.disposable.disposeAll = true
       view.dispose()
 
-    containsMixins definition,
-      'Cell.ViewMixin'
-      'Listener.Mixin'
-      'Disposable.Mixin'
-      'HTMLTemplating.ViewMixin'
-      'DOMPropertyBinding.ViewMixin'
+    it 'should use Cell.ViewMixin', -> expect(view).toUseMixin 'Cell.ViewMixin'
+    it 'should use Listener.Mixin', -> expect(view).toUseMixin 'Listener.Mixin'
+    it 'should use Disposable.Mixin', -> expect(view).toUseMixin 'Disposable.Mixin'
+    it 'should use HTMLTemplating.ViewMixin', -> expect(view).toUseMixin 'HTMLTemplating.ViewMixin'
+    it 'should use DOMPropertyBinding.ViewMixin', -> expect(view).toUseMixin 'DOMPropertyBinding.ViewMixin'
 
     it 'should render a property-bound element', ->
       view.render()

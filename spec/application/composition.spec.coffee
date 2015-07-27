@@ -5,26 +5,13 @@ define [
   'use strict'
 
   describe 'Composition', ->
-    Composition = Oraculum.getConstructor 'Composition'
-    definition = Oraculum.definitions['Composition']
-    ctor = definition.constructor
 
     composition = null
+    beforeEach -> composition = Oraculum.get 'Composition'
+    afterEach -> composition.dispose()
 
-    beforeEach ->
-      # Instantiate
-      composition = new Composition
-
-    afterEach ->
-      # Dispose
-      composition.dispose()
-      composition = null
-
-    containsMixins definition,
-      'Disposable.Mixin'
-
-    # initialize
-    # ----------
+    it 'should use Evented.Mixin', -> expect(composition).toUseMixin 'Evented.Mixin'
+    it 'should use Disposable.Mixin', -> expect(composition).toUseMixin 'Disposable.Mixin'
 
     it 'should initialize', ->
       expect(composition.stale()).toBeFalse()

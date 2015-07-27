@@ -1,96 +1,77 @@
-# Unit tests ported from Chaplin
-define [
-  'oraculum'
-  'oraculum/libs'
-  'oraculum/application/controller'
-  'oraculum/mixins/callback-provider'
-], (Oraculum) ->
+define ['oraculum'], (Oraculum) ->
   'use strict'
 
   Backbone = Oraculum.get 'Backbone'
-  provideCallback = Oraculum.mixins['CallbackProvider.Mixin'].provideCallback
-  removeCallbacks = Oraculum.mixins['CallbackProvider.Mixin'].removeCallbacks
 
   describe 'Controller', ->
-    Controller = Oraculum.getConstructor 'Controller'
-    definition = Oraculum.definitions['Controller']
-    ctor = definition.constructor
-
     controller = null
+    beforeEach -> controller = Oraculum.get 'Controller'
+    afterEach -> controller.dispose()
 
-    containsMixins definition,
-      'PubSub.Mixin'
-      'Evented.Mixin'
-      'Disposable.Mixin'
-      'CallbackDelegate.Mixin'
+    it 'should use PubSub.Mixin', -> expect(controller).toUseMixin 'PubSub.Mixin'
+    it 'should use Evented.Mixin', -> expect(controller).toUseMixin 'Evented.Mixin'
+    it 'should use Disposable.Mixin', -> expect(controller).toUseMixin 'Disposable.Mixin'
+    it 'should use CallbackDelegate.Mixin', -> expect(controller).toUseMixin 'CallbackDelegate.Mixin'
 
-    beforeEach ->
-      controller = new Controller()
-      removeCallbacks()
-
-    afterEach ->
-      controller.dispose()
-      removeCallbacks()
-      Backbone.off()
-
-    it 'should mixin a Backbone.Events', ->
+    it 'should implement Backbone.Events', ->
       expect(controller).toImplement Backbone.Events
 
-    it 'should redirect to a URL', ->
-      expect(controller.redirectTo).toBeFunction()
+    describe 'redirectTo interface', ->
+      options = {}
+      pathSpec = 'redirect-target/123'
+      listener = null
+      routeCallback = null
 
-      routerRoute = sinon.spy()
-      provideCallback 'router:route', routerRoute
+      beforeEach ->
+        listener = Oraculum.get 'Listener.SpecHelper'
+        listener.provideCallback 'router:route', routeCallback = sinon.stub()
+        controller.redirectTo pathSpec, options
 
-      url = 'redirect-target/123'
-      controller.redirectTo url
+      afterEach ->
+        listener.dispose()
 
-      expect(controller.redirected).toBeTrue()
-      expect(routerRoute).toHaveBeenCalledOnce()
-      expect(routerRoute).toHaveBeenCalledWith url
+      it 'should mark the controller as redirected', ->
+        expect(controller.redirected).toBeTrue()
 
-    it 'should redirect to a URL with routing options', ->
-      routerRoute = sinon.spy()
-      provideCallback 'router:route', routerRoute
+      it 'should notify the router of a route request', ->
+        expect(routeCallback).toHaveBeenCalledOnce()
+        expect(routeCallback).toHaveBeenCalledWith pathSpec, options
 
-      url = 'redirect-target/123'
-      options = replace: true
-      controller.redirectTo url, options
+    describe 'adjustTitle interface', ->
+      listener = null
+      titleCallback = null
 
-      expect(controller.redirected).toBeTrue()
-      expect(routerRoute).toHaveBeenCalledOnce()
-      expect(routerRoute).toHaveBeenCalledWith url, options
+      beforeEach ->
+        listener = Oraculum.get 'Listener.SpecHelper'
+        listener.subscribeEvent '!adjustTitle', titleCallback = sinon.stub()
+        controller.adjustTitle 'newTitle'
 
-    it 'should redirect to a named route', ->
-      routerRoute = sinon.spy()
-      provideCallback 'router:route', routerRoute
+      afterEach ->
+        listener.dispose()
 
-      name = 'params'
-      params = one: '21'
-      pathDesc = name: name, params: params
-      controller.redirectTo pathDesc
+      it 'should publish an `!adjustTitle` event', ->
+        expect(titleCallback).toHaveBeenCalledOnce()
+        expect(titleCallback).toHaveBeenCalledWith 'newTitle'
 
-      expect(controller.redirected).toBeTrue()
-      expect(routerRoute).toHaveBeenCalledOnce()
-      expect(routerRoute).toHaveBeenCalledWith pathDesc
+    describe 'reuse interface', ->
+      listener = null
+      composeCallback = null
+      retrieveCallback = null
 
-    it 'should redirect to a named route with options', ->
-      routerRoute = sinon.spy()
-      provideCallback 'router:route', routerRoute
+      beforeEach ->
+        listener = Oraculum.get 'Listener.SpecHelper'
+        listener.provideCallback 'composer:compose', composeCallback = sinon.stub()
+        listener.provideCallback 'composer:retrieve', retrieveCallback = sinon.stub()
 
-      name = 'params'
-      params = one: '21'
-      pathDesc = name: name, params: params
-      options = replace: true
-      controller.redirectTo pathDesc, options
+      afterEach ->
+        listener.dispose()
 
-      expect(controller.redirected).toBeTrue()
-      expect(routerRoute).toHaveBeenCalledOnce()
-      expect(routerRoute).toHaveBeenCalledWith pathDesc, options
+      it 'should notify the composer of a retrieval request if called with only one argument', ->
+        controller.reuse 'testInstance'
+        expect(retrieveCallback).toHaveBeenCalledOnce()
+        expect(retrieveCallback).toHaveBeenCalledWith 'testInstance'
 
-    it 'should adjust page title', ->
-      spy = sinon.spy()
-      Backbone.on '!adjustTitle', spy
-      controller.adjustTitle 'meh'
-      expect(spy).toHaveBeenCalledOnce()
-      expect(spy).toHaveBeenCalledWith 'meh'
+      it 'should notify the composer of a composition request if called with more than one argument', ->
+        controller.reuse 'testInstance', 'SomeDefinition', options = {}
+        expect(composeCallback).toHaveBeenCalledOnce()
+        expect(composeCallback).toHaveBeenCalledWith 'testInstance', 'SomeDefinition', options

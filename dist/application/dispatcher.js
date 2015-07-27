@@ -144,8 +144,7 @@
           return function() {
             if (controller.redirected || _this.currentRoute && route === _this.currentRoute) {
               _this.nextPreviousRoute = _this.nextCurrentRoute = null;
-              controller.dispose();
-              return;
+              return controller.dispose();
             }
             _this.currentRoute = _this.nextCurrentRoute;
             _this.previousRoute = _this.nextPreviousRoute;

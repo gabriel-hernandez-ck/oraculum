@@ -41,6 +41,7 @@ define [
     dispose: ->
       # Gate the method based on the disposed state of the instance.
       return this if @disposed
+      frozen = Object.isFrozen? this
 
       # Provide event hooks for SRP disposal. I.e. if any mixed in behavior
       # creates non-primitive memory-unsafe objects, notify them of the
@@ -49,7 +50,7 @@ define [
 
       @trigger 'dispose:before', this
       @trigger 'dispose', this
-      @disposed = true
+      @disposed = true unless frozen
       @trigger 'dispose:after', this
 
       # Remove all event listeners from the instance.
@@ -61,7 +62,7 @@ define [
         _.each this, (prop, name) -> prop?.dispose?()
 
       # Delete all of our non-object primitives, assuming we're not frozen.
-      unless Object.isFrozen? this
+      unless frozen
         _.each this, (prop, name) =>
           return if _.isFunction prop
           return unless _.isObject prop

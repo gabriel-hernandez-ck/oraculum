@@ -22,8 +22,8 @@ define [
       view.__dispose()
       column.__dispose()
 
-    dependsMixins Oraculum, 'Cell.ViewMixin',
-      'Evented.Mixin'
+    it 'should use Evented.Mixin', ->
+      expect(view).toUseMixin 'Evented.Mixin'
 
     it 'should cache the column constructor arg', ->
       expect(view.column).toBe column

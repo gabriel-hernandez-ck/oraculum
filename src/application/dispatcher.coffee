@@ -146,8 +146,7 @@ define [
         if controller.redirected or
         @currentRoute and route is @currentRoute
           @nextPreviousRoute = @nextCurrentRoute = null
-          controller.dispose()
-          return
+          return controller.dispose()
         @currentRoute = @nextCurrentRoute
         @previousRoute = @nextPreviousRoute
         @nextPreviousRoute = @nextCurrentRoute = null

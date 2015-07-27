@@ -1,11 +1,4 @@
-define [
-  'oraculum'
-  'oraculum/libs'
-  'oraculum/mixins/disposable'
-  'oraculum/views/mixins/list'
-  'oraculum/views/mixins/auto-render'
-  'oraculum/views/mixins/html-templating'
-], (Oraculum) ->
+define ['oraculum'], (Oraculum) ->
   'use strict'
 
   $ = Oraculum.get 'jQuery'
@@ -473,18 +466,15 @@ define [
 
       it 'should save the filter callback', ->
         basicSetup()
-
-        _filterCallback = mixin.mixinOptions.list.filterCallback
         filterer = -> false
         filterCallback = ->
-        expect(listView.mixinOptions.list.filterCallback).toBe _filterCallback
+        expect(listView.mixinOptions.list.filterCallback).not.toBe filterCallback
         listView.filter filterer, filterCallback
         expect(listView.mixinOptions.list.filterCallback).toBe filterCallback
 
       it 'should not call the filter callback when unfiltered', ->
         createCollection []
         listView = Oraculum.get 'List.View', {collection}
-
         spy = sinon.spy listView.mixinOptions.list, 'filterCallback'
         collection.reset freshModels()
         addThree()

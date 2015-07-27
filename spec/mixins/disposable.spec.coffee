@@ -1,13 +1,11 @@
-define [
-  'oraculum'
-  'oraculum/mixins/disposable'
-], (Oraculum) ->
+define ['oraculum'], (Oraculum) ->
   'use strict'
 
   describe 'Disposable.Mixin', ->
     view = null
 
-    Oraculum.extend 'View', 'Disposable.View', {}, mixins: ['Disposable.Mixin']
+    Oraculum.extend 'View', 'Disposable.View', {
+    }, mixins: ['Disposable.Mixin']
 
     beforeEach ->
       view = Oraculum.get 'Disposable.View'
@@ -15,9 +13,8 @@ define [
     afterEach ->
       view.dispose()
 
-    dependsMixins Oraculum, 'Disposable.Mixin',
-      'Evented.Mixin'
-      'Freezable.Mixin'
+    it 'should inherit Evented.Mixin', -> expect(view).toUseMixin 'Evented.Mixin'
+    it 'should inherit Freezable.Mixin', -> expect(view).toUseMixin 'Freezable.Mixin'
 
     it 'should trigger dispose:before, dispose, dispose:after', ->
       view.on 'dispose:before', beforeSpy = sinon.spy()

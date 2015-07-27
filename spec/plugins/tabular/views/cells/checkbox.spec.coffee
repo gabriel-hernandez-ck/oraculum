@@ -23,12 +23,11 @@ define [
       view.mixinOptions.disposable.disposeAll = true
       view.dispose()
 
-    containsMixins definition,
-      'Cell.ViewMixin'
-      'Listener.Mixin'
-      'Disposable.Mixin'
-      'EventedMethod.Mixin'
-      'HTMLTemplating.ViewMixin'
+    it 'should use Cell.ViewMixin', -> expect(view).toUseMixin 'Cell.ViewMixin'
+    it 'should use Listener.Mixin', -> expect(view).toUseMixin 'Listener.Mixin'
+    it 'should use Disposable.Mixin', -> expect(view).toUseMixin 'Disposable.Mixin'
+    it 'should use EventedMethod.Mixin', -> expect(view).toUseMixin 'EventedMethod.Mixin'
+    it 'should use HTMLTemplating.ViewMixin', -> expect(view).toUseMixin 'HTMLTemplating.ViewMixin'
 
     it 'should render a checkbox element', ->
       view.render()
