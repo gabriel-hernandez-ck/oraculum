@@ -20,10 +20,6 @@ define [
   Oraculum.defineMixin 'Cell.ViewMixin', {
 
     mixinOptions:
-      staticClasses: [
-        'cell' # TODO: 'cell' should be removed prior to 2.0
-        'cell-mixin'
-      ]
       cell: column: null
 
     mixconfig: ({cell}, {model, column} = {}) ->
@@ -49,5 +45,4 @@ define [
     'Evented.Mixin'
     'Hideable.CellMixin'
     'Sortable.CellMixin'
-    'StaticClasses.ViewMixin'
   ]

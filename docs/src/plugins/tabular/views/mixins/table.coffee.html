@@ -41,21 +41,17 @@
   <span class="s">&#39;oraculum&#39;</span>
   <span class="s">&#39;oraculum/libs&#39;</span>
   <span class="s">&#39;oraculum/views/mixins/list&#39;</span>
-  <span class="s">&#39;oraculum/views/mixins/static-classes&#39;</span>
 <span class="p">],</span> <span class="nf">(Oraculum) -&gt;</span>
   <span class="s">&#39;use strict&#39;</span>
-
-  <span class="nv">composeConfig = </span><span class="nx">Oraculum</span><span class="p">.</span><span class="nx">get</span> <span class="s">&#39;composeConfig&#39;</span>
 
   <span class="nx">Oraculum</span><span class="p">.</span><span class="nx">defineMixin</span> <span class="s">&#39;Table.ViewMixin&#39;</span><span class="p">,</span> <span class="p">{</span>
 
     <span class="nv">mixinOptions:</span>
-      <span class="nv">staticClasses: </span><span class="p">[</span><span class="s">&#39;table-mixin&#39;</span><span class="p">]</span>
       <span class="nv">table: columns: </span><span class="kc">null</span>
 
     <span class="nv">mixconfig: </span><span class="nf">({table, list}, {columns} = {}) -&gt;</span>
       <span class="nv">table.columns = </span><span class="nx">columns</span> <span class="k">if</span> <span class="nx">columns</span><span class="o">?</span>
-      <span class="nv">list.viewOptions = </span><span class="nx">composeConfig</span> <span class="p">{</span>
+      <span class="nv">list.viewOptions = </span><span class="nx">Oraculum</span><span class="p">.</span><span class="nx">composeConfig</span> <span class="p">{</span>
         <span class="nv">collection: </span><span class="nx">table</span><span class="p">.</span><span class="nx">columns</span>
       <span class="p">},</span> <span class="nx">list</span><span class="p">.</span><span class="nx">viewOptions</span>
 
@@ -64,10 +60,7 @@
       <span class="vi">@columns = </span><span class="nx">@__factory</span><span class="p">().</span><span class="nx">get</span> <span class="nx">@columns</span> <span class="k">if</span> <span class="nx">_</span><span class="p">.</span><span class="nx">isString</span> <span class="nx">@columns</span>
       <span class="vi">@columns = </span><span class="nx">@__factory</span><span class="p">().</span><span class="nx">get</span> <span class="s">&#39;Collection&#39;</span><span class="p">,</span> <span class="nx">@columns</span> <span class="k">if</span> <span class="nx">_</span><span class="p">.</span><span class="nx">isArray</span> <span class="nx">@columns</span>
 
-  <span class="p">},</span> <span class="nv">mixins: </span><span class="p">[</span>
-    <span class="s">&#39;List.ViewMixin&#39;</span>
-    <span class="s">&#39;StaticClasses.ViewMixin&#39;</span>
-  <span class="p">]</span>
+  <span class="p">},</span> <span class="nv">mixins: </span><span class="p">[</span><span class="s">&#39;List.ViewMixin&#39;</span><span class="p">]</span>
 </pre></div>
         </td>
       </tr>

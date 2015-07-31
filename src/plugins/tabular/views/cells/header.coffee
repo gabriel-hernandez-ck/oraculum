@@ -24,7 +24,6 @@ define [
       'click a': '_sort'
 
     mixinOptions:
-      staticClasses: ['header-cell-view']
       eventedMethods:
         render: {}
       listen:

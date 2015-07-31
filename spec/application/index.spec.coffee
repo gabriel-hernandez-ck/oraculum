@@ -42,9 +42,9 @@ define ['oraculum'], (Oraculum) ->
       it 'should set the disposeAll bit to true on the disposable mixin by default', ->
         expect(application.mixinOptions.disposable.disposeAll).toBeTrue()
 
-      it 'should set the freeze bit to true on the freezable mixin by default', ->
+      it 'should set the freeze bit to true on the freezable mixin by default', (done) ->
         expect(application.mixinOptions.freeze).toBe true
-        expect(Object.isFrozen application).toBe true
+        _.defer -> done expect(Object.isFrozen application).toBe true
 
     describe 'initialization', ->
 

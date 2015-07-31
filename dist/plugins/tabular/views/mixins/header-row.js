@@ -1,17 +1,14 @@
 (function() {
-  define(['oraculum', 'oraculum/libs', 'oraculum/views/mixins/static-classes', 'oraculum/plugins/tabular/views/mixins/row'], function(Oraculum) {
+  define(['oraculum', 'oraculum/libs', 'oraculum/plugins/tabular/views/mixins/row'], function(Oraculum) {
     'use strict';
-    var composeConfig;
-    composeConfig = Oraculum.get('composeConfig');
+    var _;
+    _ = Oraculum.get('underscore');
 
     /*
     HeaderRow.ViewMixin
     ===================
      */
     return Oraculum.defineMixin('HeaderRow.ViewMixin', {
-      mixinOptions: {
-        staticClasses: ['header-row-mixin']
-      },
       resolveModelView: function(column) {
         var headerView, modelView, ref, viewOptions;
         ref = this.mixinOptions.list, headerView = ref.headerView, modelView = ref.modelView, viewOptions = ref.viewOptions;
@@ -24,21 +21,20 @@
         model = this.model || column;
         headerOptions = column.get('headerViewOptions');
         viewOptions = this.mixinOptions.list.viewOptions;
-        viewOptions = composeConfig({
+        viewOptions = Oraculum.composeConfig({
           model: model,
           column: column
         }, viewOptions, headerOptions);
         if (_.isFunction(viewOptions)) {
-          return viewOptions.call(this, {
+          viewOptions = viewOptions.call(this, {
             model: model,
             column: column
           });
-        } else {
-          return viewOptions;
         }
+        return viewOptions;
       }
     }, {
-      mixins: ['Row.ViewMixin', 'StaticClasses.ViewMixin']
+      mixins: ['Row.ViewMixin']
     });
   });
 

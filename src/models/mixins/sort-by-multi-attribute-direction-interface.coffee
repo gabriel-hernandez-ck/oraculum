@@ -9,7 +9,6 @@ define [
   'use strict'
 
   _ = Oraculum.get 'underscore'
-  composeConfig = Oraculum.get 'composeConfig'
 
   # Define the collection we want to use to store our sort specification state
   stateModelName = '_SortByMultiAttributeDirectionInterfaceState.Collection'
@@ -21,15 +20,14 @@ define [
     'DisposeRemoved.CollectionMixin'
   ]
 
-  Oraculum.defineMixin 'SortByMultiAttributeDirectionInterface.CollectionMixin',
-  {
+  Oraculum.defineMixin 'SortByMultiAttributeDirectionInterface.CollectionMixin', {
 
     mixinOptions:
       sortByMultiAttributeDirection:
         defaults: []
 
     mixconfig: ({sortByMultiAttributeDirection:conf}, m, {sortDefaults} = {}) ->
-      conf.defaults = composeConfig conf.defaults, sortDefaults
+      conf.defaults = Oraculum.composeConfig conf.defaults, sortDefaults
 
     mixinitialize: ->
       defaults = @mixinOptions.sortByMultiAttributeDirection.defaults

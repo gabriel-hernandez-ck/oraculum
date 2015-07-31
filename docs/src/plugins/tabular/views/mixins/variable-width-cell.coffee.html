@@ -42,7 +42,6 @@
         </td>
         <td class="code highlight"><div class="highlight"><pre><span class="nx">define</span> <span class="p">[</span>
   <span class="s">&#39;oraculum&#39;</span>
-  <span class="s">&#39;oraculum/views/mixins/static-classes&#39;</span>
 <span class="p">],</span> <span class="nf">(Oraculum) -&gt;</span>
   <span class="s">&#39;use strict&#39;</span>
 
@@ -70,10 +69,7 @@ behavior on a cell based on its column's width attribute.</p>
         </td>
         <td class="code highlight"><div class="highlight"><pre>
 
-  <span class="nx">Oraculum</span><span class="p">.</span><span class="nx">defineMixin</span> <span class="s">&#39;VariableWidth.CellMixin&#39;</span><span class="p">,</span> <span class="p">{</span>
-
-    <span class="nv">mixinOptions:</span>
-      <span class="nv">staticClasses: </span><span class="p">[</span><span class="s">&#39;variable-width-cell-mixin&#39;</span><span class="p">]</span>
+  <span class="nx">Oraculum</span><span class="p">.</span><span class="nx">defineMixin</span> <span class="s">&#39;VariableWidth.CellMixin&#39;</span><span class="p">,</span>
 
     <span class="nv">mixinitialize: </span><span class="nf">-&gt;</span>
       <span class="nx">@listenTo</span> <span class="nx">@column</span><span class="p">,</span> <span class="s">&#39;change:width&#39;</span><span class="p">,</span> <span class="nx">@_updateWidth</span>
@@ -82,8 +78,6 @@ behavior on a cell based on its column's width attribute.</p>
     <span class="nv">_updateWidth: </span><span class="nf">-&gt;</span>
       <span class="k">return</span> <span class="k">unless</span> <span class="p">(</span><span class="nv">width = </span><span class="nx">@column</span><span class="p">.</span><span class="nx">get</span> <span class="s">&#39;width&#39;</span><span class="p">)</span><span class="o">?</span>
       <span class="nx">@$el</span><span class="p">.</span><span class="nx">css</span> <span class="p">{</span><span class="nx">width</span><span class="p">}</span>
-
-  <span class="p">},</span> <span class="nv">mixins: </span><span class="p">[</span><span class="s">&#39;StaticClasses.ViewMixin&#39;</span><span class="p">]</span>
 </pre></div>
         </td>
       </tr>

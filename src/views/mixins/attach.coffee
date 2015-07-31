@@ -1,6 +1,5 @@
 define [
   'oraculum'
-  'oraculum/mixins/pub-sub'
   'oraculum/mixins/evented-method'
 ], (Oraculum) ->
   'use strict'
@@ -32,6 +31,4 @@ define [
       $(container)[containerMethod] @el
       @trigger 'addedToParent'
 
-  }, mixins: [
-    'EventedMethod.Mixin'
-  ]
+  }, mixins: ['EventedMethod.Mixin']

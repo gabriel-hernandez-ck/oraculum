@@ -19,100 +19,104 @@ define [
   @param {String} eventPrefix? An optional string to prefix on the event name.
   ###
 
-  Oraculum.define 'makeMiddlewareMethod', (->
+  Oraculum.makeMiddlewareMethod = (object, methodName, emitter = object, trigger = 'trigger', eventPrefix = '') ->
+    # Grab a handle to the original method.
+    # Return immediately if it doesn't exist.
+    original = object[methodName]
+    return console?.warn? """
+      Attempted to event undefined method #{methodName} of #{object}
+    """ unless original
 
-    return (object, methodName, emitter = object, trigger = 'trigger', eventPrefix = '') ->
+    # Don't do anything if the targeted method is already middleware.
+    return if original.middleware
 
-      # Grab a handle to the original method.
-      # Return immediately if it doesn't exist.
-      original = object[methodName]
-      return console?.warn? """
-        Attempted to event undefined method #{methodName} of #{object}
-      """ unless original
+    # Grab a handle to the emitter's "trigger" method.
+    fireEvent = emitter[trigger]
 
-      # Don't do anything if the targeted method is already middleware.
-      return if original.middleware
+    # Do some sanity checks...
+    throw new TypeError """
+      Method #{methodName} does not exist on object
+    """ unless typeof original is 'function'
+    throw new TypeError """
+      Method #{trigger} does not exist on emitter
+    """ unless typeof fireEvent is 'function'
 
-      # Grab a handle to the emitter's "trigger" method.
-      fireEvent = emitter[trigger]
+    # Modify the event prefix to ensure it ends with ':'
+    eventPrefix ?= ':' if eventPrefix and not /:$/.test eventPrefix
 
-      # Do some sanity checks...
-      throw new TypeError """
-        Method #{methodName} does not exist on object
-      """ unless typeof original is 'function'
-      throw new TypeError """
-        Method #{trigger} does not exist on emitter
-      """ unless typeof fireEvent is 'function'
+    ###
+    Create our new middleware method.
 
-      # Modify the event prefix to ensure it ends with ':'
-      eventPrefix ?= ':' if eventPrefix and not /:$/.test eventPrefix
+    __fires__ `<emitter>#[eventPrefix:]<methodName>:middleware:before`
+
+    __fires__ `<emitter>#[eventPrefix:]<methodName>:middleware:after`
+    ###
+
+    middleware = object[methodName] = (args...) ->
 
       ###
-      Create our new middleware method.
-
-      __fires__ `<emitter>#[eventPrefix:]<methodName>:middleware:before`
-
-      __fires__ `<emitter>#[eventPrefix:]<methodName>:middleware:after`
+      Create our `proxy` object. This object will be passed by reference
+      through our events, allowing its properties to be mutated in memory
+      by any listener that receives it.
       ###
 
-      middleware = object[methodName] = (args...) ->
+      proxy =
+        type: 'middleware_proxy'
+        wait: false
+        abort: false
+        result: undefined
 
-        ###
-        Create our `proxy` object. This object will be passed by reference
-        through our events, allowing its properties to be mutated in memory
-        by any listener that receives it.
-        ###
+      # Fire the initial event, passing along our proxy
+      fireEvent.call emitter, "#{eventPrefix}:#{methodName}:middleware:before",
+        args..., proxy, emitter, object
 
-        proxy =
-          type: 'middleware_proxy'
-          wait: false
-          abort: false
-          result: undefined
+      ###
+      Allow the implementation to be aborted, passing back whatever the
+      current value of `proxy.result` is at that point.
+      This allows the method's implementation to be completely bypassed and
+      controlled by any arbitrary event listener.
+      This can result in unexpected behavior if used incorrectly or ambiguously.
+      Code carefully.
+      ###
 
-        # Fire the initial event, passing along our proxy
-        fireEvent.call emitter, "#{eventPrefix}:#{methodName}:middleware:before",
+      return proxy.result if proxy.abort is true
+
+      # Create a callback to invoke our original implementation.
+      resolve = ->
+
+        # Invoke the original method in the scope of the original `object`,
+        # assigning its return value to `proxy.result`.
+        proxy.result = original.call object, args...
+
+        # Fire the `after` event, again passing along our `proxy` object.
+        fireEvent.call emitter, "#{eventPrefix}:#{methodName}:middleware:after",
           args..., proxy, emitter, object
 
-        ###
-        Allow the implementation to be aborted, passing back whatever the
-        current value of `proxy.result` is at that point.
-        This allows the method's implementation to be completely bypassed and
-        controlled by any arbitrary event listener.
-        This can result in unexpected behavior if used incorrectly or ambiguously.
-        Code carefully.
-        ###
+      # If we're waiting, create a promise and pass it through the `proxy`.
+      if proxy.wait is true
+        proxy.dfd = new $.Deferred()
+        proxy.promise = proxy.dfd.promise()
+        proxy.promise.then resolve
+        fireEvent.call emitter, "#{eventPrefix}:#{methodName}:middleware:defer",
+          args..., proxy, emitter, object
 
-        return proxy.result if proxy.abort is true
+      # Otherwise, simply invoke our resolver
+      else resolve()
 
-        # Create a callback to invoke our original implementation.
-        resolve = ->
+      # Finally, return the result.
+      return proxy.result
 
-          # Invoke the original method in the scope of the original `object`,
-          # assigning its return value to `proxy.result`.
-          proxy.result = original.call object, args...
+    # Mark the new method as middleware
+    middleware.middleware = true
 
-          # Fire the `after` event, again passing along our `proxy` object.
-          fireEvent.call emitter, "#{eventPrefix}:#{methodName}:middleware:after",
-            args..., proxy, emitter, object
+    # And cache the original method
+    middleware.original = original
 
-        # If we're waiting, create a promise and pass it through the `proxy`.
-        if proxy.wait is true
-          proxy.dfd = new $.Deferred()
-          proxy.promise = proxy.dfd.promise()
-          proxy.promise.then resolve
-          fireEvent.call emitter, "#{eventPrefix}:#{methodName}:middleware:defer",
-            args..., proxy, emitter, object
-
-        # Otherwise, simply invoke our resolver
-        else resolve()
-
-        # Finally, return the result.
-        return proxy.result
-
-      # Mark the new method as middleware
-      middleware.middleware = true
-
-      # And cache the original method
-      middleware.original = original
-
+  Oraculum.define 'makeMiddlewareMethod', (->
+    console?.warn? '''
+      Oraculum makeMiddlewareMethod definition has been superceded by the
+      Oraculum.makeMiddlewareMethod instance method.
+      This factory definition will be removed in 2.x
+    '''
+    return Oraculum.makeMiddlewareMethod
   ), singleton: true

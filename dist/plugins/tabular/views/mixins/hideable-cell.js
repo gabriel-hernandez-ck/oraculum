@@ -1,5 +1,5 @@
 (function() {
-  define(['oraculum', 'oraculum/views/mixins/static-classes'], function(Oraculum) {
+  define(['oraculum'], function(Oraculum) {
     'use strict';
 
     /*
@@ -9,9 +9,6 @@
     behavior on a cell based on its columns hidden state.
      */
     return Oraculum.defineMixin('Hideable.CellMixin', {
-      mixinOptions: {
-        staticClasses: ['hideable-cell-mixin']
-      },
       mixinitialize: function() {
         this.column = this.mixinOptions.cell.column;
         this.listenTo(this.column, 'change:hidden', this._updateHiddenState);
@@ -27,8 +24,6 @@
           display: display
         });
       }
-    }, {
-      mixins: ['StaticClasses.ViewMixin']
     });
   });
 

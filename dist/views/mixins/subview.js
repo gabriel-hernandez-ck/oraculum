@@ -1,9 +1,8 @@
 (function() {
   define(['oraculum', 'oraculum/libs', 'oraculum/mixins/evented-method'], function(Oraculum) {
     'use strict';
-    var _, composeConfig;
+    var _;
     _ = Oraculum.get('underscore');
-    composeConfig = Oraculum.get('composeConfig');
     return Oraculum.defineMixin('Subview.ViewMixin', {
       mixinOptions: {
         eventedMethods: {
@@ -13,7 +12,7 @@
       mixconfig: function(mixinOptions, arg) {
         var subviews;
         subviews = (arg != null ? arg : {}).subviews;
-        return mixinOptions.subviews = composeConfig(mixinOptions.subviews, subviews);
+        return mixinOptions.subviews = Oraculum.composeConfig(mixinOptions.subviews, subviews);
       },
       mixinitialize: function() {
         this._subviews = [];

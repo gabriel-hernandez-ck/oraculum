@@ -1,6 +1,5 @@
 define [
   'oraculum'
-  'oraculum/views/mixins/static-classes'
 ], (Oraculum) ->
   'use strict'
 
@@ -11,10 +10,7 @@ define [
   class states on a cell based on its columns sort state.
   ###
 
-  Oraculum.defineMixin 'Sortable.CellMixin', {
-
-    mixinOptions:
-      staticClasses: ['sortable-cell-mixin']
+  Oraculum.defineMixin 'Sortable.CellMixin',
 
     mixinitialize: ->
       @column = @mixinOptions.cell.column
@@ -32,5 +28,3 @@ define [
       @$el.toggleClass 'sorted', Boolean direction
       @$el.toggleClass 'ascending', direction is -1
       @$el.toggleClass 'descending', direction is 1
-
-  }, mixins: ['StaticClasses.ViewMixin']

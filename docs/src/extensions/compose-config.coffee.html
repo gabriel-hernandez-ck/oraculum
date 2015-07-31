@@ -37,31 +37,16 @@
 </div>
 
         </td>
-        <td class="code highlight"><div class="highlight"><pre><span class="nx">define</span> <span class="p">[</span>
-  <span class="s">&#39;oraculum&#39;</span>
-  <span class="s">&#39;underscore&#39;</span>
-<span class="p">],</span> <span class="nf">(Oraculum, _) -&gt;</span>
+        <td class="code highlight"><div class="highlight"><pre><span class="nx">define</span> <span class="p">[</span><span class="s">&#39;oraculum&#39;</span><span class="p">],</span> <span class="nf">(Oraculum) -&gt;</span>
   <span class="s">&#39;use strict&#39;</span>
 
   <span class="nx">Oraculum</span><span class="p">.</span><span class="nx">define</span> <span class="s">&#39;composeConfig&#39;</span><span class="p">,</span> <span class="p">(</span><span class="nf">-&gt;</span>
-
-    <span class="nv">composeConfig = </span><span class="nf">(defaultConfig, overrideConfig, args...) -&gt;</span>
-      <span class="k">if</span> <span class="nx">_</span><span class="p">.</span><span class="nx">isFunction</span> <span class="nx">defaultConfig</span>
-        <span class="nv">defaultConfig = </span><span class="nx">defaultConfig</span><span class="p">.</span><span class="nx">apply</span> <span class="k">this</span><span class="p">,</span> <span class="nx">args</span>
-      <span class="k">if</span> <span class="nx">_</span><span class="p">.</span><span class="nx">isFunction</span> <span class="nx">overrideConfig</span>
-        <span class="nv">overrideConfig = </span><span class="nx">overrideConfig</span><span class="p">.</span><span class="nx">apply</span> <span class="k">this</span><span class="p">,</span> <span class="nx">args</span>
-      <span class="k">return</span> <span class="nx">_</span><span class="p">.</span><span class="nx">clone</span><span class="p">(</span><span class="nx">defaultConfig</span><span class="p">)</span> <span class="k">unless</span> <span class="nx">overrideConfig</span><span class="o">?</span>
-      <span class="k">return</span> <span class="k">if</span> <span class="nx">_</span><span class="p">.</span><span class="nx">isArray</span><span class="p">(</span><span class="nx">defaultConfig</span><span class="p">)</span> <span class="o">and</span> <span class="nx">_</span><span class="p">.</span><span class="nx">isArray</span><span class="p">(</span><span class="nx">overrideConfig</span><span class="p">)</span>
-      <span class="k">then</span> <span class="p">[].</span><span class="nx">concat</span> <span class="nx">defaultConfig</span><span class="p">,</span> <span class="nx">overrideConfig</span>
-      <span class="k">else</span> <span class="nx">_</span><span class="p">.</span><span class="nx">extend</span> <span class="p">{},</span> <span class="nx">defaultConfig</span><span class="p">,</span> <span class="nx">overrideConfig</span>
-
-    <span class="k">return</span> <span class="nf">(defaultConfig, overrideConfigs...) -&gt;</span>
-      <span class="k">return</span> <span class="nx">_</span><span class="p">.</span><span class="nx">reduce</span> <span class="nx">overrideConfigs</span><span class="p">,</span> <span class="p">(</span><span class="nf">(defaultConfig, overrideConfig) -&gt;</span>
-        <span class="k">return</span> <span class="k">if</span> <span class="nx">_</span><span class="p">.</span><span class="nx">isFunction</span><span class="p">(</span><span class="nx">defaultConfig</span><span class="p">)</span> <span class="o">or</span> <span class="nx">_</span><span class="p">.</span><span class="nx">isFunction</span><span class="p">(</span><span class="nx">overrideConfig</span><span class="p">)</span>
-        <span class="k">then</span> <span class="nf">-&gt;</span> <span class="nx">composeConfig</span><span class="p">.</span><span class="nx">call</span> <span class="k">this</span><span class="p">,</span> <span class="nx">defaultConfig</span><span class="p">,</span> <span class="nx">overrideConfig</span><span class="p">,</span> <span class="nx">arguments</span><span class="p">...</span>
-        <span class="k">else</span> <span class="nx">composeConfig</span> <span class="nx">defaultConfig</span><span class="p">,</span> <span class="nx">overrideConfig</span>
-      <span class="p">),</span> <span class="nx">defaultConfig</span>
-
+    <span class="nx">console</span><span class="o">?</span><span class="p">.</span><span class="nx">warn</span><span class="o">?</span> <span class="s">&#39;&#39;&#39;</span>
+<span class="s">      Oraculum composeConfig definition has been superceded by the</span>
+<span class="s">      Oraculum.composeConfig class/instance method provided by FactoryJS.</span>
+<span class="s">      This factory definition will be removed in 2.x</span>
+<span class="s">    &#39;&#39;&#39;</span>
+    <span class="k">return</span> <span class="nx">Oraculum</span><span class="p">.</span><span class="nx">composeConfig</span>
   <span class="p">),</span> <span class="nv">singleton: </span><span class="kc">true</span>
 </pre></div>
         </td>

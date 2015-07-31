@@ -29,11 +29,9 @@ define [
       expect(view.column).toBe column
 
     it 'should add the appropriate css classes', ->
-      expect(view.el).toHaveClass 'cell'
       expect(view.el).toHaveClass 'someClass'
       expect(view.el).toHaveClass 'attribute-cell'
       column.set 'attribute', 'anotherAttribute'
-      expect(view.el).toHaveClass 'cell'
       expect(view.el).toHaveClass 'someClass'
       expect(view.el).toHaveClass 'anotherAttribute-cell'
       expect(view.el).not.toHaveClass 'attribute-cell'

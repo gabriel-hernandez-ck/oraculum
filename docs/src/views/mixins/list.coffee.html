@@ -47,7 +47,6 @@
   <span class="s">&#39;use strict&#39;</span>
 
   <span class="nv">_ = </span><span class="nx">Oraculum</span><span class="p">.</span><span class="nx">get</span> <span class="s">&#39;underscore&#39;</span>
-  <span class="nv">composeConfig = </span><span class="nx">Oraculum</span><span class="p">.</span><span class="nx">get</span> <span class="s">&#39;composeConfig&#39;</span>
 
   <span class="nv">subviewPrefix = </span><span class="s">&#39;modelView:&#39;</span>
   <span class="nv">subviewName = </span><span class="nf">({cid}) -&gt;</span> <span class="s">&quot;</span><span class="si">#{</span><span class="nx">subviewPrefix</span><span class="si">}#{</span><span class="nx">cid</span><span class="si">}</span><span class="s">&quot;</span>
@@ -112,7 +111,7 @@ Hides excluded items by default.</p>
       <span class="p">{</span><span class="nx">viewOptions</span><span class="p">,</span> <span class="nx">modelView</span><span class="p">}</span> <span class="o">=</span> <span class="nx">options</span>
       <span class="nv">list.modelView = </span><span class="nx">modelView</span> <span class="k">if</span> <span class="nx">modelView</span><span class="o">?</span>
 
-      <span class="nv">list.viewOptions = </span><span class="nx">composeConfig</span> <span class="nx">list</span><span class="p">.</span><span class="nx">viewOptions</span><span class="p">,</span> <span class="nx">viewOptions</span>
+      <span class="nv">list.viewOptions = </span><span class="nx">Oraculum</span><span class="p">.</span><span class="nx">composeConfig</span> <span class="nx">list</span><span class="p">.</span><span class="nx">viewOptions</span><span class="p">,</span> <span class="nx">viewOptions</span>
 
       <span class="p">{</span><span class="nx">filterer</span><span class="p">,</span> <span class="nx">filterCallback</span><span class="p">}</span> <span class="o">=</span> <span class="nx">options</span>
       <span class="nv">list.filterer = </span><span class="nx">filterer</span> <span class="k">if</span> <span class="nx">filterer</span><span class="o">?</span>

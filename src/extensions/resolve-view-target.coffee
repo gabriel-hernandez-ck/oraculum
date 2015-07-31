@@ -1,6 +1,7 @@
 define [
   'oraculum'
-], (Oraculum) ->
+  'jquery'
+], (Oraculum, $) ->
   'use strict'
 
   ###
@@ -17,10 +18,17 @@ define [
   @param {null|false|undefined|String|Element|jQueryElement|Function} target Something that resembles an element or selector.
   ###
 
+  Oraculum.resolveViewTarget = (view, target) ->
+    target = target.call view if typeof target is 'function'
+    return target if target instanceof $
+    return $(target) if _.isElement target
+    return if target? then view.$(target) else view.$el
+
   Oraculum.define 'resolveViewTarget', (->
-
-    return (view, target) ->
-      target = target.call view if typeof target is 'function'
-      return if target? then view.$(target) else view.$el
-
+    console?.warn? '''
+      Oraculum resolveViewTarget definition has been superceded by the
+      Oraculum.resolveViewTarget instance method.
+      This factory definition will be removed in 2.x
+    '''
+    return Oraculum.resolveViewTarget
   ), singleton: true

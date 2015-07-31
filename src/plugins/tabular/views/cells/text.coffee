@@ -20,7 +20,6 @@ define [
   Oraculum.extend 'View', 'Text.Cell', {
 
     mixinOptions:
-      staticClasses: ['text-cell-view']
       listen:
         'change:attribute column': 'render'
         'change:display_attribute column': 'render'

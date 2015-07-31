@@ -1,9 +1,8 @@
 (function() {
   define(['oraculum', 'oraculum/libs', 'oraculum/mixins/evented', 'oraculum/models/mixins/disposable', 'oraculum/models/mixins/dispose-removed', 'oraculum/models/mixins/sort-by-attribute-direction'], function(Oraculum) {
     'use strict';
-    var _, composeConfig, stateModelName;
+    var _, stateModelName;
     _ = Oraculum.get('underscore');
-    composeConfig = Oraculum.get('composeConfig');
     stateModelName = '_SortByMultiAttributeDirectionInterfaceState.Collection';
     Oraculum.extend('Collection', stateModelName, {
       model: '_SortByAttributeDirectionInterfaceState.Model',
@@ -25,7 +24,7 @@
         var conf, sortDefaults;
         conf = arg.sortByMultiAttributeDirection;
         sortDefaults = (arg1 != null ? arg1 : {}).sortDefaults;
-        return conf.defaults = composeConfig(conf.defaults, sortDefaults);
+        return conf.defaults = Oraculum.composeConfig(conf.defaults, sortDefaults);
       },
       mixinitialize: function() {
         var defaults;

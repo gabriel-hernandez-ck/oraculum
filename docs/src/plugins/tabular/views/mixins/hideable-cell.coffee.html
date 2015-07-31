@@ -42,7 +42,6 @@
         </td>
         <td class="code highlight"><div class="highlight"><pre><span class="nx">define</span> <span class="p">[</span>
   <span class="s">&#39;oraculum&#39;</span>
-  <span class="s">&#39;oraculum/views/mixins/static-classes&#39;</span>
 <span class="p">],</span> <span class="nf">(Oraculum) -&gt;</span>
   <span class="s">&#39;use strict&#39;</span>
 
@@ -70,10 +69,7 @@ behavior on a cell based on its columns hidden state.</p>
         </td>
         <td class="code highlight"><div class="highlight"><pre>
 
-  <span class="nx">Oraculum</span><span class="p">.</span><span class="nx">defineMixin</span> <span class="s">&#39;Hideable.CellMixin&#39;</span><span class="p">,</span> <span class="p">{</span>
-
-    <span class="nv">mixinOptions:</span>
-      <span class="nv">staticClasses: </span><span class="p">[</span><span class="s">&#39;hideable-cell-mixin&#39;</span><span class="p">]</span>
+  <span class="nx">Oraculum</span><span class="p">.</span><span class="nx">defineMixin</span> <span class="s">&#39;Hideable.CellMixin&#39;</span><span class="p">,</span>
 
     <span class="nv">mixinitialize: </span><span class="nf">-&gt;</span>
       <span class="vi">@column = </span><span class="nx">@mixinOptions</span><span class="p">.</span><span class="nx">cell</span><span class="p">.</span><span class="nx">column</span>
@@ -84,8 +80,6 @@ behavior on a cell based on its columns hidden state.</p>
       <span class="k">return</span> <span class="k">unless</span> <span class="p">(</span><span class="nv">hidden = </span><span class="nx">@column</span><span class="p">.</span><span class="nx">get</span> <span class="s">&#39;hidden&#39;</span><span class="p">)</span><span class="o">?</span>
       <span class="nv">display = </span><span class="k">if</span> <span class="nb">Boolean</span> <span class="nx">hidden</span> <span class="k">then</span> <span class="s">&#39;none&#39;</span> <span class="k">else</span> <span class="s">&#39;&#39;</span>
       <span class="nx">@$el</span><span class="p">.</span><span class="nx">css</span> <span class="p">{</span><span class="nx">display</span><span class="p">}</span>
-
-  <span class="p">},</span> <span class="nv">mixins: </span><span class="p">[</span><span class="s">&#39;StaticClasses.ViewMixin&#39;</span><span class="p">]</span>
 </pre></div>
         </td>
       </tr>

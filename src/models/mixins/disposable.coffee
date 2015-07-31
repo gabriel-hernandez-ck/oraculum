@@ -46,7 +46,7 @@ define [
 
     mixinitialize: ->
       @on 'dispose', (target) =>
-        # Ensure that the disosed target is in fact this instance.
+        # Ensure that the disposed target is in fact this instance.
         return unless target is this
         # Ensure that we're configured to dispose of our models.
         return unless @mixinOptions.disposable.disposeModels

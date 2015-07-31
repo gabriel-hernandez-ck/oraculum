@@ -1,9 +1,8 @@
 (function() {
   define(['oraculum', 'oraculum/libs', 'oraculum/mixins/evented', 'oraculum/mixins/evented-method', 'oraculum/views/mixins/subview'], function(Oraculum) {
     'use strict';
-    var _, composeConfig, initModelView, resolveModelView, resolveViewOptions, subviewName, subviewPrefix, toggleView;
+    var _, initModelView, resolveModelView, resolveViewOptions, subviewName, subviewPrefix, toggleView;
     _ = Oraculum.get('underscore');
-    composeConfig = Oraculum.get('composeConfig');
     subviewPrefix = 'modelView:';
     subviewName = function(arg) {
       var cid;
@@ -69,7 +68,7 @@
         if (modelView != null) {
           list.modelView = modelView;
         }
-        list.viewOptions = composeConfig(list.viewOptions, viewOptions);
+        list.viewOptions = Oraculum.composeConfig(list.viewOptions, viewOptions);
         filterer = options.filterer, filterCallback = options.filterCallback;
         if (filterer != null) {
           list.filterer = filterer;

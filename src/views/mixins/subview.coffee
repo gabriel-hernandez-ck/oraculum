@@ -6,7 +6,6 @@ define [
   'use strict'
 
   _ = Oraculum.get 'underscore'
-  composeConfig = Oraculum.get 'composeConfig'
 
   Oraculum.defineMixin 'Subview.ViewMixin', {
 
@@ -28,7 +27,7 @@ define [
         render: {}
 
     mixconfig: (mixinOptions, {subviews} = {}) ->
-      mixinOptions.subviews = composeConfig mixinOptions.subviews, subviews
+      mixinOptions.subviews = Oraculum.composeConfig mixinOptions.subviews, subviews
 
     mixinitialize: ->
       @_subviews = []

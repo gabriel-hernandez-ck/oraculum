@@ -17,7 +17,6 @@
         'change input': '_updateModel'
       },
       mixinOptions: {
-        staticClasses: ['checkbox-cell-view'],
         eventedMethods: {
           render: {}
         },

@@ -1,5 +1,5 @@
 (function() {
-  define(['oraculum'], function(Oraculum) {
+  define(['oraculum', 'jquery'], function(Oraculum, $) {
     'use strict';
 
     /*
@@ -15,17 +15,29 @@
     @param {View} view The object that contains the targeted method.
     @param {null|false|undefined|String|Element|jQueryElement|Function} target Something that resembles an element or selector.
      */
+    Oraculum.resolveViewTarget = function(view, target) {
+      if (typeof target === 'function') {
+        target = target.call(view);
+      }
+      if (target instanceof $) {
+        return target;
+      }
+      if (_.isElement(target)) {
+        return $(target);
+      }
+      if (target != null) {
+        return view.$(target);
+      } else {
+        return view.$el;
+      }
+    };
     return Oraculum.define('resolveViewTarget', (function() {
-      return function(view, target) {
-        if (typeof target === 'function') {
-          target = target.call(view);
+      if (typeof console !== "undefined" && console !== null) {
+        if (typeof console.warn === "function") {
+          console.warn('Oraculum resolveViewTarget definition has been superceded by the\nOraculum.resolveViewTarget instance method.\nThis factory definition will be removed in 2.x');
         }
-        if (target != null) {
-          return view.$(target);
-        } else {
-          return view.$el;
-        }
-      };
+      }
+      return Oraculum.resolveViewTarget;
     }), {
       singleton: true
     });

@@ -7,7 +7,6 @@ define [
   'use strict'
 
   _ = Oraculum.get 'underscore'
-  composeConfig = Oraculum.get 'composeConfig'
 
   Oraculum.defineMixin 'DOMCache.ViewMixin', {
 
@@ -24,7 +23,7 @@ define [
         render: {}
 
     mixconfig: (mixinOptions, {domcache} = {}) ->
-      mixinOptions.domcache = composeConfig mixinOptions.domcache, domcache
+      mixinOptions.domcache = Oraculum.composeConfig mixinOptions.domcache, domcache
 
     mixinitialize: ->
       @on 'render:after', @cacheDOM, this

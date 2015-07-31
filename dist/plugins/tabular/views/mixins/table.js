@@ -1,11 +1,8 @@
 (function() {
-  define(['oraculum', 'oraculum/libs', 'oraculum/views/mixins/list', 'oraculum/views/mixins/static-classes'], function(Oraculum) {
+  define(['oraculum', 'oraculum/libs', 'oraculum/views/mixins/list'], function(Oraculum) {
     'use strict';
-    var composeConfig;
-    composeConfig = Oraculum.get('composeConfig');
     return Oraculum.defineMixin('Table.ViewMixin', {
       mixinOptions: {
-        staticClasses: ['table-mixin'],
         table: {
           columns: null
         }
@@ -17,7 +14,7 @@
         if (columns != null) {
           table.columns = columns;
         }
-        return list.viewOptions = composeConfig({
+        return list.viewOptions = Oraculum.composeConfig({
           collection: table.columns
         }, list.viewOptions);
       },
@@ -31,7 +28,7 @@
         }
       }
     }, {
-      mixins: ['List.ViewMixin', 'StaticClasses.ViewMixin']
+      mixins: ['List.ViewMixin']
     });
   });
 
