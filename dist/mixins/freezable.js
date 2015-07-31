@@ -1,6 +1,8 @@
 (function() {
-  define(['oraculum', 'oraculum/mixins/evented-method'], function(Oraculum) {
+  define(['oraculum', 'oraculum/libs', 'oraculum/mixins/evented-method'], function(Oraculum) {
     'use strict';
+    var _;
+    _ = Oraculum.get('underscore');
 
     /*
     Freezable.Mixin
@@ -29,11 +31,11 @@
         if (this.mixinOptions.freeze !== true) {
           return;
         }
-        if (this.constructed == null) {
-          this.constructed = function() {};
-        }
-        this.makeEventedMethod('constructed');
-        return this.on('constructed:after', this.freeze, this);
+        return _.defer((function(_this) {
+          return function() {
+            return _this.freeze();
+          };
+        })(this));
       },
 
       /*
@@ -56,8 +58,6 @@
       isFrozen: function() {
         return typeof Object.isFrozen === "function" ? Object.isFrozen(this) : void 0;
       }
-    }, {
-      mixins: ['EventedMethod.Mixin']
     });
   });
 

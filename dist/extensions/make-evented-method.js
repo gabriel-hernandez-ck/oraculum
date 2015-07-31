@@ -23,78 +23,84 @@
     @param {String} trigger? The method name of the event firing method of `emitter`. (defaults to 'trigger')
     @param {String} eventPrefix? An optional string to prefix on the event name.
      */
-    return Oraculum.define('makeEventedMethod', (function() {
-      return function(object, methodName, emitter, trigger, eventPrefix) {
-        var evented, fireEvent, original;
-        if (emitter == null) {
-          emitter = object;
-        }
-        if (trigger == null) {
-          trigger = 'trigger';
-        }
+    Oraculum.makeEventedMethod = function(object, methodName, emitter, trigger, eventPrefix) {
+      var evented, fireEvent, original;
+      if (emitter == null) {
+        emitter = object;
+      }
+      if (trigger == null) {
+        trigger = 'trigger';
+      }
+      if (eventPrefix == null) {
+        eventPrefix = '';
+      }
+      original = object[methodName];
+      if (!original) {
+        return typeof console !== "undefined" && console !== null ? typeof console.warn === "function" ? console.warn("Attempted to event undefined method " + method + " of " + object) : void 0 : void 0;
+      }
+      if (original.evented) {
+        return;
+      }
+      fireEvent = emitter[trigger];
+      if (typeof original !== 'function') {
+        throw new TypeError("Method " + methodName + " does not exist on object");
+      }
+      if (typeof fireEvent !== 'function') {
+        throw new TypeError("Method " + trigger + " does not exist on emitter");
+      }
+      if (eventPrefix && !/:$/.test(eventPrefix)) {
         if (eventPrefix == null) {
-          eventPrefix = '';
+          eventPrefix = ':';
         }
-        original = object[methodName];
-        if (!original) {
-          return typeof console !== "undefined" && console !== null ? typeof console.warn === "function" ? console.warn("Attempted to event undefined method " + method + " of " + object) : void 0 : void 0;
-        }
-        if (original.evented) {
-          return;
-        }
-        fireEvent = emitter[trigger];
-        if (typeof original !== 'function') {
-          throw new TypeError("Method " + methodName + " does not exist on object");
-        }
-        if (typeof fireEvent !== 'function') {
-          throw new TypeError("Method " + trigger + " does not exist on emitter");
-        }
-        if (eventPrefix && !/:$/.test(eventPrefix)) {
-          if (eventPrefix == null) {
-            eventPrefix = ':';
-          }
-        }
+      }
+
+      /*
+      Create our new evented method.
+      
+      __fires__ `<emitter>#[eventPrefix:]<methodName>:before`
+      
+      __fires__ `<emitter>#[eventPrefix:]<methodName>:after`
+       */
+      evented = object[methodName] = function() {
 
         /*
-        Create our new evented method.
-        
-        __fires__ `<emitter>#[eventPrefix:]<methodName>:before`
-        
-        __fires__ `<emitter>#[eventPrefix:]<methodName>:after`
+        Create our `proxy` object. This object will be passed by reference
+        through our events, allowing its properties to be mutated in memory
+        by any listener that receives it.
          */
-        evented = object[methodName] = function() {
-
-          /*
-          Create our `proxy` object. This object will be passed by reference
-          through our events, allowing its properties to be mutated in memory
-          by any listener that receives it.
-           */
-          var proxy;
-          proxy = {
-            type: 'evented_proxy',
-            abort: false,
-            result: void 0
-          };
-          fireEvent.call.apply(fireEvent, [emitter, "" + eventPrefix + methodName + ":before"].concat(slice.call(arguments), [proxy], [emitter], [object]));
-
-          /*
-          Allow the implementation to be aborted, passing back whatever the
-          current value of `proxy.result` is at that point.
-          This allows the method's implementation to be completely bypassed and
-          controlled by any arbitrary event listener.
-          This can result in unexpected behavior if used ambiguously.
-          Code carefully.
-           */
-          if (proxy.abort === true) {
-            return proxy.result;
-          }
-          proxy.result = original.apply(object, arguments);
-          fireEvent.call.apply(fireEvent, [emitter, "" + eventPrefix + methodName + ":after"].concat(slice.call(arguments), [proxy], [emitter], [object]));
-          return proxy.result;
+        var proxy;
+        proxy = {
+          type: 'evented_proxy',
+          abort: false,
+          result: void 0
         };
-        evented.evented = true;
-        return evented.original = original;
+        fireEvent.call.apply(fireEvent, [emitter, "" + eventPrefix + methodName + ":before"].concat(slice.call(arguments), [proxy], [emitter], [object]));
+
+        /*
+        Allow the implementation to be aborted, passing back whatever the
+        current value of `proxy.result` is at that point.
+        This allows the method's implementation to be completely bypassed and
+        controlled by any arbitrary event listener.
+        This can result in unexpected behavior if used ambiguously.
+        Code carefully.
+         */
+        if (proxy.abort === true) {
+          return proxy.result;
+        }
+        proxy.result = original.apply(object, arguments);
+        fireEvent.call.apply(fireEvent, [emitter, "" + eventPrefix + methodName + ":after"].concat(slice.call(arguments), [proxy], [emitter], [object]));
+        return proxy.result;
       };
+      evented.evented = true;
+      return evented.original = original;
+    };
+    return Oraculum.define('makeEventedMethod', (function() {
+      if (typeof console !== "undefined" && console !== null) {
+        if (typeof console.warn === "function") {
+          console.warn('Oraculum makeEventedMethod definition has been superceded by the\nOraculum.makeEventedMethod instance method.\nThis factory definition will be removed in 2.x');
+        }
+      }
+      return Oraculum.makeEventedMethod;
     }), {
       singleton: true
     });

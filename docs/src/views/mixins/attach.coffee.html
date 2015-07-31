@@ -39,7 +39,6 @@
         </td>
         <td class="code highlight"><div class="highlight"><pre><span class="nx">define</span> <span class="p">[</span>
   <span class="s">&#39;oraculum&#39;</span>
-  <span class="s">&#39;oraculum/mixins/pub-sub&#39;</span>
   <span class="s">&#39;oraculum/mixins/evented-method&#39;</span>
 <span class="p">],</span> <span class="nf">(Oraculum) -&gt;</span>
   <span class="s">&#39;use strict&#39;</span>
@@ -71,9 +70,7 @@
       <span class="nx">$</span><span class="p">(</span><span class="nx">container</span><span class="p">)[</span><span class="nx">containerMethod</span><span class="p">]</span> <span class="nx">@el</span>
       <span class="nx">@trigger</span> <span class="s">&#39;addedToParent&#39;</span>
 
-  <span class="p">},</span> <span class="nv">mixins: </span><span class="p">[</span>
-    <span class="s">&#39;EventedMethod.Mixin&#39;</span>
-  <span class="p">]</span>
+  <span class="p">},</span> <span class="nv">mixins: </span><span class="p">[</span><span class="s">&#39;EventedMethod.Mixin&#39;</span><span class="p">]</span>
 </pre></div>
         </td>
       </tr>

@@ -8,7 +8,6 @@ define [
   'use strict'
 
   _ = Oraculum.get 'underscore'
-  composeConfig = Oraculum.get 'composeConfig'
 
   subviewPrefix = 'modelView:'
   subviewName = ({cid}) -> "#{subviewPrefix}#{cid}"
@@ -62,7 +61,7 @@ define [
       {viewOptions, modelView} = options
       list.modelView = modelView if modelView?
 
-      list.viewOptions = composeConfig list.viewOptions, viewOptions
+      list.viewOptions = Oraculum.composeConfig list.viewOptions, viewOptions
 
       {filterer, filterCallback} = options
       list.filterer = filterer if filterer?

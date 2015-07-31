@@ -54,9 +54,12 @@
         </td>
         <td class="code highlight"><div class="highlight"><pre><span class="nx">define</span> <span class="p">[</span>
   <span class="s">&#39;oraculum&#39;</span>
+  <span class="s">&#39;oraculum/libs&#39;</span>
   <span class="s">&#39;oraculum/mixins/evented-method&#39;</span>
 <span class="p">],</span> <span class="nf">(Oraculum) -&gt;</span>
   <span class="s">&#39;use strict&#39;</span>
+
+  <span class="nv">_ = </span><span class="nx">Oraculum</span><span class="p">.</span><span class="nx">get</span> <span class="s">&#39;underscore&#39;</span>
 
 
 </pre></div>
@@ -82,7 +85,7 @@ a freezable interface.</p>
         </td>
         <td class="code highlight"><div class="highlight"><pre>
 
-  <span class="nx">Oraculum</span><span class="p">.</span><span class="nx">defineMixin</span> <span class="s">&#39;Freezable.Mixin&#39;</span><span class="p">,</span> <span class="p">{</span>
+  <span class="nx">Oraculum</span><span class="p">.</span><span class="nx">defineMixin</span> <span class="s">&#39;Freezable.Mixin&#39;</span><span class="p">,</span>
 
 
 </pre></div>
@@ -157,36 +160,10 @@ construction. Default to false.</p>
 <div class="pilwrap">
   <a class="pilcrow" href="#section-6" id="section-6">&#182;</a>
 </div>
-<p>Set a constructed method if one doesn't already exist.</p>
+<p>Push the freeze operation to the end of the stack</p>
         </td>
         <td class="code highlight"><div class="highlight"><pre>
-      <span class="nx">@constructed</span> <span class="o">?=</span> <span class="nf">-&gt;</span> <span class="c1"># &#39;\x90&#39;</span>
-
-</pre></div>
-        </td>
-      </tr>
-      <tr>
-        <td class="docs">
-<div class="pilwrap">
-  <a class="pilcrow" href="#section-7" id="section-7">&#182;</a>
-</div>
-<p>Event the constructed method so we can hook the after event.</p>
-        </td>
-        <td class="code highlight"><div class="highlight"><pre>
-      <span class="nx">@makeEventedMethod</span> <span class="s">&#39;constructed&#39;</span>
-
-</pre></div>
-        </td>
-      </tr>
-      <tr>
-        <td class="docs">
-<div class="pilwrap">
-  <a class="pilcrow" href="#section-8" id="section-8">&#182;</a>
-</div>
-<p>Hook our freeze operation into the constructed method's after event.</p>
-        </td>
-        <td class="code highlight"><div class="highlight"><pre>
-      <span class="nx">@</span><span class="kc">on</span> <span class="s">&#39;constructed:after&#39;</span><span class="p">,</span> <span class="nx">@freeze</span><span class="p">,</span> <span class="k">this</span>
+      <span class="nx">_</span><span class="p">.</span><span class="nx">defer</span> <span class="o">=&gt;</span> <span class="nx">@freeze</span><span class="p">()</span>
 
 
 </pre></div>
@@ -248,10 +225,6 @@ Invoke the freezse method on this instance if it's available.</p>
 
     <span class="nv">isFrozen: </span><span class="nf">-&gt;</span>
       <span class="k">return</span> <span class="nb">Object</span><span class="p">.</span><span class="nx">isFrozen</span><span class="o">?</span> <span class="k">this</span>
-
-  <span class="p">},</span> <span class="nv">mixins: </span><span class="p">[</span>
-    <span class="s">&#39;EventedMethod.Mixin&#39;</span>
-  <span class="p">]</span>
 </pre></div>
         </td>
       </tr>

@@ -1,8 +1,11 @@
 define [
   'oraculum'
+  'oraculum/libs'
   'oraculum/mixins/evented-method'
 ], (Oraculum) ->
   'use strict'
+
+  _ = Oraculum.get 'underscore'
 
   ###
   Freezable.Mixin
@@ -11,7 +14,7 @@ define [
   a freezable interface.
   ###
 
-  Oraculum.defineMixin 'Freezable.Mixin', {
+  Oraculum.defineMixin 'Freezable.Mixin',
 
     ###
     Mixin Options
@@ -32,12 +35,8 @@ define [
     mixinitialize: ->
       # Return immediately unless we're configure to freeze.
       return unless @mixinOptions.freeze is true
-      # Set a constructed method if one doesn't already exist.
-      @constructed ?= -> # '\x90'
-      # Event the constructed method so we can hook the after event.
-      @makeEventedMethod 'constructed'
-      # Hook our freeze operation into the constructed method's after event.
-      @on 'constructed:after', @freeze, this
+      # Push the freeze operation to the end of the stack
+      _.defer => @freeze()
 
     ###
     Freeze
@@ -59,7 +58,3 @@ define [
 
     isFrozen: ->
       return Object.isFrozen? this
-
-  }, mixins: [
-    'EventedMethod.Mixin'
-  ]

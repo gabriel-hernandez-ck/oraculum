@@ -1,6 +1,5 @@
 define [
   'oraculum'
-  'oraculum/views/mixins/static-classes'
 ], (Oraculum) ->
   'use strict'
 
@@ -11,10 +10,7 @@ define [
   behavior on a cell based on its column's width attribute.
   ###
 
-  Oraculum.defineMixin 'VariableWidth.CellMixin', {
-
-    mixinOptions:
-      staticClasses: ['variable-width-cell-mixin']
+  Oraculum.defineMixin 'VariableWidth.CellMixin',
 
     mixinitialize: ->
       @listenTo @column, 'change:width', @_updateWidth
@@ -23,5 +19,3 @@ define [
     _updateWidth: ->
       return unless (width = @column.get 'width')?
       @$el.css {width}
-
-  }, mixins: ['StaticClasses.ViewMixin']

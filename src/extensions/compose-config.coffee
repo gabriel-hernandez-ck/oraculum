@@ -1,26 +1,11 @@
-define [
-  'oraculum'
-  'underscore'
-], (Oraculum, _) ->
+define ['oraculum'], (Oraculum) ->
   'use strict'
 
   Oraculum.define 'composeConfig', (->
-
-    composeConfig = (defaultConfig, overrideConfig, args...) ->
-      if _.isFunction defaultConfig
-        defaultConfig = defaultConfig.apply this, args
-      if _.isFunction overrideConfig
-        overrideConfig = overrideConfig.apply this, args
-      return _.clone(defaultConfig) unless overrideConfig?
-      return if _.isArray(defaultConfig) and _.isArray(overrideConfig)
-      then [].concat defaultConfig, overrideConfig
-      else _.extend {}, defaultConfig, overrideConfig
-
-    return (defaultConfig, overrideConfigs...) ->
-      return _.reduce overrideConfigs, ((defaultConfig, overrideConfig) ->
-        return if _.isFunction(defaultConfig) or _.isFunction(overrideConfig)
-        then -> composeConfig.call this, defaultConfig, overrideConfig, arguments...
-        else composeConfig defaultConfig, overrideConfig
-      ), defaultConfig
-
+    console?.warn? '''
+      Oraculum composeConfig definition has been superceded by the
+      Oraculum.composeConfig class/instance method provided by FactoryJS.
+      This factory definition will be removed in 2.x
+    '''
+    return Oraculum.composeConfig
   ), singleton: true

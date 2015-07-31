@@ -102,9 +102,7 @@ execution of the original implementation and change it's <code>result</code>.</p
         </td>
         <td class="code highlight"><div class="highlight"><pre>
 
-  <span class="nx">Oraculum</span><span class="p">.</span><span class="nx">define</span> <span class="s">&#39;makeEventedMethod&#39;</span><span class="p">,</span> <span class="p">(</span><span class="nf">-&gt;</span>
-
-    <span class="k">return</span> <span class="nf">(object, methodName, emitter = object, trigger = &#39;trigger&#39;, eventPrefix = &#39;&#39;) -&gt;</span>
+  <span class="nv">Oraculum.makeEventedMethod = </span><span class="nf">(object, methodName, emitter = object, trigger = &#39;trigger&#39;, eventPrefix = &#39;&#39;) -&gt;</span>
 
 
 </pre></div>
@@ -119,10 +117,10 @@ execution of the original implementation and change it's <code>result</code>.</p
 Return immediately if it doesn't exist.</p>
         </td>
         <td class="code highlight"><div class="highlight"><pre>
-      <span class="nv">original = </span><span class="nx">object</span><span class="p">[</span><span class="nx">methodName</span><span class="p">]</span>
-      <span class="k">return</span> <span class="nx">console</span><span class="o">?</span><span class="p">.</span><span class="nx">warn</span><span class="o">?</span> <span class="s">&quot;&quot;&quot;</span>
-<span class="s">        Attempted to event undefined method </span><span class="si">#{</span><span class="nx">method</span><span class="si">}</span><span class="s"> of </span><span class="si">#{</span><span class="nx">object</span><span class="si">}</span><span class="s"></span>
-<span class="s">      &quot;&quot;&quot;</span> <span class="k">unless</span> <span class="nx">original</span>
+    <span class="nv">original = </span><span class="nx">object</span><span class="p">[</span><span class="nx">methodName</span><span class="p">]</span>
+    <span class="k">return</span> <span class="nx">console</span><span class="o">?</span><span class="p">.</span><span class="nx">warn</span><span class="o">?</span> <span class="s">&quot;&quot;&quot;</span>
+<span class="s">      Attempted to event undefined method </span><span class="si">#{</span><span class="nx">method</span><span class="si">}</span><span class="s"> of </span><span class="si">#{</span><span class="nx">object</span><span class="si">}</span><span class="s"></span>
+<span class="s">    &quot;&quot;&quot;</span> <span class="k">unless</span> <span class="nx">original</span>
 
 
 </pre></div>
@@ -136,7 +134,7 @@ Return immediately if it doesn't exist.</p>
 <p>Don't do anything if the targeted method is already evented.</p>
         </td>
         <td class="code highlight"><div class="highlight"><pre>
-      <span class="k">return</span> <span class="k">if</span> <span class="nx">original</span><span class="p">.</span><span class="nx">evented</span>
+    <span class="k">return</span> <span class="k">if</span> <span class="nx">original</span><span class="p">.</span><span class="nx">evented</span>
 
 
 </pre></div>
@@ -150,7 +148,7 @@ Return immediately if it doesn't exist.</p>
 <p>Grab a handle to the emitter's "trigger" method.</p>
         </td>
         <td class="code highlight"><div class="highlight"><pre>
-      <span class="nv">fireEvent = </span><span class="nx">emitter</span><span class="p">[</span><span class="nx">trigger</span><span class="p">]</span>
+    <span class="nv">fireEvent = </span><span class="nx">emitter</span><span class="p">[</span><span class="nx">trigger</span><span class="p">]</span>
 
 
 </pre></div>
@@ -164,12 +162,12 @@ Return immediately if it doesn't exist.</p>
 <p>Do some sanity checks...</p>
         </td>
         <td class="code highlight"><div class="highlight"><pre>
-      <span class="k">throw</span> <span class="k">new</span> <span class="nx">TypeError</span> <span class="s">&quot;&quot;&quot;</span>
-<span class="s">        Method </span><span class="si">#{</span><span class="nx">methodName</span><span class="si">}</span><span class="s"> does not exist on object</span>
-<span class="s">      &quot;&quot;&quot;</span> <span class="k">unless</span> <span class="k">typeof</span> <span class="nx">original</span> <span class="o">is</span> <span class="s">&#39;function&#39;</span>
-      <span class="k">throw</span> <span class="k">new</span> <span class="nx">TypeError</span> <span class="s">&quot;&quot;&quot;</span>
-<span class="s">        Method </span><span class="si">#{</span><span class="nx">trigger</span><span class="si">}</span><span class="s"> does not exist on emitter</span>
-<span class="s">      &quot;&quot;&quot;</span> <span class="k">unless</span> <span class="k">typeof</span> <span class="nx">fireEvent</span> <span class="o">is</span> <span class="s">&#39;function&#39;</span>
+    <span class="k">throw</span> <span class="k">new</span> <span class="nx">TypeError</span> <span class="s">&quot;&quot;&quot;</span>
+<span class="s">      Method </span><span class="si">#{</span><span class="nx">methodName</span><span class="si">}</span><span class="s"> does not exist on object</span>
+<span class="s">    &quot;&quot;&quot;</span> <span class="k">unless</span> <span class="k">typeof</span> <span class="nx">original</span> <span class="o">is</span> <span class="s">&#39;function&#39;</span>
+    <span class="k">throw</span> <span class="k">new</span> <span class="nx">TypeError</span> <span class="s">&quot;&quot;&quot;</span>
+<span class="s">      Method </span><span class="si">#{</span><span class="nx">trigger</span><span class="si">}</span><span class="s"> does not exist on emitter</span>
+<span class="s">    &quot;&quot;&quot;</span> <span class="k">unless</span> <span class="k">typeof</span> <span class="nx">fireEvent</span> <span class="o">is</span> <span class="s">&#39;function&#39;</span>
 
 
 </pre></div>
@@ -183,7 +181,7 @@ Return immediately if it doesn't exist.</p>
 <p>Ensure the event prefix ends with ':'</p>
         </td>
         <td class="code highlight"><div class="highlight"><pre>
-      <span class="nx">eventPrefix</span> <span class="o">?=</span> <span class="s">&#39;:&#39;</span> <span class="k">if</span> <span class="nx">eventPrefix</span> <span class="o">and</span> <span class="o">not</span> <span class="sr">/:$/</span><span class="p">.</span><span class="nx">test</span> <span class="nx">eventPrefix</span>
+    <span class="nx">eventPrefix</span> <span class="o">?=</span> <span class="s">&#39;:&#39;</span> <span class="k">if</span> <span class="nx">eventPrefix</span> <span class="o">and</span> <span class="o">not</span> <span class="sr">/:$/</span><span class="p">.</span><span class="nx">test</span> <span class="nx">eventPrefix</span>
 
 
 </pre></div>
@@ -205,7 +203,7 @@ Return immediately if it doesn't exist.</p>
         </td>
         <td class="code highlight"><div class="highlight"><pre>
 
-      <span class="nv">evented = </span><span class="nx">object</span><span class="p">[</span><span class="nx">methodName</span><span class="p">]</span> <span class="o">=</span> <span class="nf">-&gt;</span>
+    <span class="nv">evented = </span><span class="nx">object</span><span class="p">[</span><span class="nx">methodName</span><span class="p">]</span> <span class="o">=</span> <span class="nf">-&gt;</span>
 
 
 </pre></div>
@@ -227,10 +225,10 @@ by any listener that receives it.</p>
         </td>
         <td class="code highlight"><div class="highlight"><pre>
 
-        <span class="nv">proxy =</span>
-          <span class="nv">type: </span><span class="s">&#39;evented_proxy&#39;</span>
-          <span class="nv">abort: </span><span class="kc">false</span>
-          <span class="nv">result: </span><span class="kc">undefined</span>
+      <span class="nv">proxy =</span>
+        <span class="nv">type: </span><span class="s">&#39;evented_proxy&#39;</span>
+        <span class="nv">abort: </span><span class="kc">false</span>
+        <span class="nv">result: </span><span class="kc">undefined</span>
 
 
 </pre></div>
@@ -244,8 +242,8 @@ by any listener that receives it.</p>
 <p>Fire the <code>before</code> event, passing along our <code>proxy</code> object.</p>
         </td>
         <td class="code highlight"><div class="highlight"><pre>
-        <span class="nx">fireEvent</span><span class="p">.</span><span class="nx">call</span> <span class="nx">emitter</span><span class="p">,</span> <span class="s">&quot;</span><span class="si">#{</span><span class="nx">eventPrefix</span><span class="si">}#{</span><span class="nx">methodName</span><span class="si">}</span><span class="s">:before&quot;</span><span class="p">,</span>
-          <span class="nx">arguments</span><span class="p">...,</span> <span class="nx">proxy</span><span class="p">,</span> <span class="nx">emitter</span><span class="p">,</span> <span class="nx">object</span>
+      <span class="nx">fireEvent</span><span class="p">.</span><span class="nx">call</span> <span class="nx">emitter</span><span class="p">,</span> <span class="s">&quot;</span><span class="si">#{</span><span class="nx">eventPrefix</span><span class="si">}#{</span><span class="nx">methodName</span><span class="si">}</span><span class="s">:before&quot;</span><span class="p">,</span>
+        <span class="nx">arguments</span><span class="p">...,</span> <span class="nx">proxy</span><span class="p">,</span> <span class="nx">emitter</span><span class="p">,</span> <span class="nx">object</span>
 
 
 </pre></div>
@@ -270,7 +268,7 @@ Code carefully.</p>
         </td>
         <td class="code highlight"><div class="highlight"><pre>
 
-        <span class="k">return</span> <span class="nx">proxy</span><span class="p">.</span><span class="nx">result</span> <span class="k">if</span> <span class="nx">proxy</span><span class="p">.</span><span class="nx">abort</span> <span class="o">is</span> <span class="kc">true</span>
+      <span class="k">return</span> <span class="nx">proxy</span><span class="p">.</span><span class="nx">result</span> <span class="k">if</span> <span class="nx">proxy</span><span class="p">.</span><span class="nx">abort</span> <span class="o">is</span> <span class="kc">true</span>
 
 
 </pre></div>
@@ -285,7 +283,7 @@ Code carefully.</p>
 assigning its return value to <code>proxy.result</code>.</p>
         </td>
         <td class="code highlight"><div class="highlight"><pre>
-        <span class="nv">proxy.result = </span><span class="nx">original</span><span class="p">.</span><span class="nx">apply</span> <span class="nx">object</span><span class="p">,</span> <span class="nx">arguments</span>
+      <span class="nv">proxy.result = </span><span class="nx">original</span><span class="p">.</span><span class="nx">apply</span> <span class="nx">object</span><span class="p">,</span> <span class="nx">arguments</span>
 
 
 </pre></div>
@@ -299,8 +297,8 @@ assigning its return value to <code>proxy.result</code>.</p>
 <p>Fire the <code>after</code> event, again passing along our <code>proxy</code> object.</p>
         </td>
         <td class="code highlight"><div class="highlight"><pre>
-        <span class="nx">fireEvent</span><span class="p">.</span><span class="nx">call</span> <span class="nx">emitter</span><span class="p">,</span> <span class="s">&quot;</span><span class="si">#{</span><span class="nx">eventPrefix</span><span class="si">}#{</span><span class="nx">methodName</span><span class="si">}</span><span class="s">:after&quot;</span><span class="p">,</span>
-          <span class="nx">arguments</span><span class="p">...,</span> <span class="nx">proxy</span><span class="p">,</span> <span class="nx">emitter</span><span class="p">,</span> <span class="nx">object</span>
+      <span class="nx">fireEvent</span><span class="p">.</span><span class="nx">call</span> <span class="nx">emitter</span><span class="p">,</span> <span class="s">&quot;</span><span class="si">#{</span><span class="nx">eventPrefix</span><span class="si">}#{</span><span class="nx">methodName</span><span class="si">}</span><span class="s">:after&quot;</span><span class="p">,</span>
+        <span class="nx">arguments</span><span class="p">...,</span> <span class="nx">proxy</span><span class="p">,</span> <span class="nx">emitter</span><span class="p">,</span> <span class="nx">object</span>
 
 
 </pre></div>
@@ -314,7 +312,7 @@ assigning its return value to <code>proxy.result</code>.</p>
 <p>Finally, return the result.</p>
         </td>
         <td class="code highlight"><div class="highlight"><pre>
-        <span class="k">return</span> <span class="nx">proxy</span><span class="p">.</span><span class="nx">result</span>
+      <span class="k">return</span> <span class="nx">proxy</span><span class="p">.</span><span class="nx">result</span>
 
 
 </pre></div>
@@ -328,7 +326,7 @@ assigning its return value to <code>proxy.result</code>.</p>
 <p>Mark the new method as evented</p>
         </td>
         <td class="code highlight"><div class="highlight"><pre>
-      <span class="nv">evented.evented = </span><span class="kc">true</span>
+    <span class="nv">evented.evented = </span><span class="kc">true</span>
 
 
 </pre></div>
@@ -342,8 +340,15 @@ assigning its return value to <code>proxy.result</code>.</p>
 <p>And cache the original method</p>
         </td>
         <td class="code highlight"><div class="highlight"><pre>
-      <span class="nv">evented.original = </span><span class="nx">original</span>
+    <span class="nv">evented.original = </span><span class="nx">original</span>
 
+  <span class="nx">Oraculum</span><span class="p">.</span><span class="nx">define</span> <span class="s">&#39;makeEventedMethod&#39;</span><span class="p">,</span> <span class="p">(</span><span class="nf">-&gt;</span>
+    <span class="nx">console</span><span class="o">?</span><span class="p">.</span><span class="nx">warn</span><span class="o">?</span> <span class="s">&#39;&#39;&#39;</span>
+<span class="s">      Oraculum makeEventedMethod definition has been superceded by the</span>
+<span class="s">      Oraculum.makeEventedMethod instance method.</span>
+<span class="s">      This factory definition will be removed in 2.x</span>
+<span class="s">    &#39;&#39;&#39;</span>
+    <span class="k">return</span> <span class="nx">Oraculum</span><span class="p">.</span><span class="nx">makeEventedMethod</span>
   <span class="p">),</span> <span class="nv">singleton: </span><span class="kc">true</span>
 </pre></div>
         </td>

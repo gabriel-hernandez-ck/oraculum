@@ -42,7 +42,6 @@
         </td>
         <td class="code highlight"><div class="highlight"><pre><span class="nx">define</span> <span class="p">[</span>
   <span class="s">&#39;oraculum&#39;</span>
-  <span class="s">&#39;oraculum/views/mixins/static-classes&#39;</span>
 <span class="p">],</span> <span class="nf">(Oraculum) -&gt;</span>
   <span class="s">&#39;use strict&#39;</span>
 
@@ -70,10 +69,7 @@ class states on a cell based on its columns sort state.</p>
         </td>
         <td class="code highlight"><div class="highlight"><pre>
 
-  <span class="nx">Oraculum</span><span class="p">.</span><span class="nx">defineMixin</span> <span class="s">&#39;Sortable.CellMixin&#39;</span><span class="p">,</span> <span class="p">{</span>
-
-    <span class="nv">mixinOptions:</span>
-      <span class="nv">staticClasses: </span><span class="p">[</span><span class="s">&#39;sortable-cell-mixin&#39;</span><span class="p">]</span>
+  <span class="nx">Oraculum</span><span class="p">.</span><span class="nx">defineMixin</span> <span class="s">&#39;Sortable.CellMixin&#39;</span><span class="p">,</span>
 
     <span class="nv">mixinitialize: </span><span class="nf">-&gt;</span>
       <span class="vi">@column = </span><span class="nx">@mixinOptions</span><span class="p">.</span><span class="nx">cell</span><span class="p">.</span><span class="nx">column</span>
@@ -91,8 +87,6 @@ class states on a cell based on its columns sort state.</p>
       <span class="nx">@$el</span><span class="p">.</span><span class="nx">toggleClass</span> <span class="s">&#39;sorted&#39;</span><span class="p">,</span> <span class="nb">Boolean</span> <span class="nx">direction</span>
       <span class="nx">@$el</span><span class="p">.</span><span class="nx">toggleClass</span> <span class="s">&#39;ascending&#39;</span><span class="p">,</span> <span class="nx">direction</span> <span class="o">is</span> <span class="o">-</span><span class="mi">1</span>
       <span class="nx">@$el</span><span class="p">.</span><span class="nx">toggleClass</span> <span class="s">&#39;descending&#39;</span><span class="p">,</span> <span class="nx">direction</span> <span class="o">is</span> <span class="mi">1</span>
-
-  <span class="p">},</span> <span class="nv">mixins: </span><span class="p">[</span><span class="s">&#39;StaticClasses.ViewMixin&#39;</span><span class="p">]</span>
 </pre></div>
         </td>
       </tr>

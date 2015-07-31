@@ -79,10 +79,6 @@ This mixin aims to cover the most common use cases for tabular view cells.</p>
   <span class="nx">Oraculum</span><span class="p">.</span><span class="nx">defineMixin</span> <span class="s">&#39;Cell.ViewMixin&#39;</span><span class="p">,</span> <span class="p">{</span>
 
     <span class="nv">mixinOptions:</span>
-      <span class="nv">staticClasses: </span><span class="p">[</span>
-        <span class="s">&#39;cell&#39;</span> <span class="c1"># TODO: &#39;cell&#39; should be removed prior to 2.0</span>
-        <span class="s">&#39;cell-mixin&#39;</span>
-      <span class="p">]</span>
       <span class="nv">cell: column: </span><span class="kc">null</span>
 
     <span class="nv">mixconfig: </span><span class="nf">({cell}, {model, column} = {}) -&gt;</span>
@@ -108,7 +104,6 @@ This mixin aims to cover the most common use cases for tabular view cells.</p>
     <span class="s">&#39;Evented.Mixin&#39;</span>
     <span class="s">&#39;Hideable.CellMixin&#39;</span>
     <span class="s">&#39;Sortable.CellMixin&#39;</span>
-    <span class="s">&#39;StaticClasses.ViewMixin&#39;</span>
   <span class="p">]</span>
 </pre></div>
         </td>

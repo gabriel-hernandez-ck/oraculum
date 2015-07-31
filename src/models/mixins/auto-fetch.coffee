@@ -5,7 +5,6 @@ define [
   'use strict'
 
   _ = Oraculum.get 'underscore'
-  composeConfig = Oraculum.get 'composeConfig'
 
   ###
   AutoFetch.ModelMixin
@@ -37,7 +36,7 @@ define [
 
     mixconfig: ({autoFetch}, attrs, {autoFetch:fetch, fetchOptions} = {})->
       autoFetch.fetch = fetch if fetch?
-      autoFetch.fetchOptions = composeConfig autoFetch.fetchOptions, fetchOptions
+      autoFetch.fetchOptions = Oraculum.composeConfig autoFetch.fetchOptions, fetchOptions
 
     ###
     Mixinitialize

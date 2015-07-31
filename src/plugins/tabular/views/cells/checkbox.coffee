@@ -25,8 +25,6 @@ define [
       'change input': '_updateModel'
 
     mixinOptions:
-      staticClasses: ['checkbox-cell-view']
-
       # We use the `EventedMethod.Mixin` to event the `render` method so
       # that we can update the state of the checkbox as soon as it's available.
       eventedMethods:

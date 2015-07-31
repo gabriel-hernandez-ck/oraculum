@@ -13,7 +13,6 @@
      */
     return Oraculum.defineMixin('Cell.ViewMixin', {
       mixinOptions: {
-        staticClasses: ['cell', 'cell-mixin'],
         cell: {
           column: null
         }
@@ -48,7 +47,7 @@
         return this.$el.attr('data-column-attr', current);
       }
     }, {
-      mixins: ['Evented.Mixin', 'Hideable.CellMixin', 'Sortable.CellMixin', 'StaticClasses.ViewMixin']
+      mixins: ['Evented.Mixin', 'Hideable.CellMixin', 'Sortable.CellMixin']
     });
   });
 

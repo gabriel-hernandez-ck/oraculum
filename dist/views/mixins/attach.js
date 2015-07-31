@@ -1,5 +1,5 @@
 (function() {
-  define(['oraculum', 'oraculum/mixins/pub-sub', 'oraculum/mixins/evented-method'], function(Oraculum) {
+  define(['oraculum', 'oraculum/mixins/evented-method'], function(Oraculum) {
     'use strict';
     var $;
     $ = Oraculum.get('jQuery');

@@ -48,7 +48,6 @@
   <span class="s">&#39;use strict&#39;</span>
 
   <span class="nv">_ = </span><span class="nx">Oraculum</span><span class="p">.</span><span class="nx">get</span> <span class="s">&#39;underscore&#39;</span>
-  <span class="nv">composeConfig = </span><span class="nx">Oraculum</span><span class="p">.</span><span class="nx">get</span> <span class="s">&#39;composeConfig&#39;</span>
 
 
 </pre></div>
@@ -71,15 +70,14 @@
     <span class="s">&#39;DisposeRemoved.CollectionMixin&#39;</span>
   <span class="p">]</span>
 
-  <span class="nx">Oraculum</span><span class="p">.</span><span class="nx">defineMixin</span> <span class="s">&#39;SortByMultiAttributeDirectionInterface.CollectionMixin&#39;</span><span class="p">,</span>
-  <span class="p">{</span>
+  <span class="nx">Oraculum</span><span class="p">.</span><span class="nx">defineMixin</span> <span class="s">&#39;SortByMultiAttributeDirectionInterface.CollectionMixin&#39;</span><span class="p">,</span> <span class="p">{</span>
 
     <span class="nv">mixinOptions:</span>
       <span class="nv">sortByMultiAttributeDirection:</span>
         <span class="nv">defaults: </span><span class="p">[]</span>
 
     <span class="nv">mixconfig: </span><span class="nf">({sortByMultiAttributeDirection:conf}, m, {sortDefaults} = {}) -&gt;</span>
-      <span class="nv">conf.defaults = </span><span class="nx">composeConfig</span> <span class="nx">conf</span><span class="p">.</span><span class="nx">defaults</span><span class="p">,</span> <span class="nx">sortDefaults</span>
+      <span class="nv">conf.defaults = </span><span class="nx">Oraculum</span><span class="p">.</span><span class="nx">composeConfig</span> <span class="nx">conf</span><span class="p">.</span><span class="nx">defaults</span><span class="p">,</span> <span class="nx">sortDefaults</span>
 
     <span class="nv">mixinitialize: </span><span class="nf">-&gt;</span>
       <span class="nv">defaults = </span><span class="nx">@mixinOptions</span><span class="p">.</span><span class="nx">sortByMultiAttributeDirection</span><span class="p">.</span><span class="nx">defaults</span>

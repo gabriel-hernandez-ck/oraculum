@@ -2,12 +2,10 @@ define [
   'oraculum'
   'oraculum/libs'
   'oraculum/mixins/evented'
-  'oraculum/extensions/make-middleware-method'
 ], (Oraculum) ->
   'use strict'
 
   _ = Oraculum.get 'underscore'
-  makeMiddlewareMethod = Oraculum.get 'makeMiddlewareMethod'
 
   ###
   Make Middleware Method
@@ -95,7 +93,7 @@ define [
     ###
 
     makeMiddlewareMethod: ->
-      makeMiddlewareMethod this, arguments...
+      Oraculum.makeMiddlewareMethod this, arguments...
 
   }, mixins: [
     'Evented.Mixin'

@@ -6,7 +6,6 @@ define [
   'use strict'
 
   _ = Oraculum.get 'underscore'
-  composeConfig = Oraculum.get 'composeConfig'
 
   Oraculum.defineMixin 'RegionPublisher.ViewMixin', {
 
@@ -20,7 +19,7 @@ define [
     # ```
 
     mixconfig: (mixinOptions, {regions} = {}) ->
-      mixinOptions.regions = composeConfig mixinOptions.regions, regions
+      mixinOptions.regions = Oraculum.composeConfig mixinOptions.regions, regions
 
     mixinitialize: ->
       regions = @mixinOptions.regions

@@ -44,11 +44,8 @@
   <span class="s">&#39;oraculum&#39;</span>
   <span class="s">&#39;oraculum/libs&#39;</span>
   <span class="s">&#39;oraculum/views/mixins/list&#39;</span>
-  <span class="s">&#39;oraculum/views/mixins/static-classes&#39;</span>
 <span class="p">],</span> <span class="nf">(Oraculum) -&gt;</span>
   <span class="s">&#39;use strict&#39;</span>
-
-  <span class="nv">composeConfig = </span><span class="nx">Oraculum</span><span class="p">.</span><span class="nx">get</span> <span class="s">&#39;composeConfig&#39;</span>
 
 
 </pre></div>
@@ -73,9 +70,6 @@
 
   <span class="nx">Oraculum</span><span class="p">.</span><span class="nx">defineMixin</span> <span class="s">&#39;Row.ViewMixin&#39;</span><span class="p">,</span> <span class="p">{</span>
 
-    <span class="nv">mixinOptions:</span>
-      <span class="nv">staticClasses: </span><span class="p">[</span><span class="s">&#39;row-mixin&#39;</span><span class="p">]</span>
-
     <span class="nv">resolveModelView: </span><span class="nf">(column) -&gt;</span>
       <span class="p">{</span><span class="nx">modelView</span><span class="p">,</span> <span class="nx">viewOptions</span><span class="p">}</span> <span class="o">=</span> <span class="nx">@mixinOptions</span><span class="p">.</span><span class="nx">list</span>
       <span class="k">return</span> <span class="nx">column</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s">&#39;modelView&#39;</span><span class="p">)</span> <span class="o">or</span> <span class="nx">modelView</span>
@@ -84,15 +78,11 @@
       <span class="nv">model = </span><span class="nx">@model</span> <span class="o">or</span> <span class="nx">column</span>
       <span class="nv">columnOptions = </span><span class="nx">column</span><span class="p">.</span><span class="nx">get</span> <span class="s">&#39;viewOptions&#39;</span>
       <span class="nv">viewOptions = </span><span class="nx">@mixinOptions</span><span class="p">.</span><span class="nx">list</span><span class="p">.</span><span class="nx">viewOptions</span>
-      <span class="nv">viewOptions = </span><span class="nx">composeConfig</span> <span class="p">{</span><span class="nx">model</span><span class="p">,</span> <span class="nx">column</span><span class="p">},</span> <span class="nx">viewOptions</span><span class="p">,</span> <span class="nx">columnOptions</span>
-      <span class="k">return</span> <span class="k">if</span> <span class="nx">_</span><span class="p">.</span><span class="nx">isFunction</span> <span class="nx">viewOptions</span>
-      <span class="k">then</span> <span class="nx">viewOptions</span><span class="p">.</span><span class="nx">call</span> <span class="k">this</span><span class="p">,</span> <span class="p">{</span><span class="nx">model</span><span class="p">,</span> <span class="nx">column</span><span class="p">}</span>
-      <span class="k">else</span> <span class="nx">viewOptions</span>
+      <span class="nv">viewOptions = </span><span class="nx">Oraculum</span><span class="p">.</span><span class="nx">composeConfig</span> <span class="p">{</span><span class="nx">model</span><span class="p">,</span> <span class="nx">column</span><span class="p">},</span> <span class="nx">viewOptions</span><span class="p">,</span> <span class="nx">columnOptions</span>
+      <span class="nv">viewOptions = </span><span class="nx">viewOptions</span><span class="p">.</span><span class="nx">call</span> <span class="k">this</span><span class="p">,</span> <span class="p">{</span><span class="nx">model</span><span class="p">,</span> <span class="nx">column</span><span class="p">}</span> <span class="k">if</span> <span class="nx">_</span><span class="p">.</span><span class="nx">isFunction</span> <span class="nx">viewOptions</span>
+      <span class="k">return</span> <span class="nx">viewOptions</span>
 
-  <span class="p">},</span> <span class="nv">mixins: </span><span class="p">[</span>
-    <span class="s">&#39;List.ViewMixin&#39;</span>
-    <span class="s">&#39;StaticClasses.ViewMixin&#39;</span>
-  <span class="p">]</span>
+  <span class="p">},</span> <span class="nv">mixins: </span><span class="p">[</span><span class="s">&#39;List.ViewMixin&#39;</span><span class="p">]</span>
 </pre></div>
         </td>
       </tr>

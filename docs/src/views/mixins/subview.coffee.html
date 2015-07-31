@@ -48,7 +48,6 @@
   <span class="s">&#39;use strict&#39;</span>
 
   <span class="nv">_ = </span><span class="nx">Oraculum</span><span class="p">.</span><span class="nx">get</span> <span class="s">&#39;underscore&#39;</span>
-  <span class="nv">composeConfig = </span><span class="nx">Oraculum</span><span class="p">.</span><span class="nx">get</span> <span class="s">&#39;composeConfig&#39;</span>
 
   <span class="nx">Oraculum</span><span class="p">.</span><span class="nx">defineMixin</span> <span class="s">&#39;Subview.ViewMixin&#39;</span><span class="p">,</span> <span class="p">{</span>
 
@@ -86,7 +85,7 @@
         <span class="nv">render: </span><span class="p">{}</span>
 
     <span class="nv">mixconfig: </span><span class="nf">(mixinOptions, {subviews} = {}) -&gt;</span>
-      <span class="nv">mixinOptions.subviews = </span><span class="nx">composeConfig</span> <span class="nx">mixinOptions</span><span class="p">.</span><span class="nx">subviews</span><span class="p">,</span> <span class="nx">subviews</span>
+      <span class="nv">mixinOptions.subviews = </span><span class="nx">Oraculum</span><span class="p">.</span><span class="nx">composeConfig</span> <span class="nx">mixinOptions</span><span class="p">.</span><span class="nx">subviews</span><span class="p">,</span> <span class="nx">subviews</span>
 
     <span class="nv">mixinitialize: </span><span class="nf">-&gt;</span>
       <span class="vi">@_subviews = </span><span class="p">[]</span>

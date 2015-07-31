@@ -1,5 +1,5 @@
 (function() {
-  define(['oraculum', 'oraculum/views/mixins/static-classes'], function(Oraculum) {
+  define(['oraculum'], function(Oraculum) {
     'use strict';
 
     /*
@@ -9,9 +9,6 @@
     class states on a cell based on its columns sort state.
      */
     return Oraculum.defineMixin('Sortable.CellMixin', {
-      mixinOptions: {
-        staticClasses: ['sortable-cell-mixin']
-      },
       mixinitialize: function() {
         this.column = this.mixinOptions.cell.column;
         this.listenTo(this.column, 'change:sortable', this._updateSortableClass);
@@ -31,8 +28,6 @@
         this.$el.toggleClass('ascending', direction === -1);
         return this.$el.toggleClass('descending', direction === 1);
       }
-    }, {
-      mixins: ['StaticClasses.ViewMixin']
     });
   });
 

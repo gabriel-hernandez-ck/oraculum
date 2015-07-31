@@ -1,7 +1,7 @@
 ###
 This file is a stub for convenience
 ===================================
-This file will be removed in 2.0
+This file will be removed in 2.x
 ###
 
 define ['oraculum/plugins/tabular/views/mixins/cell'], ->

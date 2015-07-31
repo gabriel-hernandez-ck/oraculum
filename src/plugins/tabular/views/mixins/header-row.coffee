@@ -1,12 +1,11 @@
 define [
   'oraculum'
   'oraculum/libs'
-  'oraculum/views/mixins/static-classes'
   'oraculum/plugins/tabular/views/mixins/row'
 ], (Oraculum) ->
   'use strict'
 
-  composeConfig = Oraculum.get 'composeConfig'
+  _ = Oraculum.get 'underscore'
 
   ###
   HeaderRow.ViewMixin
@@ -14,9 +13,6 @@ define [
   ###
 
   Oraculum.defineMixin 'HeaderRow.ViewMixin', {
-
-    mixinOptions:
-      staticClasses: ['header-row-mixin']
 
     resolveModelView: (column) ->
       {headerView, modelView, viewOptions} = @mixinOptions.list
@@ -28,12 +24,8 @@ define [
       model = @model or column
       headerOptions = column.get 'headerViewOptions'
       viewOptions = @mixinOptions.list.viewOptions
-      viewOptions = composeConfig {model, column}, viewOptions, headerOptions
-      return if _.isFunction viewOptions
-      then viewOptions.call this, {model, column}
-      else viewOptions
+      viewOptions = Oraculum.composeConfig {model, column}, viewOptions, headerOptions
+      viewOptions = viewOptions.call this, {model, column} if _.isFunction viewOptions
+      return viewOptions
 
-  }, mixins: [
-    'Row.ViewMixin'
-    'StaticClasses.ViewMixin'
-  ]
+  }, mixins: ['Row.ViewMixin']

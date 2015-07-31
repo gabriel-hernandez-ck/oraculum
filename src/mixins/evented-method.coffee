@@ -2,12 +2,10 @@ define [
   'oraculum'
   'oraculum/libs'
   'oraculum/mixins/evented'
-  'oraculum/extensions/make-evented-method'
 ], (Oraculum) ->
   'use strict'
 
   _ = Oraculum.get 'underscore'
-  makeEventedMethod = Oraculum.get 'makeEventedMethod'
 
   ###
   Make Evented Method
@@ -95,7 +93,7 @@ define [
     ###
 
     makeEventedMethod: ->
-      makeEventedMethod this, arguments...
+      Oraculum.makeEventedMethod this, arguments...
 
   }, mixins: [
     'Evented.Mixin'

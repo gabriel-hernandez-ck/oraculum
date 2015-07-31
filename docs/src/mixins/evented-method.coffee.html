@@ -59,12 +59,10 @@
   <span class="s">&#39;oraculum&#39;</span>
   <span class="s">&#39;oraculum/libs&#39;</span>
   <span class="s">&#39;oraculum/mixins/evented&#39;</span>
-  <span class="s">&#39;oraculum/extensions/make-evented-method&#39;</span>
 <span class="p">],</span> <span class="nf">(Oraculum) -&gt;</span>
   <span class="s">&#39;use strict&#39;</span>
 
   <span class="nv">_ = </span><span class="nx">Oraculum</span><span class="p">.</span><span class="nx">get</span> <span class="s">&#39;underscore&#39;</span>
-  <span class="nv">makeEventedMethod = </span><span class="nx">Oraculum</span><span class="p">.</span><span class="nx">get</span> <span class="s">&#39;makeEventedMethod&#39;</span>
 
 
 </pre></div>
@@ -279,7 +277,7 @@ Forces the evented method's scope to <code>this</code>.</p>
         <td class="code highlight"><div class="highlight"><pre>
 
     <span class="nv">makeEventedMethod: </span><span class="nf">-&gt;</span>
-      <span class="nx">makeEventedMethod</span> <span class="k">this</span><span class="p">,</span> <span class="nx">arguments</span><span class="p">...</span>
+      <span class="nx">Oraculum</span><span class="p">.</span><span class="nx">makeEventedMethod</span> <span class="k">this</span><span class="p">,</span> <span class="nx">arguments</span><span class="p">...</span>
 
   <span class="p">},</span> <span class="nv">mixins: </span><span class="p">[</span>
     <span class="s">&#39;Evented.Mixin&#39;</span>

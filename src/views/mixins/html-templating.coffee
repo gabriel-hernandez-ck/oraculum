@@ -12,6 +12,4 @@ define [
       @$el.html template
       return this
 
-  }, mixins: [
-    'TemplatingInterface.ViewMixin'
-  ]
+  }, mixins: ['TemplatingInterface.ViewMixin']

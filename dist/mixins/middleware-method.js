@@ -1,11 +1,10 @@
 (function() {
   var slice = [].slice;
 
-  define(['oraculum', 'oraculum/libs', 'oraculum/mixins/evented', 'oraculum/extensions/make-middleware-method'], function(Oraculum) {
+  define(['oraculum', 'oraculum/libs', 'oraculum/mixins/evented'], function(Oraculum) {
     'use strict';
-    var _, makeMiddlewareMethod;
+    var _;
     _ = Oraculum.get('underscore');
-    makeMiddlewareMethod = Oraculum.get('makeMiddlewareMethod');
 
     /*
     Make Middleware Method
@@ -66,7 +65,7 @@
       Forces the middlewared method's scope to `this`.
        */
       makeMiddlewareMethod: function() {
-        return makeMiddlewareMethod.apply(null, [this].concat(slice.call(arguments)));
+        return Oraculum.makeMiddlewareMethod.apply(Oraculum, [this].concat(slice.call(arguments)));
       }
     }, {
       mixins: ['Evented.Mixin']

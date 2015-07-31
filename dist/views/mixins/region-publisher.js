@@ -1,14 +1,13 @@
 (function() {
   define(['oraculum', 'oraculum/libs', 'oraculum/mixins/callback-provider'], function(Oraculum) {
     'use strict';
-    var _, composeConfig;
+    var _;
     _ = Oraculum.get('underscore');
-    composeConfig = Oraculum.get('composeConfig');
     return Oraculum.defineMixin('RegionPublisher.ViewMixin', {
       mixconfig: function(mixinOptions, arg) {
         var regions;
         regions = (arg != null ? arg : {}).regions;
-        return mixinOptions.regions = composeConfig(mixinOptions.regions, regions);
+        return mixinOptions.regions = Oraculum.composeConfig(mixinOptions.regions, regions);
       },
       mixinitialize: function() {
         var regions;

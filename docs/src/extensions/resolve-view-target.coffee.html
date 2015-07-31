@@ -42,7 +42,8 @@
         </td>
         <td class="code highlight"><div class="highlight"><pre><span class="nx">define</span> <span class="p">[</span>
   <span class="s">&#39;oraculum&#39;</span>
-<span class="p">],</span> <span class="nf">(Oraculum) -&gt;</span>
+  <span class="s">&#39;jquery&#39;</span>
+<span class="p">],</span> <span class="nf">(Oraculum, $) -&gt;</span>
   <span class="s">&#39;use strict&#39;</span>
 
 
@@ -92,12 +93,19 @@ Additionally, a <code>null</code>, <code>false</code>, <code>undefined</code>, e
         </td>
         <td class="code highlight"><div class="highlight"><pre>
 
+  <span class="nv">Oraculum.resolveViewTarget = </span><span class="nf">(view, target) -&gt;</span>
+    <span class="nv">target = </span><span class="nx">target</span><span class="p">.</span><span class="nx">call</span> <span class="nx">view</span> <span class="k">if</span> <span class="k">typeof</span> <span class="nx">target</span> <span class="o">is</span> <span class="s">&#39;function&#39;</span>
+    <span class="k">return</span> <span class="nx">target</span> <span class="k">if</span> <span class="nx">target</span> <span class="k">instanceof</span> <span class="nx">$</span>
+    <span class="k">return</span> <span class="nx">$</span><span class="p">(</span><span class="nx">target</span><span class="p">)</span> <span class="k">if</span> <span class="nx">_</span><span class="p">.</span><span class="nx">isElement</span> <span class="nx">target</span>
+    <span class="k">return</span> <span class="k">if</span> <span class="nx">target</span><span class="o">?</span> <span class="k">then</span> <span class="nx">view</span><span class="p">.</span><span class="nx">$</span><span class="p">(</span><span class="nx">target</span><span class="p">)</span> <span class="k">else</span> <span class="nx">view</span><span class="p">.</span><span class="nx">$el</span>
+
   <span class="nx">Oraculum</span><span class="p">.</span><span class="nx">define</span> <span class="s">&#39;resolveViewTarget&#39;</span><span class="p">,</span> <span class="p">(</span><span class="nf">-&gt;</span>
-
-    <span class="k">return</span> <span class="nf">(view, target) -&gt;</span>
-      <span class="nv">target = </span><span class="nx">target</span><span class="p">.</span><span class="nx">call</span> <span class="nx">view</span> <span class="k">if</span> <span class="k">typeof</span> <span class="nx">target</span> <span class="o">is</span> <span class="s">&#39;function&#39;</span>
-      <span class="k">return</span> <span class="k">if</span> <span class="nx">target</span><span class="o">?</span> <span class="k">then</span> <span class="nx">view</span><span class="p">.</span><span class="nx">$</span><span class="p">(</span><span class="nx">target</span><span class="p">)</span> <span class="k">else</span> <span class="nx">view</span><span class="p">.</span><span class="nx">$el</span>
-
+    <span class="nx">console</span><span class="o">?</span><span class="p">.</span><span class="nx">warn</span><span class="o">?</span> <span class="s">&#39;&#39;&#39;</span>
+<span class="s">      Oraculum resolveViewTarget definition has been superceded by the</span>
+<span class="s">      Oraculum.resolveViewTarget instance method.</span>
+<span class="s">      This factory definition will be removed in 2.x</span>
+<span class="s">    &#39;&#39;&#39;</span>
+    <span class="k">return</span> <span class="nx">Oraculum</span><span class="p">.</span><span class="nx">resolveViewTarget</span>
   <span class="p">),</span> <span class="nv">singleton: </span><span class="kc">true</span>
 </pre></div>
         </td>

@@ -56,7 +56,6 @@
   <span class="s">&#39;use strict&#39;</span>
 
   <span class="nv">_ = </span><span class="nx">Oraculum</span><span class="p">.</span><span class="nx">get</span> <span class="s">&#39;underscore&#39;</span>
-  <span class="nv">composeConfig = </span><span class="nx">Oraculum</span><span class="p">.</span><span class="nx">get</span> <span class="s">&#39;composeConfig&#39;</span>
 
 
 </pre></div>
@@ -149,7 +148,7 @@
 
     <span class="nv">mixconfig: </span><span class="nf">({autoFetch}, attrs, {autoFetch:fetch, fetchOptions} = {})-&gt;</span>
       <span class="nv">autoFetch.fetch = </span><span class="nx">fetch</span> <span class="k">if</span> <span class="nx">fetch</span><span class="o">?</span>
-      <span class="nv">autoFetch.fetchOptions = </span><span class="nx">composeConfig</span> <span class="nx">autoFetch</span><span class="p">.</span><span class="nx">fetchOptions</span><span class="p">,</span> <span class="nx">fetchOptions</span>
+      <span class="nv">autoFetch.fetchOptions = </span><span class="nx">Oraculum</span><span class="p">.</span><span class="nx">composeConfig</span> <span class="nx">autoFetch</span><span class="p">.</span><span class="nx">fetchOptions</span><span class="p">,</span> <span class="nx">fetchOptions</span>
 
 
 </pre></div>

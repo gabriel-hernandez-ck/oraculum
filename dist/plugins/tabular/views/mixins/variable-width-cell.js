@@ -1,5 +1,5 @@
 (function() {
-  define(['oraculum', 'oraculum/views/mixins/static-classes'], function(Oraculum) {
+  define(['oraculum'], function(Oraculum) {
     'use strict';
 
     /*
@@ -9,9 +9,6 @@
     behavior on a cell based on its column's width attribute.
      */
     return Oraculum.defineMixin('VariableWidth.CellMixin', {
-      mixinOptions: {
-        staticClasses: ['variable-width-cell-mixin']
-      },
       mixinitialize: function() {
         this.listenTo(this.column, 'change:width', this._updateWidth);
         return this._updateWidth();
@@ -25,8 +22,6 @@
           width: width
         });
       }
-    }, {
-      mixins: ['StaticClasses.ViewMixin']
     });
   });
 

@@ -48,7 +48,6 @@
   <span class="s">&#39;use strict&#39;</span>
 
   <span class="nv">_ = </span><span class="nx">Oraculum</span><span class="p">.</span><span class="nx">get</span> <span class="s">&#39;underscore&#39;</span>
-  <span class="nv">composeConfig = </span><span class="nx">Oraculum</span><span class="p">.</span><span class="nx">get</span> <span class="s">&#39;composeConfig&#39;</span>
 
   <span class="nx">Oraculum</span><span class="p">.</span><span class="nx">defineMixin</span> <span class="s">&#39;RegionPublisher.ViewMixin&#39;</span><span class="p">,</span> <span class="p">{</span>
 
@@ -78,7 +77,7 @@
         <td class="code highlight"><div class="highlight"><pre>
 
     <span class="nv">mixconfig: </span><span class="nf">(mixinOptions, {regions} = {}) -&gt;</span>
-      <span class="nv">mixinOptions.regions = </span><span class="nx">composeConfig</span> <span class="nx">mixinOptions</span><span class="p">.</span><span class="nx">regions</span><span class="p">,</span> <span class="nx">regions</span>
+      <span class="nv">mixinOptions.regions = </span><span class="nx">Oraculum</span><span class="p">.</span><span class="nx">composeConfig</span> <span class="nx">mixinOptions</span><span class="p">.</span><span class="nx">regions</span><span class="p">,</span> <span class="nx">regions</span>
 
     <span class="nv">mixinitialize: </span><span class="nf">-&gt;</span>
       <span class="nv">regions = </span><span class="nx">@mixinOptions</span><span class="p">.</span><span class="nx">regions</span>
