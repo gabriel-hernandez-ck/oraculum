@@ -42,8 +42,8 @@
         var current, previous;
         current = this.column.get('attribute');
         previous = this.column.previous('attribute');
-        this.$el.addClass((current + "-cell").replace(/[\.\s]/, '-'));
         this.$el.removeClass((previous + "-cell").replace(/[\.\s]/, '-'));
+        this.$el.addClass((current + "-cell").replace(/[\.\s]/, '-'));
         return this.$el.attr('data-column-attr', current);
       }
     }, {

@@ -37,8 +37,8 @@ define [
     _updateCellAttributes: ->
       current = @column.get 'attribute'
       previous = @column.previous 'attribute'
-      @$el.addClass "#{current}-cell".replace /[\.\s]/, '-'
       @$el.removeClass "#{previous}-cell".replace /[\.\s]/, '-'
+      @$el.addClass "#{current}-cell".replace /[\.\s]/, '-'
       @$el.attr 'data-column-attr', current
 
   }, mixins: [
