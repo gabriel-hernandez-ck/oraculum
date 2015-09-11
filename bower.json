@@ -34,7 +34,7 @@
     "Gabriel Hernandez <gabriel.hernandez@lookout.com> (http://about.me/gabrielhernandez/)"
   ],
   "dependencies": {
-    "factoryjs": "latest"
+    "factoryjs": ">=1.1.9"
   },
   "devDependencies": {
     "jquery": "~2.1.1",

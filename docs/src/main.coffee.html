@@ -178,6 +178,35 @@ Finally, add 'Oraculum' as our base tag, so our definitions will inherit it.</p>
       </tr>
       <tr>
         <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-4" id="section-4">&#182;</a>
+</div>
+<p>Provide a self-referencing definition</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+  <span class="nx">Oraculum</span><span class="p">.</span><span class="nx">define</span> <span class="s">&#39;Oraculum&#39;</span><span class="p">,</span> <span class="p">(</span><span class="nf">-&gt;</span> <span class="nx">Oraculum</span><span class="p">),</span> <span class="nv">singleton: </span><span class="kc">true</span>
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-5" id="section-5">&#182;</a>
+</div>
+<p>Inject our version, commit #s</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+  <span class="nv">Oraculum.COMMIT = </span><span class="s">&quot;&lt;%- gitinfo.local.branch.current.SHA %&gt;&quot;</span>
+  <span class="nv">Oraculum.VERSION = </span><span class="s">&quot;&lt;%- component.version %&gt;&quot;</span>
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
 <div class="pilwrap" id="extension">
   <h2>
     <a href="#extension" name="extension" class="pilcrow">&#182;</a>

@@ -57,11 +57,11 @@
   <span class="nv">_ = </span><span class="nx">Oraculum</span><span class="p">.</span><span class="nx">get</span> <span class="s">&#39;underscore&#39;</span>
 
   <span class="nv">modifierKeyPressed = </span><span class="nf">(event) -&gt;</span>
-    <span class="k">return</span> <span class="nx">event</span><span class="p">.</span><span class="nx">altKey</span> <span class="o">or</span>
-    <span class="nx">event</span><span class="p">.</span><span class="nx">ctrlKey</span> <span class="o">or</span>
-    <span class="nx">event</span><span class="p">.</span><span class="nx">metaKey</span> <span class="o">or</span>
-    <span class="nx">event</span><span class="p">.</span><span class="nx">shiftKey</span> <span class="o">or</span>
-    <span class="nx">event</span><span class="p">.</span><span class="nx">button</span> <span class="o">is</span> <span class="mi">1</span>
+    <span class="k">return</span> <span class="nx">event</span><span class="p">.</span><span class="nx">altKey</span> <span class="o">or</span> <span class="c1"># Held down alt</span>
+    <span class="nx">event</span><span class="p">.</span><span class="nx">ctrlKey</span> <span class="o">or</span>       <span class="c1"># Held down control</span>
+    <span class="nx">event</span><span class="p">.</span><span class="nx">metaKey</span> <span class="o">or</span>       <span class="c1"># Held down windows/meta key</span>
+    <span class="nx">event</span><span class="p">.</span><span class="nx">shiftKey</span> <span class="o">or</span>      <span class="c1"># Held down shift</span>
+    <span class="nx">event</span><span class="p">.</span><span class="nx">button</span> <span class="o">is</span> <span class="mi">1</span>      <span class="c1"># Used middle-click</span>
 
   <span class="nx">Oraculum</span><span class="p">.</span><span class="nx">defineMixin</span> <span class="s">&#39;Layout.ViewMixin&#39;</span><span class="p">,</span> <span class="p">{</span>
 
@@ -168,7 +168,7 @@ Get the title from the title property of the current controller.</p>
     <span class="nv">adjustTitle: </span><span class="nf">(subtitle = &#39;&#39;) -&gt;</span>
       <span class="nv">title = </span><span class="nx">@mixinOptions</span><span class="p">.</span><span class="nx">layout</span><span class="p">.</span><span class="nx">title</span>
       <span class="nv">titleTemplate = </span><span class="nx">@mixinOptions</span><span class="p">.</span><span class="nx">layout</span><span class="p">.</span><span class="nx">titleTemplate</span>
-      <span class="nb">document</span><span class="p">.</span><span class="nv">title = </span><span class="nx">titleTemplate</span> <span class="p">{</span> <span class="nx">title</span><span class="p">,</span> <span class="nx">subtitle</span> <span class="p">}</span>
+      <span class="nb">document</span><span class="p">.</span><span class="nv">title = </span><span class="nx">titleTemplate</span><span class="p">.</span><span class="nx">call</span> <span class="k">this</span><span class="p">,</span> <span class="p">{</span> <span class="nx">title</span><span class="p">,</span> <span class="nx">subtitle</span> <span class="p">}</span>
       <span class="k">return</span> <span class="nx">title</span>
 
 
@@ -321,7 +321,7 @@ but it doesn’t make sense to route it.</p>
       <span class="nv">isExternalLink = </span><span class="nx">isAnchor</span> <span class="o">and</span> <span class="nx">@isExternalLink</span> <span class="nx">el</span>
       <span class="k">if</span> <span class="nx">isExternalLink</span>
         <span class="k">if</span> <span class="nx">openExternalToBlank</span>
-          <span class="nx">@mixinOptions</span><span class="p">.</span><span class="nx">layout</span><span class="p">.</span><span class="nx">openExternalLink</span><span class="p">(</span><span class="nx">href</span><span class="p">,</span> <span class="nx">event</span><span class="p">)</span>
+          <span class="nx">@mixinOptions</span><span class="p">.</span><span class="nx">layout</span><span class="p">.</span><span class="nx">openExternalLink</span><span class="p">.</span><span class="nx">call</span> <span class="k">this</span><span class="p">,</span> <span class="nx">href</span><span class="p">,</span> <span class="nx">event</span>
         <span class="k">return</span> <span class="c1"># void 0</span>
 
 

@@ -95,7 +95,7 @@
         }
         title = this.mixinOptions.layout.title;
         titleTemplate = this.mixinOptions.layout.titleTemplate;
-        document.title = titleTemplate({
+        document.title = titleTemplate.call(this, {
           title: title,
           subtitle: subtitle
         });
@@ -154,7 +154,7 @@
         isExternalLink = isAnchor && this.isExternalLink(el);
         if (isExternalLink) {
           if (openExternalToBlank) {
-            this.mixinOptions.layout.openExternalLink(href, event);
+            this.mixinOptions.layout.openExternalLink.call(this, href, event);
           }
           return;
         }

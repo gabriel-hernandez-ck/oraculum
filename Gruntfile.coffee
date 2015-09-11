@@ -27,6 +27,7 @@ jasmineConfig =
 module.exports = (grunt) ->
   grunt.loadNpmTasks 'grunt-bump'
   grunt.loadNpmTasks 'grunt-docker'
+  grunt.loadNpmTasks 'grunt-gitinfo'
   grunt.loadNpmTasks 'grunt-gh-pages'
 
   grunt.loadNpmTasks 'grunt-coveralls'
@@ -104,6 +105,10 @@ module.exports = (grunt) ->
         options: force: true
 
     copy:
+      options:
+        noProcess: ['!**/*.js']
+        process: (content, srcpath) ->
+          return grunt.template.process content
       dist:
         files: [{
           cwd: 'build/src/'
@@ -140,8 +145,7 @@ module.exports = (grunt) ->
         tasks: [
           'build'
           'jasmine:live'
-          'clean:dist'
-          'copy:dist'
+          'dist'
           'docs'
         ]
         options:
@@ -172,7 +176,7 @@ module.exports = (grunt) ->
           interrupt: true
       static:
         files: ['src/**/static/**/*']
-        tasks: ['copy:dist']
+        tasks: ['dist']
         options:
           spawn: true
           interrupt: true
@@ -199,6 +203,7 @@ module.exports = (grunt) ->
 
   grunt.registerTask 'dist', [
     'clean:dist'
+    'gitinfo'
     'copy:dist'
   ]
 
@@ -212,8 +217,7 @@ module.exports = (grunt) ->
   grunt.registerTask 'default', [
     'build'
     'jasmine:normal'
-    'clean:dist'
-    'copy:dist'
+    'dist'
     'docs'
   ]
 
@@ -221,8 +225,7 @@ module.exports = (grunt) ->
     'build'
     'connect:test'
     'jasmine:live'
-    'clean:dist'
-    'copy:dist'
+    'dist'
     'docs'
     'watch'
   ]

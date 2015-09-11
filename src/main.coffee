@@ -77,6 +77,13 @@ define [
   # Finally, add 'Oraculum' as our base tag, so our definitions will inherit it.
   Oraculum = new Factory (-> BackboneFactory), baseTags: ['Oraculum']
 
+  # Provide a self-referencing definition
+  Oraculum.define 'Oraculum', (-> Oraculum), singleton: true
+
+  # Inject our version, commit #s
+  Oraculum.COMMIT = "<%- gitinfo.local.branch.current.SHA %>"
+  Oraculum.VERSION = "<%- component.version %>"
+
   # Extension
   # ---------
   # Mirror all current and future definitions from BackboneFactory

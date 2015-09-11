@@ -12,11 +12,11 @@ define [
   _ = Oraculum.get 'underscore'
 
   modifierKeyPressed = (event) ->
-    return event.altKey or
-    event.ctrlKey or
-    event.metaKey or
-    event.shiftKey or
-    event.button is 1
+    return event.altKey or # Held down alt
+    event.ctrlKey or       # Held down control
+    event.metaKey or       # Held down windows/meta key
+    event.shiftKey or      # Held down shift
+    event.button is 1      # Used middle-click
 
   Oraculum.defineMixin 'Layout.ViewMixin', {
 
@@ -76,7 +76,7 @@ define [
     adjustTitle: (subtitle = '') ->
       title = @mixinOptions.layout.title
       titleTemplate = @mixinOptions.layout.titleTemplate
-      document.title = titleTemplate { title, subtitle }
+      document.title = titleTemplate.call this, { title, subtitle }
       return title
 
     # Automatic routing of internal links
@@ -128,7 +128,7 @@ define [
       isExternalLink = isAnchor and @isExternalLink el
       if isExternalLink
         if openExternalToBlank
-          @mixinOptions.layout.openExternalLink(href, event)
+          @mixinOptions.layout.openExternalLink.call this, href, event
         return # void 0
 
       # Pass to the router, try to route the path internally.

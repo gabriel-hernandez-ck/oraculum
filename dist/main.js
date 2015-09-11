@@ -74,6 +74,13 @@ SOFTWARE.
     }), {
       baseTags: ['Oraculum']
     });
+    Oraculum.define('Oraculum', (function() {
+      return Oraculum;
+    }), {
+      singleton: true
+    });
+    Oraculum.COMMIT = "40137ec20de156dd0bb9da5afd5246c118475c4c";
+    Oraculum.VERSION = "0.1.10";
     Oraculum.mirror(BackboneFactory);
     return window.Oraculum = Oraculum;
   });
