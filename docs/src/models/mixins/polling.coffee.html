@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>polling.coffee</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <link rel="stylesheet" media="all" href="../../../doc-style.css" />
+  <script src="../../../doc-filelist.js"></script>
+  <script>
+    var relativeDir = "../../../", thisFile = "src/models/mixins/polling.coffee", defaultSidebar = true;
+  </script>
+  <script src="../../../doc-script.js"></script>
+</head>
+<body>
+  <div id="sidebar_wrapper">
+    <div id="sidebar_switch">
+      <span class="tree">Files</span>
+      <span class="headings">Headings</span>
+    </div>
+    <div id="tree"></div>
+    <div id="headings">
+    </div>
+  </div>
+  <div id="sidebar-toggle"></div>
+  <div id="container"><div class="background highlight"></div>
+<table cellpadding="0" cellspacing="0">
+  <tbody>
+      <tr>
+        <td class="docs">
+          <h1>polling.coffee</h1>
+        </td>
+        <td class="code highlight"></td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-1" id="section-1">&#182;</a>
+</div>
+
+        </td>
+        <td class="code highlight"><div class="highlight"><pre><span class="nx">define</span> <span class="p">[</span>
+  <span class="s">&#39;oraculum&#39;</span>
+  <span class="s">&#39;oraculum/mixins/pub-sub&#39;</span>
+<span class="p">],</span> <span class="nf">(oraculum) -&gt;</span>
+  <span class="s">&#39;use strict&#39;</span>
+
+  <span class="nx">oraculum</span><span class="p">.</span><span class="nx">defineMixin</span> <span class="s">&#39;Polling.ModelMixin&#39;</span><span class="p">,</span>
+    <span class="nv">mixinOptions:</span>
+      <span class="nv">polling:</span>
+        <span class="nv">interval: </span><span class="mi">2000</span>
+
+    <span class="nv">mixconfig: </span><span class="nf">({polling}, attrs, {pollingInterval} = {}) -&gt;</span>
+      <span class="nv">polling.interval = </span><span class="nx">pollingInterval</span> <span class="k">if</span> <span class="nx">pollingInterval</span><span class="o">?</span>
+
+    <span class="nv">mixinitialize: </span><span class="nf">-&gt;</span>
+      <span class="nv">pollingPaused = </span><span class="kc">false</span>
+      <span class="nx">@subscribeEvent</span> <span class="s">&#39;polling:pause&#39;</span><span class="p">,</span> <span class="o">=&gt;</span>
+        <span class="nv">pollingPaused = </span><span class="nx">@_polling</span>
+        <span class="nx">@stopPolling</span><span class="p">()</span>
+      <span class="nx">@subscribeEvent</span> <span class="s">&#39;polling:resume&#39;</span><span class="p">,</span> <span class="o">=&gt;</span>
+        <span class="nx">@startPolling</span><span class="p">()</span> <span class="k">if</span> <span class="nx">pollingPaused</span>
+      <span class="nx">@</span><span class="kc">on</span> <span class="s">&#39;dispose&#39;</span><span class="p">,</span> <span class="nx">@stopPolling</span><span class="p">,</span> <span class="k">this</span>
+
+    <span class="nv">startPolling: </span><span class="nf">-&gt;</span>
+      <span class="k">return</span> <span class="k">if</span> <span class="nx">@_polling</span>
+      <span class="vi">@_polling = </span><span class="kc">true</span>
+      <span class="nv">fetch = </span><span class="nx">_</span><span class="p">.</span><span class="nx">debounce</span> <span class="p">(</span><span class="o">=&gt;</span>
+        <span class="k">return</span> <span class="k">unless</span> <span class="nx">@_polling</span>
+        <span class="vi">@_pollingXHR = </span><span class="nx">@fetch</span><span class="p">()</span>
+        <span class="nx">@_pollingXHR</span><span class="p">.</span><span class="nx">always</span> <span class="nx">fetch</span>
+      <span class="p">),</span> <span class="nx">@mixinOptions</span><span class="p">.</span><span class="nx">polling</span><span class="p">.</span><span class="nx">interval</span>
+      <span class="nx">fetch</span><span class="p">()</span>
+      <span class="nx">@trigger</span> <span class="s">&#39;startPolling&#39;</span><span class="p">,</span> <span class="k">this</span>
+      <span class="k">return</span> <span class="k">this</span>
+
+    <span class="nv">stopPolling: </span><span class="nf">-&gt;</span>
+      <span class="k">return</span> <span class="k">unless</span> <span class="nx">@_polling</span>
+      <span class="vi">@_polling = </span><span class="kc">false</span>
+      <span class="nx">@_pollingXHR</span><span class="o">?</span><span class="p">.</span><span class="nx">abort</span><span class="p">()</span>
+      <span class="nx">@trigger</span> <span class="s">&#39;stopPolling&#39;</span><span class="p">,</span> <span class="k">this</span>
+      <span class="k">return</span> <span class="k">this</span>
+  <span class="p">,</span> <span class="nv">mixins: </span><span class="p">[</span><span class="s">&#39;PubSub.Mixin&#39;</span><span class="p">]</span>
+</pre></div>
+        </td>
+      </tr>
+  </tbody>
+</table>
+  </div>
+</body>
+</html>

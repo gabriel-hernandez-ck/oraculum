@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>sync-class.coffee</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <link rel="stylesheet" media="all" href="../../../doc-style.css" />
+  <script src="../../../doc-filelist.js"></script>
+  <script>
+    var relativeDir = "../../../", thisFile = "src/views/mixins/sync-class.coffee", defaultSidebar = true;
+  </script>
+  <script src="../../../doc-script.js"></script>
+</head>
+<body>
+  <div id="sidebar_wrapper">
+    <div id="sidebar_switch">
+      <span class="tree">Files</span>
+      <span class="headings">Headings</span>
+    </div>
+    <div id="tree"></div>
+    <div id="headings">
+    </div>
+  </div>
+  <div id="sidebar-toggle"></div>
+  <div id="container"><div class="background highlight"></div>
+<table cellpadding="0" cellspacing="0">
+  <tbody>
+      <tr>
+        <td class="docs">
+          <h1>sync-class.coffee</h1>
+        </td>
+        <td class="code highlight"></td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-1" id="section-1">&#182;</a>
+</div>
+
+        </td>
+        <td class="code highlight"><div class="highlight"><pre><span class="nx">define</span> <span class="p">[</span>
+  <span class="s">&#39;oraculum&#39;</span>
+  <span class="s">&#39;oraculum/libs&#39;</span>
+  <span class="s">&#39;oraculum/mixins/evented&#39;</span>
+  <span class="s">&#39;oraculum/mixins/evented-method&#39;</span>
+<span class="p">],</span> <span class="nf">(oraculum) -&gt;</span>
+  <span class="s">&#39;use strict&#39;</span>
+
+  <span class="nv">_ = </span><span class="nx">oraculum</span><span class="p">.</span><span class="nx">get</span> <span class="s">&#39;underscore&#39;</span>
+
+  <span class="nv">getOptions = </span><span class="nf">-&gt;</span>
+    <span class="nv">options = </span><span class="nx">@mixinOptions</span><span class="p">.</span><span class="nx">syncClass</span>
+    <span class="nv">options = </span><span class="nx">options</span><span class="p">.</span><span class="nx">call</span><span class="p">(</span><span class="k">this</span><span class="p">)</span> <span class="k">if</span> <span class="nx">_</span><span class="p">.</span><span class="nx">isFunction</span> <span class="nx">options</span>
+    <span class="k">return</span> <span class="nx">options</span>
+
+  <span class="nx">oraculum</span><span class="p">.</span><span class="nx">defineMixin</span> <span class="s">&#39;SyncClass.ViewMixin&#39;</span><span class="p">,</span> <span class="p">{</span>
+
+    <span class="nv">mixinOptions:</span>
+      <span class="nv">syncClass:</span>
+        <span class="nv">emitter: </span><span class="kc">null</span>
+        <span class="nv">selector: </span><span class="kc">null</span>
+      <span class="nv">eventedMethods:</span>
+        <span class="nv">render: </span><span class="p">{}</span>
+
+    <span class="nv">mixconfig: </span><span class="nf">({syncClass}, {syncEmitter, syncSelector} = {}) -&gt;</span>
+      <span class="nv">syncClass.emitter = </span><span class="nx">syncEmitter</span> <span class="k">if</span> <span class="nx">syncEmitter</span><span class="o">?</span>
+      <span class="nv">syncClass.selector = </span><span class="nx">syncSelector</span> <span class="k">if</span> <span class="nx">syncSelector</span><span class="o">?</span>
+
+    <span class="nv">mixinitialize: </span><span class="nf">-&gt;</span>
+      <span class="nx">@</span><span class="kc">on</span> <span class="s">&#39;render:after&#39;</span><span class="p">,</span> <span class="nx">@updateSyncClass</span><span class="p">,</span> <span class="k">this</span>
+      <span class="nx">@setSyncEmitter</span><span class="p">()</span>
+
+    <span class="nv">setSyncEmitter: </span><span class="nf">(emitter) -&gt;</span>
+      <span class="k">return</span> <span class="k">unless</span> <span class="nx">emitter</span> <span class="o">?=</span> <span class="nx">getOptions</span><span class="p">.</span><span class="nx">call</span><span class="p">(</span><span class="k">this</span><span class="p">).</span><span class="nx">emitter</span>
+      <span class="k">if</span> <span class="nx">@_syncClassEmitter</span>
+        <span class="nx">@stopListening</span> <span class="nx">@_syncClassEmitter</span><span class="p">,</span> <span class="s">&#39;syncStateChange&#39;</span><span class="p">,</span> <span class="nx">@updateSyncClass</span>
+      <span class="vi">@_syncClassEmitter = </span><span class="nx">emitter</span>
+      <span class="nx">@listenTo</span> <span class="nx">emitter</span><span class="p">,</span> <span class="s">&#39;syncStateChange&#39;</span><span class="p">,</span> <span class="nx">@updateSyncClass</span>
+      <span class="nx">@updateSyncClass</span><span class="p">()</span>
+
+    <span class="nv">updateSyncClass: </span><span class="nf">-&gt;</span>
+      <span class="k">return</span> <span class="k">unless</span> <span class="nx">@_syncClassEmitter</span>
+      <span class="nv">selector = </span><span class="nx">getOptions</span><span class="p">.</span><span class="nx">call</span><span class="p">(</span><span class="k">this</span><span class="p">).</span><span class="nx">selector</span>
+      <span class="nv">$target = </span><span class="k">if</span> <span class="nx">selector</span><span class="o">?</span> <span class="k">then</span> <span class="nx">@$</span> <span class="nx">selector</span> <span class="k">else</span> <span class="nx">@$el</span>
+      <span class="nx">$target</span><span class="p">.</span><span class="nx">toggleClass</span> <span class="s">&#39;synced&#39;</span><span class="p">,</span> <span class="nx">@_syncClassEmitter</span><span class="p">.</span><span class="nx">isSynced</span><span class="p">()</span>
+      <span class="nx">$target</span><span class="p">.</span><span class="nx">toggleClass</span> <span class="s">&#39;syncing&#39;</span><span class="p">,</span> <span class="nx">@_syncClassEmitter</span><span class="p">.</span><span class="nx">isSyncing</span><span class="p">()</span>
+      <span class="nx">$target</span><span class="p">.</span><span class="nx">toggleClass</span> <span class="s">&#39;unsynced&#39;</span><span class="p">,</span> <span class="nx">@_syncClassEmitter</span><span class="p">.</span><span class="nx">isUnsynced</span><span class="p">()</span>
+
+  <span class="p">},</span> <span class="nv">mixins: </span><span class="p">[</span>
+    <span class="s">&#39;Evented.Mixin&#39;</span>
+    <span class="s">&#39;EventedMethod.Mixin&#39;</span>
+  <span class="p">]</span>
+</pre></div>
+        </td>
+      </tr>
+  </tbody>
+</table>
+  </div>
+</body>
+</html>

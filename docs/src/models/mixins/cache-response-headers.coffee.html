@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>cache-response-headers.coffee</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <link rel="stylesheet" media="all" href="../../../doc-style.css" />
+  <script src="../../../doc-filelist.js"></script>
+  <script>
+    var relativeDir = "../../../", thisFile = "src/models/mixins/cache-response-headers.coffee", defaultSidebar = true;
+  </script>
+  <script src="../../../doc-script.js"></script>
+</head>
+<body>
+  <div id="sidebar_wrapper">
+    <div id="sidebar_switch">
+      <span class="tree">Files</span>
+      <span class="headings">Headings</span>
+    </div>
+    <div id="tree"></div>
+    <div id="headings">
+    </div>
+  </div>
+  <div id="sidebar-toggle"></div>
+  <div id="container"><div class="background highlight"></div>
+<table cellpadding="0" cellspacing="0">
+  <tbody>
+      <tr>
+        <td class="docs">
+          <h1>cache-response-headers.coffee</h1>
+        </td>
+        <td class="code highlight"></td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-1" id="section-1">&#182;</a>
+</div>
+
+        </td>
+        <td class="code highlight"><div class="highlight"><pre><span class="nx">define</span> <span class="p">[</span><span class="s">&#39;oraculum&#39;</span><span class="p">],</span> <span class="nf">(oraculum) -&gt;</span>
+  <span class="s">&#39;use strict&#39;</span>
+
+  <span class="nx">oraculum</span><span class="p">.</span><span class="nx">defineMixin</span> <span class="s">&#39;CacheResponseHeaders.ModelMixin&#39;</span><span class="p">,</span>
+
+    <span class="nv">mixinOptions:</span>
+      <span class="nv">cacheResponseHeaders: </span><span class="p">[]</span>
+
+    <span class="nv">mixinitialize: </span><span class="nf">-&gt;</span>
+      <span class="vi">@responseHeaders = </span><span class="nx">@__factory</span><span class="p">().</span><span class="nx">get</span> <span class="s">&#39;Model&#39;</span>
+      <span class="nx">@</span><span class="kc">on</span> <span class="s">&#39;dispose&#39;</span><span class="p">,</span> <span class="o">=&gt;</span> <span class="nx">@responseHeaders</span><span class="p">.</span><span class="nx">dispose</span><span class="o">?</span><span class="p">()</span>
+      <span class="nx">@</span><span class="kc">on</span> <span class="s">&#39;sync&#39;</span><span class="p">,</span> <span class="nf">(model, response, {xhr}) =&gt;</span>
+        <span class="nx">@responseHeaders</span><span class="p">.</span><span class="nx">set</span> <span class="nx">_</span><span class="p">.</span><span class="nx">chain</span><span class="p">(</span><span class="nx">@mixinOptions</span><span class="p">.</span><span class="nx">cacheResponseHeaders</span><span class="p">).</span><span class="nx">map</span><span class="p">(</span>
+          <span class="nf">(headerName) -&gt;</span> <span class="p">[</span><span class="nx">headerName</span><span class="p">,</span> <span class="nx">xhr</span><span class="p">.</span><span class="nx">getResponseHeader</span><span class="p">(</span><span class="nx">headerName</span><span class="p">)]</span>
+        <span class="p">).</span><span class="nx">object</span><span class="p">().</span><span class="nx">value</span><span class="p">()</span>
+</pre></div>
+        </td>
+      </tr>
+  </tbody>
+</table>
+  </div>
+</body>
+</html>

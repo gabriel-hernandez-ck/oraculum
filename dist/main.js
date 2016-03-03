@@ -79,7 +79,7 @@ SOFTWARE.
     }), {
       singleton: true
     });
-    Oraculum.COMMIT = "40137ec20de156dd0bb9da5afd5246c118475c4c";
+    Oraculum.COMMIT = "637810de5eae4c0cd20676fe72f688444fe72086";
     Oraculum.VERSION = "0.1.10";
     Oraculum.mirror(BackboneFactory);
     return window.Oraculum = Oraculum;

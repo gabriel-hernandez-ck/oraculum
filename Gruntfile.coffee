@@ -89,6 +89,7 @@ module.exports = (grunt) ->
         eqnull: true
         shadow: true
         newcap: false
+        supernew: true
 
     jasmine:
       normal: jasmineConfig
